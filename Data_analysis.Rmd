@@ -7,27 +7,90 @@ output:
     keep_md: true
 ---
 
+This file will analyse data pertaining to all Lemna minor single and mixed inoculation trials. We will generate figures and do some modelling.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+SECTION 1: Upload packages
+
+```{r Packages, message=FALSE, warning=FALSE}
+library(ggplot2) # we need this for plotting
+library(reshape2) # melting and stuff
+library(plyr) # manipulating data frames
+library(dplyr)
 ```
 
-## R Markdown
+SECTION 2: Upload data for the latest round of experiments
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r Data, message=FALSE, warning=FALSE}
+setwd("C:/Users/jason/Dropbox/My PC (DESKTOP-IOO274E)/Desktop/Data/Lemna_singleinoculations/Lemna_single_inoculations")
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+df<-read.table('CW_mixed_inoculation_data.txt', header=F, na.strings="", sep="\t")
+names(df)<-c('pop','plt','bac','id','frd0','pix0','per0','grn0','grnper0','frd1','pix1','per1','grn1','grnper1','abs')
+str(df)
 
-```{r cars}
-summary(cars)
+#Fix the structure for bacterial inoculation and plant
+df$bac <- factor(df$bac, levels = c("Control", "1", "2", "3", "4", "5","6","7","8","9","10","All10"))
+df$plt <- as.factor(df$plt)
+
+#Let's generate some summary statistics. Things like greenness (health), growth (fitness), and aggregation.
+
+df$Grt<-df$pix1 - df$pix0
+df$Agg<-df$pix1/df$per1
+df$Hlth<-df$grn1/df$pix1
+
+#Let's check the normality of our data
+ggplot(data=df, aes(x = Grt)) + geom_histogram(fill = "white", colour = "black")
+# Looks pretty good
+
+ggplot(data=df, aes(x = Agg)) + geom_histogram(fill = "white", colour = "black")
+# Looks pretty good
+
+ggplot(data=df, aes(x = Hlth)) + geom_histogram(fill = "white", colour = "black")
+# Looks pretty good
+
+#What about bacterial fitness data? Let's look at absolute count.
+ggplot(data=df, aes(x = abs)) + geom_histogram(fill = "white", colour = "black")
+# Right-tailed, heavily.
+ggplot(data=df, aes(x = abs)) + geom_histogram(fill = "white", colour = "black") +  facet_grid(pop ~ plt, scales = "free")
+# That looks better — most of the low values come from wells lacking plants. 
+
+# Let's create a logged absolute count column anyway
+df$logabs<-log(df$abs)
+
+ggplot(data=df, aes(x = logabs)) + geom_histogram(fill = "white", colour = "black") +  facet_grid(pop ~ plt, scales = "free")
+# That looks better still!
+
+#OK, one last thing. We want to generate LogRR's for each of these bacterial inoculation treatments, because we want to compare across experiments.
+
+#Generate summary statistics.
+melt_LRR<-melt(df, id.vars=c("pop", "bac"), measure.vars= "Grt", na.rm = T)
+Sum_LRR<- ddply(melt_LRR, c("pop", "bac","variable"), summarise,
+      mean = mean(value), sd = sd(value), count=n(),
+      sem = sd(value)/sqrt(length(value)))
+
+LRR_grt<-data.frame(matrix(ncol=5, nrow=2*11))
+names(LRR_grt)<-c('pop','bac','LRR','var','SE')
+
+LRR_grt$pop<-c(rep('C', 11), rep('W', 11))
+LRR_grt$bac<-rep(c("1", "2", "3", "4", "5","6","7","8","9","10","All10"), 2)
+
+#Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
+
+for (i in 1:11){
+  LRR_grt[i,3]<-log(Sum_LRR[i+1,4]/Sum_LRR[1,4])
+  LRR_grt[i,4]<-Sum_LRR[i+1,5]^2/(Sum_LRR[i+1,6]*Sum_LRR[i+1,4]^2) + Sum_LRR[1,5]^2/(Sum_LRR[1,6]*Sum_LRR[1,4]^2)
+}
+
+for (i in 12:22){
+  LRR_grt[i,3]<-log(Sum_LRR[i+2,4]/Sum_LRR[13,4])
+  LRR_grt[i,4]<-Sum_LRR[i+2,5]^2/(Sum_LRR[i+2,6]*Sum_LRR[i+2,4]^2) + Sum_LRR[13,5]^2/(Sum_LRR[13,6]*Sum_LRR[13,4]^2)
+}
+
+LRR_grt$SE<-sqrt(LRR_grt$var)
+
+#Let's create separate dataframes for each population
+dfC<-subset(df, df$pop== "Churchill")
+dfW<-subset(df, df$pop== "Wellspring")
+
+logC<-subset(LRR_grt, LRR_grt$pop== "C")
+logW<-subset(LRR_grt, LRR_grt$pop== "W")
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

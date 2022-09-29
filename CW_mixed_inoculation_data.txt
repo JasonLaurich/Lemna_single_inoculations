@@ -1,917 +1,920 @@
-1	Wellspring	N	5	*	*	89.1
-2	Wellspring	Y	6	2678	42778	1119
-3	Wellspring	Y	10	3358	45962	2408
-4	Churchill	Y	5	3579	26043	4750
-5	Churchill	N	All10	*	*	7678
-6	Churchill	Y	7	2569	18342	2640
-7	Churchill	N	4	*	*	812
-8	Churchill	Y	10	4345	26257	2604
-9	Wellspring	Y	9	4955	47355	4770
-10	Wellspring	Y	7	1339	19443	6206
-11	Churchill	N	1	*	*	217
-12	Wellspring	Y	2	2600	24660	3528
-13	Wellspring	N	1	*	*	359
-14	Wellspring	N	5	*	*	414
-15	Churchill	N	9	*	*	2800
-16	Churchill	Y	Control	1709	21806	1163
-17	Wellspring	Y	10	2737	50734	3484
-18	Churchill	N	10	*	*	307
-19	Churchill	Y	3	2686	4379	140
-20	Wellspring	Y	10	3653	25811	9182
-21	Churchill	Y	10	2562	19841	2450
-22	Wellspring	N	7	*	*	664
-23	Churchill	Y	4	2281	26000	2595
-24	Wellspring	N	5	*	*	193
-25	Churchill	Y	7	2728	24885	4316
-26	Wellspring	N	4	*	*	208
-27	Churchill	Y	5	2198	27691	4234
-28	Churchill	N	5	*	*	60.5
-29	Wellspring	Y	5	1392	21697	6306
-30	Wellspring	N	4	*	*	110
-31	Wellspring	N	3	*	*	3376
-32	Churchill	N	8	*	*	64.9
-33	Churchill	N	9	*	*	4453
-34	Churchill	N	3	*	*	123
-35	Wellspring	Y	8	4052	15492	904
-36	Churchill	N	5	*	*	40.7
-37	Wellspring	N	6	*	*	260
-38	Wellspring	Y	7	3007	12736	13248
-39	Wellspring	N	3	*	*	553
-40	Churchill	N	2	*	*	554
-41	Wellspring	Y	4	2431	51468	6484
-42	Wellspring	N	9	*	*	85.8
-43	Churchill	N	8	*	*	107
-44	Churchill	N	5	*	*	55
-45	Churchill	Y	10	2172	2842	162
-46	Wellspring	Y	10	4484	43173	2335
-47	Wellspring	Y	2	2106	36628	2665
-48	Wellspring	N	10	*	*	71.5
-49	Churchill	Y	1	795	3418	41.8
-50	Churchill	N	5	*	*	180
-51	Churchill	N	All10	*	*	574
-52	Wellspring	N	5	*	*	38.5
-53	Churchill	Y	8	1103	15459	1830
-54	Wellspring	N	2	*	*	813
-55	Churchill	N	8	*	*	73.7
-56	Churchill	N	1	*	*	47.3
-57	Wellspring	Y	6	3410	35291	700
-58	Wellspring	Y	3	4099	51840	4402
-59	Churchill	Y	9	3651	28509	10044
-60	Wellspring	N	7	*	*	139
-61	Wellspring	Y	3	1572	2304	1786
-62	Wellspring	Y	8	2666	38302	3452
-63	Wellspring	N	6	*	*	239
-64	Wellspring	N	4	*	*	108
-65	Churchill	Y	8	5649	18746	1696
-66	Churchill	Y	6	2544	24638	3441
-67	Churchill	Y	2	3281	4534	4897
-68	Churchill	N	3	*	*	81.4
-69	Wellspring	N	4	*	*	86.9
-70	Churchill	Y	10	3177	30897	3143
-71	Wellspring	N	8	*	*	53.9
-72	Wellspring	N	2	*	*	1064
-73	Wellspring	Y	10	4183	45946	5916
-74	Churchill	N	6	*	*	311
-75	Churchill	N	5	*	*	94.6
-76	Churchill	N	10	*	*	49.5
-77	Churchill	N	2	*	*	24619
-78	Churchill	N	1	*	*	238
-79	Churchill	Y	6	3972	32094	2135
-80	Wellspring	N	4	*	*	78.1
-81	Wellspring	N	10	*	*	306
-82	Churchill	N	1	*	*	59.4
-83	Wellspring	Y	4	3969	30420	10721
-84	Wellspring	Y	All10	4653	55033	5635
-85	Churchill	N	6	*	*	485
-86	Churchill	N	1	*	*	318
-87	Wellspring	N	All10	*	*	8480
-88	Wellspring	N	8	*	*	48.4
-89	Churchill	N	1	*	*	61.6
-90	Wellspring	N	10	*	*	135
-91	Wellspring	Y	8	5268	29790	620
-92	Wellspring	Y	4	2360	24879	3169
-93	Wellspring	N	5	*	*	33
-94	Wellspring	Y	9	3227	41479	5448
-95	Churchill	Y	6	3301	27125	2366
-96	Churchill	N	2	*	*	3682
-97	Churchill	Y	4	2131	11101	5386
-98	Wellspring	N	8	*	*	33
-99	Churchill	Y	1	2532	9475	4683
-100	Churchill	Y	3	2207	9964	710
-101	Churchill	Y	8	3468	24556	3352
-102	Wellspring	N	7	*	*	462
-103	Churchill	Y	10	4440	21452	2716
-104	Wellspring	Y	6	2792	33776	189
-105	Wellspring	N	10	*	*	6301
-106	Churchill	N	7	*	*	56.1
-107	Churchill	Y	1	1694	5908	3677
-108	Churchill	Y	4	2533	11880	2599
-109	Churchill	N	4	*	*	6635
-110	Wellspring	N	7	*	*	859
-111	Wellspring	N	1	*	*	7142
-112	Wellspring	N	3	*	*	2493
-113	Churchill	N	7	*	*	53.9
-114	Wellspring	N	All10	*	*	4286
-115	Churchill	Y	2	3481	21949	11419
-116	Wellspring	Y	10	6720	31555	3259
-117	Wellspring	Y	9	2591	35867	5635
-118	Churchill	Y	7	2809	15047	3808
-119	Wellspring	N	1	*	*	89.1
-120	Wellspring	Y	10	4395	38496	8219
-121	Churchill	Y	4	5126	37799	6351
-122	Wellspring	N	9	*	*	67.1
-123	Wellspring	N	8	*	*	23.1
-124	Churchill	Y	3	2412	7653	2687
-125	Churchill	N	10	*	*	168
-126	Churchill	N	9	*	*	3102
-127	Wellspring	N	5	*	*	77
-128	Wellspring	N	3	*	*	1250
-129	Churchill	N	10	*	*	102
-130	Churchill	Y	7	2178	10167	2346
-131	Wellspring	N	7	*	*	525
-132	Wellspring	Y	5	2930	32023	1861
-133	Wellspring	N	2	*	*	393
-134	Wellspring	N	6	*	*	279
-135	Churchill	Y	9	1836	4169	2133
-136	Wellspring	Y	4	3351	48666	5475
-137	Churchill	Y	Control	1592	16491	2392
-138	Wellspring	Y	9	4487	34547	4539
-139	Wellspring	Y	Control	5342	24684	2885
-140	Wellspring	Y	Control	2190	21660	1971
-141	Churchill	Y	9	3654	22094	6116
-142	Churchill	N	5	*	*	116
-143	Churchill	Y	8	1565	8565	1046
-144	Churchill	N	6	*	*	1058
-145	Churchill	N	1	*	*	101
-146	Churchill	N	5	*	*	78.1
-147	Wellspring	Y	6	1778	22111	402
-148	Churchill	Y	9	1583	6787	1040
-149	Wellspring	N	10	*	*	210
-150	Churchill	Y	4	3469	7240	1462
-151	Churchill	Y	7	3214	13831	1955
-152	Churchill	N	6	*	*	680
-153	Churchill	Y	1	3545	17834	4469
-154	Churchill	Y	8	1621	11863	1318
-155	Wellspring	Y	4	1864	18946	6946
-156	Wellspring	Y	8	3792	31505	1526
-157	Churchill	Y	All10	2386	28304	5530
-158	Wellspring	Y	6	2262	34179	815
-159	Wellspring	Y	10	3316	36953	3846
-160	Wellspring	Y	4	3717	12365	1180
-161	Churchill	Y	Control	2577	15508	2298
-162	Churchill	Y	Control	3105	20924	1500
-163	Wellspring	Y	4	4593	25476	6377
-164	Churchill	Y	9	1735	14173	5136
-165	Churchill	Y	5	2671	24854	1023
-166	Wellspring	Y	All10	2562	28341	10439
-167	Wellspring	Y	6	3603	8609	484
-168	Churchill	Y	4	1860	22813	947
-169	Churchill	Y	All10	2515	21513	7496
-170	Churchill	Y	6	2762	12184	2087
-171	Churchill	Y	2	3122	33136	7606
-172	Churchill	N	10	*	*	48.4
-173	Wellspring	Y	9	2379	20345	4243
-174	Wellspring	N	9	*	*	114
-175	Churchill	Y	10	3327	12923	1104
-176	Wellspring	Y	9	1728	1240	27.5
-177	Wellspring	N	2	*	*	2136
-178	Churchill	Y	6	3257	20361	2593
-179	Churchill	Y	8	4853	25438	1789
-180	Churchill	N	10	*	*	83.6
-181	Churchill	N	All10	*	*	2848
-182	Wellspring	N	9	*	*	25.3
-183	Wellspring	N	2	*	*	780
-184	Wellspring	Y	4	1408	22462	4864
-185	Churchill	Y	5	4481	30002	3782
-186	Wellspring	N	2	*	*	219
-187	Churchill	N	2	*	*	1110
-188	Churchill	N	10	*	*	51.7
-189	Churchill	Y	2	3246	31080	10680
-190	Wellspring	Y	10	3991	16947	2354
-191	Churchill	Y	Control	2478	19377	3135
-192	Churchill	N	1	*	*	48.4
-193	Wellspring	Y	5	2063	27792	3110
-194	Churchill	Y	10	1664	12633	3404
-195	Churchill	N	5	*	*	31.9
-196	Churchill	N	3	*	*	78.1
-197	Wellspring	N	8	*	*	96.8
-198	Wellspring	N	9	*	*	283
-199	Wellspring	N	2	*	*	330
-200	Churchill	N	3	*	*	52.8
-201	Wellspring	Y	7	4097	50429	5875
-202	Churchill	Y	2	1731	1312	12003
-203	Wellspring	Y	7	1088	19245	7889
-204	Churchill	N	6	*	*	295
-205	Churchill	N	10	*	*	31.9
-206	Wellspring	Y	1	2505	33367	3489
-207	Wellspring	N	1	*	*	129
-208	Churchill	Y	4	1947	20549	1920
-209	Churchill	Y	5	3276	5136	42.9
-210	Wellspring	N	9	*	*	35.2
-211	Churchill	N	4	*	*	20.9
-212	Wellspring	N	8	*	*	30.8
-213	Churchill	Y	All10	1333	24938	7904
-214	Churchill	N	10	*	*	19.8
-215	Churchill	Y	4	4468	19120	1591
-216	Wellspring	N	8	*	*	14.3
-217	Wellspring	Y	7	4121	50752	4783
-218	Churchill	N	7	*	*	79.2
-219	Wellspring	N	1	*	*	74.8
-220	Wellspring	N	7	*	*	168
-221	Wellspring	Y	All10	1992	2574	2836
-222	Churchill	N	6	*	*	279
-223	Churchill	Y	9	4020	19445	3835
-224	Wellspring	Y	2	*	*	333
-225	Wellspring	N	7	*	*	224
-226	Churchill	Y	10	2707	21885	5963
-227	Churchill	Y	Control	3687	30490	2256
-228	Churchill	Y	9	1660	9852	2790
-229	Wellspring	N	9	*	*	788
-230	Churchill	Y	6	2636	3769	424
-231	Wellspring	N	All10	*	*	6135
-232	Wellspring	N	10	*	*	348
-233	Churchill	Y	6	3228	23681	2088
-234	Churchill	N	3	*	*	1119
-235	Churchill	N	7	*	*	268
-236	Churchill	N	6	*	*	135
-237	Wellspring	N	1	*	*	482
-238	Wellspring	Y	4	2332	3660	864
-239	Wellspring	Y	Control	1613	25614	2027
-240	Wellspring	N	3	*	*	1112
-241	Churchill	N	6	*	*	893
-242	Churchill	Y	4	3345	30658	3406
-243	Wellspring	Y	All10	1508	31820	3509
-244	Churchill	N	6	*	*	3044
-245	Churchill	N	9	*	*	2276
-246	Churchill	Y	8	3093	13407	211
-247	Churchill	N	5	*	*	83.6
-248	Churchill	Y	5	2736	29745	2270
-249	Churchill	Y	6	3191	10587	2277
-250	Wellspring	Y	Control	4253	17710	517
-251	Churchill	Y	8	2360	18287	1493
-252	Churchill	N	7	*	*	5179
-253	Wellspring	Y	8	1999	17371	444
-254	Wellspring	Y	7	1330	11613	10262
-255	Wellspring	N	9	*	*	400
-256	Wellspring	Y	10	4239	37526	1764
-257	Churchill	Y	6	3302	18263	1494
-258	Wellspring	N	All10	*	*	5453
-259	Wellspring	N	8	*	*	33
-260	Churchill	N	3	*	*	3385
-261	Wellspring	Y	6	4112	39647	1299
-262	Churchill	Y	10	3744	14322	1778
-263	Wellspring	N	1	*	*	626
-264	Wellspring	Y	Control	4366	24119	3686
-265	Wellspring	N	2	*	*	210
-266	Wellspring	Y	2	2671	53887	1129
-267	Churchill	Y	6	4644	24687	2651
-268	Churchill	Y	7	2837	17885	1177
-269	Churchill	Y	8	2350	20830	1305
-270	Wellspring	Y	5	2999	34358	2520
-271	Churchill	N	6	*	*	859
-272	Wellspring	Y	4	2089	34978	2734
-273	Wellspring	N	7	*	*	139
-274	Churchill	N	4	*	*	200
-275	Churchill	N	7	*	*	151
-276	Wellspring	N	All10	*	*	2036
-277	Churchill	Y	All10	1922	25443	5563
-278	Churchill	N	1	*	*	117
-279	Churchill	N	7	*	*	144
-280	Wellspring	Y	7	2848	57681	2951
-281	Wellspring	N	7	*	*	107
-282	Wellspring	Y	1	2006	24321	1119
-283	Churchill	N	All10	*	*	2122
-284	Wellspring	N	10	*	*	52.8
-285	Churchill	N	4	*	*	331
-286	Wellspring	Y	3	2921	23757	2414
-287	Churchill	N	6	*	*	516
-288	Churchill	N	4	*	*	184
-289	Churchill	Y	7	3708	25689	2727
-290	Wellspring	Y	2	2565	37768	3148
-291	Wellspring	Y	All10	5790	57260	9767
-292	Wellspring	Y	6	3887	44347	541
-293	Wellspring	Y	5	3521	41525	4731
-294	Wellspring	N	9	*	*	120
-295	Wellspring	N	8	*	*	122
-296	Churchill	N	All10	*	*	1534
-297	Wellspring	N	9	*	*	97.9
-298	Wellspring	N	10	*	*	212
-299	Churchill	Y	5	4817	25313	2316
-300	Wellspring	Y	1	1276	14709	564
-301	Wellspring	Y	Control	3709	16257	519
-302	Wellspring	N	4	*	*	128
-303	Wellspring	Y	3	2819	36797	3473
-304	Wellspring	Y	7	4920	44499	3439
-305	Churchill	N	7	*	*	37.4
-306	Wellspring	Y	2	1979	26223	4325
-307	Churchill	N	5	*	*	112
-308	Churchill	Y	8	1167	11984	1189
-309	Churchill	N	All10	*	*	1167
-310	Churchill	Y	2	3604	39096	8845
-311	Wellspring	N	All10	*	*	1439
-312	Churchill	Y	Control	4916	35013	2827
-313	Wellspring	Y	10	3664	43566	5356
-314	Churchill	N	4	*	*	256
-315	Wellspring	Y	Control	2471	30974	1862
-316	Churchill	Y	3	1475	6236	1175
-317	Wellspring	N	All10	*	*	3614
-318	Churchill	N	10	*	*	125
-319	Wellspring	Y	2	4122	33806	2133
-320	Churchill	N	2	*	*	10238
-321	Churchill	Y	2	1481	9512	9793
-322	Churchill	Y	8	3061	14132	1539
-323	Wellspring	N	1	*	*	83.6
-324	Churchill	Y	10	1562	8669	857
-325	Wellspring	N	5	*	*	271
-326	Churchill	N	5	*	*	91.3
-327	Churchill	N	7	*	*	125
-328	Churchill	Y	6	1976	6564	549
-329	Churchill	Y	1	2031	15551	2035
-330	Wellspring	Y	6	3993	28775	2135
-331	Wellspring	N	9	*	*	119
-332	Wellspring	Y	6	4809	47834	2160
-333	Wellspring	Y	1	3987	28880	7106
-334	Wellspring	N	4	*	*	400
-335	Churchill	Y	7	1441	21554	3170
-336	Churchill	N	8	*	*	152
-337	Wellspring	Y	8	639	627	62.7
-338	Wellspring	Y	6	3350	33802	613
-339	Churchill	Y	All10	2386	21939	4754
-340	Churchill	Y	6	2675	15987	943
-341	Churchill	N	10	*	*	86.9
-342	Wellspring	Y	9	4958	35245	1318
-343	Wellspring	N	9	*	*	105
-344	Churchill	Y	1	4077	34268	1938
-345	Churchill	Y	8	3346	19717	1295
-346	Churchill	Y	5	4067	15243	427
-347	Wellspring	N	6	*	*	276
-348	Churchill	N	3	*	*	123
-349	Churchill	N	4	*	*	416
-350	Wellspring	Y	1	1313	8923	3715
-351	Wellspring	Y	4	2626	30332	4447
-352	Churchill	Y	3	3438	27535	354
-353	Churchill	Y	2	3836	45107	9321
-354	Wellspring	N	7	*	*	1394
-355	Wellspring	N	All10	*	*	3179
-356	Churchill	Y	3	3699	15542	730
-357	Churchill	N	7	*	*	171
-358	Wellspring	Y	6	2779	30149	1327
-359	Wellspring	Y	3	1679	21808	5400
-360	Wellspring	Y	3	1809	38430	2563
-361	Churchill	Y	All10	3218	45368	4177
-362	Wellspring	Y	1	2350	4966	2489
-363	Wellspring	Y	5	3105	55262	312
-364	Churchill	N	10	*	*	1634
-365	Wellspring	Y	4	878	4154	2790
-366	Wellspring	Y	6	974	21166	1692
-367	Wellspring	Y	7	4072	52351	2362
-368	Churchill	N	6	*	*	953
-369	Wellspring	N	6	*	*	276
-370	Churchill	N	9	*	*	1470
-371	Churchill	Y	6	1515	21456	3816
-372	Churchill	N	2	*	*	18411
-373	Wellspring	N	5	*	*	101
-374	Churchill	N	7	*	*	253
-375	Churchill	N	3	*	*	409
-376	Churchill	N	3	*	*	91.3
-377	Wellspring	Y	1	3303	58920	5430
-378	Wellspring	N	9	*	*	60.5
-379	Wellspring	Y	3	1760	11259	4964
-380	Wellspring	N	All10	*	*	4687
-381	Wellspring	Y	7	3172	51971	5801
-382	Churchill	N	3	*	*	72.6
-383	Churchill	Y	7	3129	29251	3482
-384	Churchill	N	All10	*	*	5574
-385	Churchill	N	10	*	*	111
-386	Churchill	N	1	*	*	259
-387	Wellspring	Y	9	1133	12970	3196
-388	Wellspring	N	10	*	*	290
-389	Wellspring	Y	1	4813	21585	1979
-390	Wellspring	N	6	*	*	145
-391	Churchill	N	9	*	*	1618
-392	Wellspring	N	2	*	*	713
-393	Wellspring	Y	3	2904	18510	6012
-394	Churchill	N	8	*	*	81.4
-395	Wellspring	Y	3	1588	10849	3665
-396	Churchill	N	5	*	*	55
-397	Wellspring	N	9	*	*	122
-398	Wellspring	N	4	*	*	585
-399	Churchill	N	4	*	*	472
-400	Wellspring	Y	8	1209	14880	354
-401	Churchill	Y	Control	3887	13131	2641
-402	Churchill	Y	Control	3663	6231	110
-403	Churchill	N	4	*	*	270
-404	Churchill	Y	Control	2744	11354	887
-405	Churchill	Y	9	4921	17524	3849
-406	Wellspring	Y	5	2029	3624	163
-407	Wellspring	Y	3	1998	16988	1987
-408	Wellspring	Y	Control	2546	29970	2387
-409	Churchill	N	8	*	*	117
-410	Churchill	N	8	*	*	209
-411	Churchill	Y	1	1472	11652	3540
-412	Wellspring	Y	Control	2819	28606	2610
-413	Churchill	Y	6	2822	21399	2214
-414	Wellspring	Y	7	756	11685	11961
-415	Churchill	N	8	*	*	89.1
-416	Churchill	Y	10	2246	18550	1398
-417	Churchill	Y	4	2374	17428	1898
-418	Wellspring	Y	2	2186	17017	2497
-419	Churchill	Y	3	5009	17639	197
-420	Wellspring	N	All10	*	*	4473
-421	Churchill	N	All10	*	*	3866
-422	Churchill	Y	10	3436	18967	1983
-423	Wellspring	Y	2	3090	25236	1038
-424	Wellspring	N	1	*	*	82.5
-425	Wellspring	Y	5	3397	20910	1297
-426	Churchill	Y	All10	2790	25640	3851
-427	Wellspring	N	All10	*	*	3583
-428	Wellspring	N	3	*	*	736
-429	Churchill	N	All10	*	*	4922
-430	Churchill	N	2	*	*	8508
-431	Churchill	Y	All10	3027	29852	1570
-432	Wellspring	N	6	*	*	197
-433	Churchill	N	2	*	*	51.7
-434	Churchill	Y	10	2786	26712	3688
-435	Churchill	Y	4	3868	34871	3100
-436	Churchill	N	1	*	*	75.9
-437	Churchill	Y	6	1481	8809	1380
-438	Churchill	Y	5	1641	11120	794
-439	Wellspring	Y	Control	4215	38628	2622
-440	Wellspring	N	10	*	*	39.6
-441	Churchill	N	10	*	*	47.3
-442	Wellspring	Y	2	2025	10038	4316
-443	Wellspring	Y	3	1398	20231	3183
-444	Wellspring	Y	9	2420	5361	55
-445	Wellspring	N	3	*	*	942
-446	Wellspring	N	4	*	*	135
-447	Wellspring	N	6	*	*	153
-448	Churchill	N	4	*	*	105
-449	Churchill	Y	Control	3230	12904	2742
-450	Churchill	Y	3	2623	14441	684
-451	Churchill	N	All10	*	*	2312
-452	Churchill	N	2	*	*	4382
-454	Wellspring	N	1	*	*	38.5
-455	Churchill	N	4	*	*	52.8
-456	Churchill	N	7	*	*	201
-457	Wellspring	N	5	*	*	*
-458	Churchill	Y	All10	2365	20690	*
-459	Churchill	Y	10	5541	32373	*
-460	Wellspring	N	9	*	*	*
-461	Wellspring	N	4	*	*	*
-462	Wellspring	Y	9	2691	22343	*
-463	Churchill	N	All10	*	*	*
-464	Wellspring	N	5	*	*	*
-465	Wellspring	Y	9	2224	33948	*
-466	Churchill	N	2	*	*	*
-467	Churchill	Y	9	2790	19301	*
-468	Churchill	Y	9	4228	49695	*
-469	Churchill	Y	6	2242	17380	*
-470	Wellspring	Y	6	3248	18699	*
-471	Churchill	Y	Control	3420	26030	*
-472	Churchill	N	8	*	*	*
-473	Wellspring	Y	2	2205	21956	*
-474	Wellspring	N	3	*	*	*
-475	Wellspring	Y	2	3950	10553	*
-476	Wellspring	Y	6	4880	38058	*
-477	Churchill	N	8	*	*	*
-478	Wellspring	N	1	*	*	*
-479	Churchill	Y	7	1832	10229	*
-480	Wellspring	Y	Control	3154	48362	*
-481	Wellspring	Y	Control	2516	33572	*
-482	Churchill	Y	2	3068	32890	*
-483	Churchill	N	3	*	*	*
-484	Churchill	Y	1	3014	14609	*
-485	Wellspring	Y	7	2226	16168	*
-486	Wellspring	N	8	*	*	*
-487	Wellspring	Y	8	3124	38489	*
-488	Wellspring	N	7	*	*	*
-489	Churchill	Y	3	1752	13705	*
-490	Churchill	Y	All10	1704	14437	*
-491	Churchill	N	10	*	*	*
-492	Churchill	Y	All10	2627	29173	*
-493	Churchill	Y	2	4311	44551	*
-495	Wellspring	N	3	*	*	*
-496	Wellspring	Y	2	2785	44947	*
-497	Churchill	Y	2	2213	20341	*
-498	Wellspring	N	7	*	*	*
-499	Wellspring	N	4	*	*	*
-500	Wellspring	N	3	*	*	*
-501	Wellspring	Y	3	3596	60671	*
-502	Wellspring	Y	All10	1719	35074	*
-503	Churchill	Y	5	4526	31557	*
-504	Wellspring	Y	8	5218	57843	*
-505	Churchill	N	8	*	*	*
-506	Churchill	N	All10	*	*	*
-507	Wellspring	N	3	*	*	*
-508	Churchill	N	5	*	*	*
-509	Churchill	Y	9	2193	10542	*
-510	Churchill	Y	2	1901	17372	*
-511	Wellspring	N	7	*	*	*
-512	Wellspring	Y	10	4394	56324	*
-513	Churchill	N	9	*	*	*
-514	Wellspring	Y	1	2611	18298	*
-515	Churchill	N	9	*	*	*
-516	Churchill	N	8	*	*	*
-517	Churchill	N	4	*	*	*
-518	Wellspring	N	5	*	*	*
-519	Churchill	Y	8	2042	17088	*
-520	Wellspring	Y	All10	3316	52833	*
-521	Churchill	Y	4	2567	3905	*
-522	Churchill	N	1	*	*	*
-523	Churchill	N	5	*	*	*
-524	Churchill	N	6	*	*	*
-525	Wellspring	Y	All10	2492	22834	*
-526	Churchill	N	1	*	*	*
-527	Churchill	N	2	*	*	*
-528	Churchill	Y	1	3355	26287	*
-529	Wellspring	Y	8	2655	29640	*
-530	Churchill	N	1	*	*	*
-531	Wellspring	Y	5	1799	23889	*
-532	Wellspring	N	3	*	*	*
-533	Churchill	N	7	*	*	*
-534	Wellspring	Y	10	2604	32919	*
-535	Churchill	Y	7	2684	13481	*
-536	Wellspring	Y	7	2973	36634	*
-537	Wellspring	Y	8	4441	34957	*
-538	Churchill	N	5	*	*	*
-539	Churchill	Y	10	3263	17166	*
-540	Churchill	N	7	*	*	*
-541	Wellspring	Y	6	2793	39786	*
-542	Churchill	Y	3	1873	9078	*
-543	Wellspring	N	8	*	*	*
-544	Wellspring	N	2	*	*	*
-545	Wellspring	Y	3	3063	39839	*
-546	Churchill	N	3	*	*	*
-547	Wellspring	N	2	*	*	*
-548	Churchill	Y	9	1654	42717	*
-549	Churchill	N	8	*	*	*
-550	Churchill	N	2	*	*	*
-551	Churchill	N	4	*	*	*
-552	Churchill	N	6	*	*	*
-553	Churchill	Y	7	2054	24833	*
-554	Wellspring	N	2	*	*	*
-555	Churchill	Y	All10	1987	26089	*
-556	Wellspring	Y	All10	1963	23035	*
-557	Wellspring	N	All10	*	*	*
-558	Churchill	Y	8	1783	3785	*
-559	Wellspring	Y	2	2792	37949	*
-560	Churchill	Y	All10	1672	39599	*
-561	Wellspring	Y	6	1749	34536	*
-562	Churchill	Y	7	3300	22161	*
-563	Wellspring	N	4	*	*	*
-564	Wellspring	N	8	*	*	*
-565	Wellspring	Y	All10	2224	18152	*
-566	Churchill	Y	7	3571	28934	*
-567	Churchill	Y	4	1841	14468	*
-568	Churchill	Y	3	2537	20677	*
-569	Wellspring	N	All10	*	*	*
-570	Wellspring	Y	8	2684	32629	*
-571	Churchill	Y	1	2004	13812	*
-572	Wellspring	N	3	*	*	*
-573	Wellspring	Y	3	4038	69492	*
-574	Wellspring	Y	6	1548	23741	*
-575	Churchill	Y	7	1519	6932	*
-576	Churchill	N	2	*	*	*
-577	Wellspring	N	8	*	*	*
-578	Churchill	Y	1	2418	3460	*
-579	Wellspring	Y	9	2857	27619	*
-580	Wellspring	N	4	*	*	*
-581	Wellspring	Y	Control	1808	12573	*
-582	Wellspring	Y	1	2241	24768	*
-583	Churchill	Y	7	3006	27681	*
-584	Churchill	N	10	*	*	*
-585	Wellspring	Y	10	1518	23912	*
-586	Wellspring	N	9	*	*	*
-587	Wellspring	Y	7	1526	16121	*
-588	Churchill	N	5	*	*	*
-589	Churchill	Y	8	2114	23206	*
-590	Wellspring	N	7	*	*	*
-591	Wellspring	Y	6	1170	5323	*
-592	Wellspring	N	6	*	*	*
-593	Churchill	Y	3	4259	34085	*
-594	Wellspring	N	1	*	*	*
-595	Wellspring	N	10	*	*	*
-596	Wellspring	Y	All10	4121	72974	*
-597	Wellspring	N	10	*	*	*
-598	Churchill	N	3	*	*	*
-599	Churchill	N	8	*	*	*
-600	Wellspring	N	5	*	*	*
-601	Wellspring	Y	9	3750	38058	*
-602	Wellspring	Y	5	2894	35030	*
-603	Wellspring	Y	1	3881	59140	*
-604	Wellspring	N	6	*	*	*
-605	Wellspring	Y	6	1186	11191	*
-606	Wellspring	N	2	*	*	*
-607	Churchill	N	3	*	*	*
-608	Churchill	N	6	*	*	*
-609	Wellspring	Y	2	4218	56783	*
-610	Churchill	Y	8	1908	13687	*
-611	Churchill	Y	9	2040	23959	*
-612	Churchill	N	3	*	*	*
-613	Churchill	Y	All10	2648	35421	*
-614	Wellspring	Y	4	4590	59285	*
-615	Churchill	N	7	*	*	*
-616	Wellspring	N	6	*	*	*
-617	Churchill	N	3	*	*	*
-618	Churchill	N	7	*	*	*
-619	Wellspring	N	10	*	*	*
-620	Churchill	N	4	*	*	*
-621	Wellspring	Y	All10	2517	13379	*
-622	Wellspring	Y	8	1134	17314	*
-623	Churchill	Y	9	1803	14786	*
-624	Churchill	Y	4	2857	43456	*
-625	Churchill	Y	9	1916	27889	*
-626	Wellspring	Y	3	1834	18239	*
-627	Wellspring	N	8	*	*	*
-628	Wellspring	N	All10	*	*	*
-629	Wellspring	N	5	*	*	*
-630	Wellspring	Y	2	1361	22436	*
-631	Churchill	Y	All10	1824	18815	*
-632	Wellspring	N	3	*	*	*
-633	Churchill	Y	6	3065	33666	*
-634	Churchill	N	6	*	*	*
-635	Churchill	Y	Control	4430	23510	*
-636	Churchill	Y	3	5326	46482	*
-637	Wellspring	N	6	*	*	*
-638	Wellspring	Y	3	2732	32450	*
-639	Wellspring	Y	All10	3226	51737	*
-640	Churchill	N	All10	*	*	*
-641	Churchill	Y	10	2802	21867	*
-642	Wellspring	Y	10	4951	56164	*
-643	Wellspring	N	2	*	*	*
-644	Wellspring	N	3	*	*	*
-645	Wellspring	N	3	*	*	*
-646	Wellspring	Y	4	2051	40208	*
-647	Wellspring	N	4	*	*	*
-648	Churchill	N	9	*	*	*
-649	Churchill	Y	9	1900	3011	*
-650	Wellspring	N	3	*	*	*
-651	Churchill	N	8	*	*	*
-652	Wellspring	Y	10	2190	26880	*
-653	Wellspring	Y	4	3342	46143	*
-654	Churchill	Y	5	2126	21853	*
-655	Churchill	Y	6	1995	22184	*
-656	Churchill	N	9	*	*	*
-657	Wellspring	N	5	*	*	*
-658	Wellspring	N	1	*	*	*
-659	Wellspring	Y	5	1510	21089	*
-660	Wellspring	N	All10	*	*	*
-661	Churchill	Y	2	2090	23306	*
-662	Churchill	N	All10	*	*	*
-663	Wellspring	Y	2	1033	7373	*
-664	Wellspring	N	10	*	*	*
-665	Churchill	N	5	*	*	*
-666	Wellspring	N	All10	*	*	*
-667	Churchill	N	2	*	*	*
-668	Wellspring	N	4	*	*	*
-669	Churchill	Y	7	1472	14931	*
-670	Churchill	N	All10	*	*	*
-671	Churchill	Y	6	3453	28858	*
-672	Churchill	Y	1	2161	26114	*
-673	Wellspring	N	7	*	*	*
-674	Churchill	N	10	*	*	*
-675	Wellspring	N	10	*	*	*
-676	Wellspring	N	10	*	*	*
-677	Churchill	Y	5	2375	18462	*
-678	Churchill	Y	4	3297	16003	*
-679	Churchill	N	8	*	*	*
-680	Wellspring	N	10	*	*	*
-681	Wellspring	N	2	*	*	*
-682	Churchill	N	6	*	*	*
-683	Churchill	N	9	*	*	*
-684	Churchill	Y	2	3135	36018	*
-685	Wellspring	Y	5	5033	44926	*
-686	Wellspring	Y	8	2976	13035	*
-687	Wellspring	N	9	*	*	*
-688	Wellspring	Y	1	2139	32034	*
-689	Churchill	N	9	*	*	*
-690	Wellspring	N	5	*	*	*
-691	Wellspring	Y	All10	3643	34722	*
-692	Churchill	N	6	*	*	*
-693	Churchill	N	1	*	*	*
-694	Wellspring	Y	8	3730	35546	*
-695	Wellspring	N	6	*	*	*
-696	Wellspring	Y	1	3545	6751	*
-697	Wellspring	N	6	*	*	*
-698	Wellspring	N	2	*	*	*
-699	Wellspring	N	7	*	*	*
-700	Churchill	Y	2	1552	28881	*
-701	Wellspring	N	5	*	*	*
-702	Wellspring	Y	10	2762	46770	*
-703	Churchill	Y	1	1555	21081	*
-704	Churchill	N	9	*	*	*
-705	Churchill	N	9	*	*	*
-706	Wellspring	Y	8	2648	30371	*
-707	Churchill	Y	3	3359	24411	*
-708	Churchill	N	All10	*	*	*
-709	Wellspring	N	4	*	*	*
-710	Churchill	Y	2	4297	39388	*
-711	Churchill	N	4	*	*	*
-712	Churchill	Y	2	2119	45754	*
-713	Wellspring	Y	9	2014	13294	*
-714	Churchill	Y	10	2523	26324	*
-715	Churchill	Y	Control	1660	17747	*
-716	Churchill	Y	Control	2459	13581	*
-717	Wellspring	Y	10	2986	43053	*
-718	Churchill	Y	6	3307	26518	*
-719	Wellspring	N	6	*	*	*
-720	Churchill	N	3	*	*	*
-721	Wellspring	N	9	*	*	*
-722	Wellspring	N	1	*	*	*
-723	Wellspring	N	10	*	*	*
-724	Wellspring	N	3	*	*	*
-725	Wellspring	Y	7	2862	46044	*
-726	Churchill	N	4	*	*	*
-727	Churchill	N	2	*	*	*
-728	Churchill	Y	2	2396	33666	*
-729	Wellspring	N	9	*	*	*
-730	Wellspring	Y	5	3253	45981	*
-731	Wellspring	N	4	*	*	*
-732	Wellspring	Y	All10	2013	24166	*
-733	Wellspring	N	8	*	*	*
-734	Wellspring	Y	All10	4427	58113	*
-735	Churchill	Y	5	2432	23623	*
-736	Wellspring	Y	5	1860	29624	*
-737	Churchill	Y	5	1929	13505	*
-738	Wellspring	N	1	*	*	*
-739	Wellspring	N	1	*	*	*
-740	Churchill	N	8	*	*	*
-741	Wellspring	N	1	*	*	*
-742	Churchill	Y	Control	2072	27720	*
-743	Wellspring	Y	2	1593	8272	*
-744	Wellspring	Y	8	4388	50157	*
-745	Wellspring	Y	5	2897	47178	*
-746	Churchill	N	7	*	*	*
-747	Churchill	Y	Control	1676	5595	*
-748	Wellspring	Y	5	980	3005	*
-749	Wellspring	N	6	*	*	*
-750	Churchill	Y	4	2743	14342	*
-751	Churchill	N	4	*	*	*
-752	Churchill	N	2	*	*	*
-753	Churchill	N	9	*	*	*
-754	Churchill	N	All10	*	*	*
-755	Wellspring	Y	9	2803	23921	*
-756	Churchill	N	1	*	*	*
-757	Wellspring	Y	Control	2739	39686	*
-758	Wellspring	Y	4	5153	57053	*
-759	Wellspring	Y	7	2607	32149	*
-760	Churchill	Y	2	1714	9265	*
-761	Wellspring	N	8	*	*	*
-762	Wellspring	N	10	*	*	*
-763	Churchill	Y	1	2406	19216	*
-764	Wellspring	Y	1	1499	7959	*
-765	Churchill	N	3	*	*	*
-766	Wellspring	N	6	*	*	*
-767	Wellspring	Y	5	2800	39020	*
-768	Churchill	Y	10	1134	20608	*
-769	Wellspring	Y	9	2057	17953	*
-770	Churchill	Y	9	3651	23913	*
-771	Wellspring	N	8	*	*	*
-772	Churchill	Y	Control	2817	27363	*
-773	Wellspring	N	5	*	*	*
-774	Churchill	N	10	*	*	*
-775	Wellspring	Y	All10	1623	21838	*
-776	Churchill	N	9	*	*	*
-777	Wellspring	N	All10	*	*	*
-778	Churchill	N	1	*	*	*
-779	Churchill	Y	9	4933	40846	*
-780	Wellspring	N	7	*	*	*
-781	Churchill	Y	1	2270	25345	*
-782	Wellspring	N	All10	*	*	*
-783	Churchill	Y	3	2855	27805	*
-784	Wellspring	Y	4	2776	49776	*
-785	Wellspring	N	5	*	*	*
-786	Wellspring	N	1	*	*	*
-787	Wellspring	Y	3	2894	34332	*
-788	Wellspring	N	1	*	*	*
-789	Churchill	Y	10	3536	36108	*
-790	Wellspring	Y	1	2744	32143	*
-791	Wellspring	Y	3	2174	48394	*
-792	Churchill	Y	All10	2355	18290	*
-793	Wellspring	Y	9	4400	47792	*
-794	Wellspring	N	9	*	*	*
-795	Churchill	N	3	*	*	*
-796	Churchill	Y	5	2214	33709	*
-797	Churchill	N	8	*	*	*
-799	Wellspring	Y	1	3633	36853	*
-800	Wellspring	N	3	*	*	*
-801	Churchill	N	5	*	*	*
-802	Churchill	N	5	*	*	*
-803	Wellspring	N	8	*	*	*
-804	Wellspring	Y	1	3071	57005	*
-805	Wellspring	Y	Control	1625	12579	*
-806	Churchill	Y	3	3409	29977	*
-807	Churchill	N	3	*	*	*
-808	Wellspring	N	10	*	*	*
-809	Churchill	N	2	*	*	*
-810	Wellspring	N	5	*	*	*
-811	Wellspring	Y	1	2370	24211	*
-812	Churchill	Y	1	1767	15185	*
-813	Churchill	N	1	*	*	*
-814	Wellspring	Y	4	3960	31309	*
-815	Churchill	N	1	*	*	*
-816	Wellspring	Y	9	4450	50526	*
-817	Churchill	Y	4	2032	15548	*
-818	Churchill	N	7	*	*	*
-819	Churchill	Y	All10	2048	22195	*
-820	Wellspring	Y	2	1620	10391	*
-821	Churchill	N	4	*	*	*
-822	Wellspring	Y	5	2263	25632	*
-823	Churchill	N	6	*	*	*
-824	Churchill	N	2	*	*	*
-825	Wellspring	Y	All10	4782	59774	*
-826	Wellspring	N	5	*	*	*
-827	Churchill	N	5	*	*	*
-828	Wellspring	Y	All10	2522	35938	*
-829	Wellspring	Y	10	4564	43671	*
-830	Churchill	Y	9	2243	19383	*
-831	Churchill	Y	3	3967	24858	*
-832	Wellspring	Y	7	3018	52493	*
-833	Churchill	Y	1	2549	23340	*
-834	Churchill	N	7	*	*	*
-835	Churchill	Y	3	2579	20207	*
-836	Churchill	Y	1	1813	11692	*
-837	Wellspring	Y	5	5262	53818	*
-838	Wellspring	Y	9	2867	41043	*
-839	Churchill	N	All10	*	*	*
-840	Wellspring	Y	2	4172	43813	*
-841	Wellspring	N	8	*	*	*
-842	Churchill	N	9	*	*	*
-843	Wellspring	Y	4	2612	32946	*
-844	Wellspring	Y	Control	3941	47149	*
-845	Churchill	N	8	*	*	*
-846	Churchill	Y	4	2385	21152	*
-847	Wellspring	Y	Control	1765	19205	*
-848	Wellspring	Y	9	1286	19718	*
-849	Churchill	Y	1	4254	29296	*
-850	Churchill	Y	5	2920	7735	*
-851	Churchill	N	All10	*	*	*
-852	Churchill	Y	5	2019	30495	*
-853	Wellspring	Y	8	1397	14734	*
-854	Wellspring	Y	5	2029	25041	*
-855	Churchill	N	All10	*	*	*
-856	Churchill	N	2	*	*	*
-857	Wellspring	Y	8	2517	30378	*
-858	Wellspring	N	2	*	*	*
-859	Churchill	N	2	*	*	*
-860	Churchill	Y	All10	2512	24184	*
-861	Wellspring	N	All10	*	*	*
-862	Wellspring	Y	3	1923	28017	*
-863	Churchill	Y	9	940	18461	*
-864	Churchill	Y	2	2031	10505	*
-865	Churchill	Y	All10	2187	19535	*
-866	Churchill	N	10	*	*	*
-867	Wellspring	N	7	*	*	*
-868	Churchill	N	9	*	*	*
-869	Wellspring	Y	1	3161	35733	*
-870	Churchill	Y	7	2127	17908	*
-871	Wellspring	N	8	*	*	*
-872	Churchill	N	9	*	*	*
-873	Wellspring	Y	7	4526	51181	*
-874	Wellspring	Y	Control	2183	29943	*
-875	Wellspring	N	4	*	*	*
-876	Churchill	N	4	*	*	*
-877	Wellspring	N	6	*	*	*
-878	Churchill	Y	5	2218	4855	*
-879	Wellspring	N	2	*	*	*
-880	Churchill	Y	8	2669	17187	*
-881	Churchill	N	7	*	*	*
-882	Wellspring	Y	4	1787	30414	*
-883	Wellspring	N	2	*	*	*
-884	Wellspring	N	3	*	*	*
-885	Wellspring	Y	Control	3931	49419	*
-886	Churchill	Y	8	3855	35804	*
-887	Wellspring	N	6	*	*	*
-888	Churchill	N	9	*	*	*
-889	Churchill	N	8	*	*	*
-890	Churchill	Y	1	1871	22230	*
-891	Churchill	Y	7	4031	33521	*
-892	Wellspring	Y	10	1451	17438	*
-893	Churchill	Y	5	3322	24414	*
-894	Churchill	N	10	*	*	*
-895	Wellspring	N	6	*	*	*
-896	Wellspring	Y	1	2565	41166	*
-897	Wellspring	N	2	*	*	*
-898	Wellspring	N	10	*	*	*
-899	Wellspring	Y	Control	1442	2324	*
-900	Wellspring	N	7	*	*	*
-901	Churchill	N	1	*	*	*
-902	Churchill	Y	Control	2256	19938	*
-903	Churchill	Y	8	2281	18360	*
-904	Churchill	Y	Control	3158	23991	*
-905	Wellspring	N	1	*	*	*
-906	Churchill	Y	10	1988	12638	*
-907	Wellspring	N	4	*	*	*
-908	Churchill	Y	4	3704	39425	*
-909	Wellspring	N	7	*	*	*
-910	Churchill	N	6	*	*	*
-911	Wellspring	N	4	*	*	*
-912	Churchill	Y	3	2137	19771	*
-913	Wellspring	Y	All10	4084	39631	*
-914	Churchill	Y	8	3999	34941	*
-915	Churchill	Y	3	3376	21082	*
-916	Wellspring	Y	7	2585	55551	*
-917	Wellspring	Y	3	2244	20806	*
-918	Wellspring	Y	7	2760	6481	*
-919	Churchill	Y	5	3134	23963	*
-920	Churchill	Y	7	1761	20631	*
+Wellspring	N	5	1											89.1
+Wellspring	Y	6	2	2	2904	788.878	2467	771.146	14	39060	1370.424	34927	1357.324	1119
+Wellspring	Y	10	3	2	3641	818.167	3059	711.535	13	41268	1365.761	38105	1442.318	2408
+Churchill	Y	5	4	1	3819	661.527	3374	819.858	11	25077	1124.208	24338	1042.594	4750
+Churchill	N	All10	5											7678
+Churchill	Y	7	6	2	2760	787.905	2354	869.172	9	17425	762.883	14626	831.496	2640
+Churchill	N	4	7											812
+Churchill	Y	10	8	3	4632	638.35	4072	1080.97	14	25035	1072.977	22234	1086.394	2604
+Wellspring	Y	9	9	3	5966	761.402	3088	883.993	15	41636	1298.445	36642	1395.656	4770
+Wellspring	Y	7	10	1	1547	647.296	1078	869.819	9	21250	1005.986	20642	993.599	6206
+Churchill	N	1	11											217
+Wellspring	Y	2	12	2	2766	672.583	2455	1068.86	11	22708	1080.92	21563	1131.838	3528
+Wellspring	N	1	13											359
+Wellspring	N	5	14											414
+Churchill	N	9	15											2800
+Churchill	Y	Control	16	2	1821	559.358	1614	1144.227	11	19247	946.376	18009	947.6	1163
+Wellspring	Y	10	17	2	3056	811.598	2388	1250.672	14	44186	1352.22	40904	1356.823	3484
+Churchill	N	10	18											307
+Churchill	Y	3	19	2	2887	862.852	2517	865.985	5	4320	667.363	4271	710.029	140
+Wellspring	Y	10	20	2	3924	794.469	3404	978.77	12	24478	1012.433	20824	1074.961	9182
+Churchill	Y	10	21	2	2861	458.516	2284	988.875	8	19409	869.975	15989	822.69	2450
+Wellspring	N	7	22											664
+Churchill	Y	4	23	2	2503	853.464	2061	1026.792	11	25122	1173.703	21616	1065.487	2595
+Wellspring	N	5	24											193
+Churchill	Y	7	25	2	2359	568.56275	1985	604.5475	11	24755	1013.298	22537	1058.442	4316
+Wellspring	N	4	26											208
+Churchill	Y	5	27	2	1929	364.563	1782	383.285	12	27664	958.173	25027	1083.375	4234
+Churchill	N	5	28											60.5
+Wellspring	Y	5	29	1	1127	466.956	793	489.773	8	21183	928.405	18442	994.595	6306
+Wellspring	N	4	30											110
+Wellspring	N	3	31											3376
+Churchill	N	8	32											64.9
+Churchill	N	9	33											4453
+Churchill	N	3	34											123
+Wellspring	Y	8	35	2	3685	739.361	3436	802.81	9	15448	867.43	13417	878.41	904
+Churchill	N	5	36											40.7
+Wellspring	N	6	37											260
+Wellspring	Y	7	38	3	2666	648.643	2455	773.8	9	12733	930.045	10442	953.413	13248
+Wellspring	N	3	39											553
+Churchill	N	2	40											554
+Wellspring	Y	4	41	2	2041	789.447	1714	608.924	13	48476	1415.016	43042	1298.167	6484
+Wellspring	N	9	42											85.8
+Churchill	N	8	43											107
+Churchill	N	5	44											55
+Churchill	Y	10	45	2	1906	482.716	1698	583.221	2	4217	493.658	3864	459.69	162
+Wellspring	Y	10	46	3	3716	564.549	2467	657.584	14	42546	1352.125	36647	1332.208	2335
+Wellspring	Y	2	47	1	1802	492.267	1535	536.983	12	38196	1394.938	31506	1326.699	2665
+Wellspring	N	10	48											71.5
+Churchill	Y	1	49	2	1342	703.312	1200	655.894	3	3418	615.41	3332	582.003	41.8
+Churchill	N	5	50											180
+Churchill	N	All10	51											574
+Wellspring	N	5	52											38.5
+Churchill	Y	8	53	2	1271	706.275	1127	625.926	7	15458	741.294	14919	726.568	1830
+Wellspring	N	2	54											813
+Churchill	N	8	55											73.7
+Churchill	N	1	56											47.3
+Wellspring	Y	6	57	2	3211	680.863	2954	514.272	12	34676	1004.07	33144	1037.527	700
+Wellspring	Y	3	58	2	3921	720.622	3719	562.292	14	51332	1457.212	45193	1399.069	4402
+Churchill	Y	9	59	2	3528	659.414	3408	828.371	13	28055	1138.788	25514	1114.51	10044
+Wellspring	N	7	60											139
+Wellspring	Y	3	61	1	1428	474.786	1259	510.257	2	1261	276.053	1101	242.697	1786
+Wellspring	Y	8	62	2	2524	593.362	2383	573.918	11	38095	1194.417	33803	1223.347	3452
+Wellspring	N	6	63											239
+Wellspring	N	4	64											108
+Churchill	Y	8	65	5	5408	694.193	5112	679.166	10	17293	719.076	18949	703.223	1696
+Churchill	Y	6	66	2	2432	573.76	2363	524.746	11	24615	1153.781	23030	1125.101	3441
+Churchill	Y	2	67	2	3145	510.859	2976	600.209	4	4534	719.458	3940	647.989	4897
+Churchill	N	3	68											81.4
+Wellspring	N	4	69											86.9
+Churchill	Y	10	70	2	2878	513.725	2675	462.806	12	30897	1061.016	29071	1111.798	3143
+Wellspring	N	8	71											53.9
+Wellspring	N	2	72											1064
+Wellspring	Y	10	73	2	4183	566.48	3524	615.514	12	43719	1290.984	40544	1151.964	5916
+Churchill	N	6	74											311
+Churchill	N	5	75											94.6
+Churchill	N	10	76											49.5
+Churchill	N	2	77											24619
+Churchill	N	1	78											238
+Churchill	Y	6	79	2	3972	707.728	3649	663.719	12	30602	1150.108	25195	1131.218	2135
+Wellspring	N	4	80											78.1
+Wellspring	N	10	81											306
+Churchill	N	1	82											59.4
+Wellspring	Y	4	83	2	3969	720.806	3499	603.548	10	28491	1125.716	20513	1095.881	10721
+Wellspring	Y	All10	84	2	4653	649.902	4304	783.694	14	50752	1306.697	38897	1337.662	5635
+Churchill	N	6	85											485
+Churchill	N	1	86											318
+Wellspring	N	All10	87											8480
+Wellspring	N	8	88											48.4
+Churchill	N	1	89											61.6
+Wellspring	N	10	90											135
+Wellspring	Y	8	91	2	5268	691.545	4677	624.184	10	32880	1156.957	20821	1281.822	620
+Wellspring	Y	4	92	2	2360	475.85	2054	560.927	7	25382	974.921	18748	1092.231	3169
+Wellspring	N	5	93											33
+Wellspring	Y	9	94	2	3227	633.898	2704	625.45	13	40952	1169.933	31510	1294.282	5448
+Churchill	Y	6	95	2	3301	537.783	2965	569.833	11	27447	1026.897	22335	1032.053	2366
+Churchill	N	2	96											3682
+Churchill	Y	4	97	2	2131	702.247	1522	547.506	5	11087	727.851	9919	733.322	5386
+Wellspring	N	8	98											33
+Churchill	Y	1	99	2	2532	565.531	2082	623.505	5	9469	737.515	7790	746.753	4683
+Churchill	Y	3	100	1	2207	481.999	1815	478.829	6	9964	611.314	9179	667.126	710
+Churchill	Y	8	101	2	3468	595.574	2844	667.548	11	24519	1001.135	21821	958.633	3352
+Wellspring	N	7	102											462
+Churchill	Y	10	103	3	4440	673.417	4109	785.028	10	21452	996.34	17415	997.462	2716
+Wellspring	Y	6	104	1	2792	674.052	2508	601.539	11	32953	1412.089	27350	1430.217	189
+Wellspring	N	10	105											6301
+Churchill	N	7	106											56.1
+Churchill	Y	1	107	1	1694	579.243	1298	539.242	4	5908	621.618	3539	729.897	3677
+Churchill	Y	4	108	2	2533	571.33	2203	572.677	7	11880	714.866	9562	675.562	2599
+Churchill	N	4	109											6635
+Wellspring	N	7	110											859
+Wellspring	N	1	111											7142
+Wellspring	N	3	112											2493
+Churchill	N	7	113											53.9
+Wellspring	N	All10	114											4286
+Churchill	Y	2	115	2	3481	635.519	2913	566.038	12	21949	1033.367	17296	1069.122	11419
+Wellspring	Y	10	116	3	6720	588.425	6009	709.687	11	30650	1292.589	26361	1300.838	3259
+Wellspring	Y	9	117	2	2591	498.971	2097	621.327	12	33760	1229.18	30082	1274.168	5635
+Churchill	Y	7	118	1	2809	454.651	2156	608.859	6	15047	829.02	12736	914.381	3808
+Wellspring	N	1	119											89.1
+Wellspring	Y	10	120	2	4395	741.159	3838	659.83	13	38769	1176.407	33682	1202.034	8219
+Churchill	Y	4	121	2	5375	693.572	4785	726.464	15	38470	1141.384	34359	1221.846	6351
+Wellspring	N	9	122											67.1
+Wellspring	N	8	123											23.1
+Churchill	Y	3	124	1	2540	607.438	2251	533.745	4	7653	632.182	6988	689.011	2687
+Churchill	N	10	125											168
+Churchill	N	9	126											3102
+Wellspring	N	5	127											77
+Wellspring	N	3	128											1250
+Churchill	N	10	129											102
+Churchill	Y	7	130	2	2288	704.288	2029	655.934	7	10157	830.287	7420	895.754	2346
+Wellspring	N	7	131											525
+Wellspring	Y	5	132	2	3018	513.691	2816	621.986	12	31626	1235.188	22898	1275.105	1861
+Wellspring	N	2	133											393
+Wellspring	N	6	134											279
+Churchill	Y	9	135	2	1896	459.59	1765	496.398	3	4169	723.638	3497	670.017	2133
+Wellspring	Y	4	136	1	3469	483.901	3180	563.104	13	47631	1242.068	38330	1260.572	5475
+Churchill	Y	Control	137	1	1738	361.914	1387	433.638	7	16491	819.683	10910	899.824	2392
+Wellspring	Y	9	138	2	4703	772.572	4200	628.97	13	34542	1172.1	24496	1206.214	4539
+Wellspring	Y	Control	139	2	5475	615.805	5154	721.579	11	24674	1084.935	17028	1206.662	2885
+Wellspring	Y	Control	140	1	2276	463.475	2070	514.416	7	21531	1104.01	16234	1144.106	1971
+Churchill	Y	9	141	3	3808	596.789	3440	561.252	10	22101	967.921	17999	925.905	6116
+Churchill	N	5	142											116
+Churchill	Y	8	143	1	1694	540.602	1352	627.343	5	8565	685.506	5214	857.053	1046
+Churchill	N	6	144											1058
+Churchill	N	1	145											101
+Churchill	N	5	146											78.1
+Wellspring	Y	6	147	1	1778	512.925	1410	569.713	7	21221	974.179	17861	1173.604	402
+Churchill	Y	9	148	1	1583	601.347	1234	526.513	4	6473	689.522	5524	753.224	1040
+Wellspring	N	10	149											210
+Churchill	Y	4	150	3	3469	477.003	3151	502.581	5	6788	993.406	5941	1026.786	1462
+Churchill	Y	7	151	1	3214	561.852	2697	614.412	6	13367	849.072	11359	734.77	1955
+Churchill	N	6	152											680
+Churchill	Y	1	153	2	3545	609.878	3143	628.677	8	17308	903.053	15484	926.462	4469
+Churchill	Y	8	154	1	1621	491.594	1269	398.367	7	11131	795.241	8841	734.756	1318
+Wellspring	Y	4	155	1	1864	487.237	1587	527.1	7	17919	915.26	14216	984.852	6946
+Wellspring	Y	8	156	2	3792	540.31	3507	623.691	13	30321	1091.12	26130	1209.484	1526
+Churchill	Y	All10	157	1	2386	693.765	1989	554.162	9	26851	1029.94	21190	1086.617	5530
+Wellspring	Y	6	158	2	2262	636.284	1884	574.643	11	31298	1254.628	27279	1264.339	815
+Wellspring	Y	10	159	2	3316	619.365	2948	536.566	11	32241	1169.862	29983	1170.693	3846
+Wellspring	Y	4	160	2	3717	648.564	3333	623.791	7	11765	836.272	9282	847.563	1180
+Churchill	Y	Control	161	2	2577	712.612	1854	535.967	7	14898	802.274	10992	868.125	2298
+Churchill	Y	Control	162	2	3105	560.678	2811	580.19	12	20249	919.067	14716	997.855	1500
+Wellspring	Y	4	163	3	4593	681.322	4170	677.598	9	23707	1064.113	17921	1117.808	6377
+Churchill	Y	9	164	2	1735	520.36	1424	596.573	8	13676	822.268	9559	984.546	5136
+Churchill	Y	5	165	2	2671	550.841	2365	613.329	9	23161	1176.047	20176	987.47	1023
+Wellspring	Y	All10	166	2	2562	551.996	2263	643.603	9	26196	926.357	22007	957.082	10439
+Wellspring	Y	6	167	2	3603	568.67	3227	592.206	5	8397	721.481	7372	833.343	484
+Churchill	Y	4	168	1	1860	468.756	1699	545.814	9	21145	937.182	17776	1023.623	947
+Churchill	Y	All10	169	1	2769	625.3	1757	629.276	9	21369	943.054	20230	906.739	7496
+Churchill	Y	6	170	2	2986	670.516	2194	604.313	6	12042	601.955	11323	681.398	2087
+Churchill	Y	2	171	2	3268	669.751	2837	538.856	12	33113	1189.71	27594	1198.408	7606
+Churchill	N	10	172											48.4
+Wellspring	Y	9	173	2	2598	569.752	1906	690.373	10	19671	1115.448	17190	1090.593	4243
+Wellspring	N	9	174											114
+Churchill	Y	10	175	2	3443	541.88	3144	682.769	7	12919	843.765	11297	849.707	1104
+Wellspring	Y	9	176	2	1786	534.347	1628	644.369	2	1114	314.032	962	494.99	27.5
+Wellspring	N	2	177											2136
+Churchill	Y	6	178	1	3539	663.046	2254	581.667	8	20361	944.714	17960	962.842	2593
+Churchill	Y	8	179	2	4990	601.152	4634	828.384	12	25438	1067.98	21869	1088.777	1789
+Churchill	N	10	180											83.6
+Churchill	N	All10	181											2848
+Wellspring	N	9	182											25.3
+Wellspring	N	2	183											780
+Wellspring	Y	4	184	2	2402	652.507	1250	658.742	8	22388	1067.807	19333	1137.41	4864
+Churchill	Y	5	185	2	4696	915.692	4076	758.397	14	29999	1053.805	27006	1077.245	3782
+Wellspring	N	2	186											219
+Churchill	N	2	187											1110
+Churchill	N	10	188											51.7
+Churchill	Y	2	189	2	3449	636.387	2693	586.601	11	29549	1013.118	26932	1019.149	10680
+Wellspring	Y	10	190	2	4202	640.109	3564	532.305	7	16889	859.671	16104	831.55	2354
+Churchill	Y	Control	191	1	2660	716.369	2078	585.751	8	19283	928.629	17212	997.213	3135
+Churchill	N	1	192											48.4
+Wellspring	Y	5	193	2	2325	614.489	1784	672.631	9	26127	1111.373	25551	1046.865	3110
+Churchill	Y	10	194	2	1866	558.836	1432	723.196	8	11701	728.062	11314	794.725	3404
+Churchill	N	5	195											31.9
+Churchill	N	3	196											78.1
+Wellspring	N	8	197											96.8
+Wellspring	N	9	198											283
+Wellspring	N	2	199											330
+Churchill	N	3	200											52.8
+Wellspring	Y	7	201	2	4468	546.667	3334	617.854	13	40541	1188.656	38291	1240.896	5875
+Churchill	Y	2	202	2	1882	512.055	1456	719.786	2	973	345.386	840	295.081	12003
+Wellspring	Y	7	203	1	1186	332.503	955	421.039	6	15360	899.078	13546	868.217	7889
+Churchill	N	6	204											295
+Churchill	N	10	205											31.9
+Wellspring	Y	1	206	2	2627	555.709	2352	717.641	10	27582	1275.851	25549	1327.598	3489
+Wellspring	N	1	207											129
+Churchill	Y	4	208	2	2090	663.686	1759	580.979	9	19062	874.212	18500	833.254	1920
+Churchill	Y	5	209	2	3716	582.142	2322	680.586	3	4880	599.84	4791	691.895	42.9
+Wellspring	N	9	210											35.2
+Churchill	N	4	211											20.9
+Wellspring	N	8	212											30.8
+Churchill	Y	All10	213	2	1544	302.715	1181	347.167	10	21616	951.32	21229	956.672	7904
+Churchill	N	10	214											19.8
+Churchill	Y	4	215	3	4779	655.824	3984	658.828	11	17493	940.365	17138	958.212	1591
+Wellspring	N	8	216											14.3
+Wellspring	Y	7	217	2	4595	600.258	3080	621.71	12	44971	1445.783	36997	1483.088	4783
+Churchill	N	7	218											79.2
+Wellspring	N	1	219											74.8
+Wellspring	N	7	220											168
+Wellspring	Y	All10	221	2	2243	498.276	1645	637.632	2	2515	507.492	2387	635.029	2836
+Churchill	N	6	222											279
+Churchill	Y	9	223	2	4203	577.912	3776	653.753	10	18468	1052.472	15556	1028.196	3835
+Wellspring	Y	2	224											333
+Wellspring	N	7	225											224
+Churchill	Y	10	226	2	2914	539.084	2215	533.433	9	20949	965.971	17663	944.417	5963
+Churchill	Y	Control	227	2	3818	541.575	3534	573.82	11	29677	1086.888	27040	1043.237	2256
+Churchill	Y	9	228	2	1789	454.869	1488	502.157	6	9543	751.583	8328	659.171	2790
+Wellspring	N	9	229											788
+Churchill	Y	6	230	2	2749	528.333	2380	611.618	3	3683	596.146	3379	671.208	424
+Wellspring	N	All10	231											6135
+Wellspring	N	10	232											348
+Churchill	Y	6	233	2	3400	757.398	2979	699.906	8	23268	1044.283	21201	1031.623	2088
+Churchill	N	3	234											1119
+Churchill	N	7	235											268
+Churchill	N	6	236											135
+Wellspring	N	1	237											482
+Wellspring	Y	4	238	2	2524	625.269	2022	594.683	3	3548	456.601	3338	490.955	864
+Wellspring	Y	Control	239	1	1774	581.668	1410	510.783	7	25005	969.644	22039	958.137	2027
+Wellspring	N	3	240											1112
+Churchill	N	6	241											893
+Churchill	Y	4	242	2	3359	634.968	2885	564.3	11	27623	1118.832	26317	1124.519	3406
+Wellspring	Y	All10	243	1	1522	582.544	1078	606.712	11	27285	1136.441	23251	1122.582	3509
+Churchill	N	6	244											3044
+Churchill	N	9	245											2276
+Churchill	Y	8	246	2	3113	636.24	2641	686.646	7	12635	674.313	11810	666.668	211
+Churchill	N	5	247											83.6
+Churchill	Y	5	248	2	2749	614.545	2475	673.453	12	27879	1026.045	26194	1054.528	2270
+Churchill	Y	6	249	2	3227	669.606	2048	788.083	7	9854	742.988	9219	853.091	2277
+Wellspring	Y	Control	250	2	4274	702.582	3580	665.643	6	16134	894.206	14473	897.558	517
+Churchill	Y	8	251	2	2368	678.263	2088	618.734	8	16751	897.112	15087	852.882	1493
+Churchill	N	7	252											5179
+Wellspring	Y	8	253	2	2012	661.777	1534	796.375	7	15956	1002.98	14801	985.865	444
+Wellspring	Y	7	254	2	1340	472.187	1071	587.312	6	8795	821.828	6459	812.608	10262
+Wellspring	N	9	255											400
+Wellspring	Y	10	256	1	4255	653.954	3751	626.845	10	32637	1227.571	28254	1185.569	1764
+Churchill	Y	6	257	2	3435	653.245	2488	616.649	7	16998	994.722	16130	992.494	1494
+Wellspring	N	All10	258											5453
+Wellspring	N	8	259											33
+Churchill	N	3	260											3385
+Wellspring	Y	6	261	3	4138	701.965	3212	813.677	11	36476	1070.619	34902	1105.033	1299
+Churchill	Y	10	262	2	3765	610.273	3118	779.869	6	13676	813.274	13084	769.825	1778
+Wellspring	N	1	263											626
+Wellspring	Y	Control	264	2	4398	671.733	3656	656.467	8	22395	1005.455	20717	975.97	3686
+Wellspring	N	2	265											210
+Wellspring	Y	2	266	2	2780	695.37	2180	594.786	16	48927	1308.532	41238	1346.308	1129
+Churchill	Y	6	267	3	4818	719.93	3804	796.293	10	23340	989.44	21604	958.664	2651
+Churchill	Y	7	268	2	2579	636	1930	615	7	16915	838.512	15756	959.81	1177
+Churchill	Y	8	269	1	2508	783.256	1573	454.651	8	19648	909.972	18016	1021.422	1305
+Wellspring	Y	5	270	2	3140	666.825	2458	558.492	8	29424	1162.243	25832	1178.817	2520
+Churchill	N	6	271											859
+Wellspring	Y	4	272	2	2186	578.051	1769	674.824	12	33711	1188.233	30678	1294.439	2734
+Wellspring	N	7	273											139
+Churchill	N	4	274											200
+Churchill	N	7	275											151
+Wellspring	N	All10	276											2036
+Churchill	Y	All10	277	2	2050	543.561	1402	592.702	10	23256	1108.051	20930	1075.558	5563
+Churchill	N	1	278											117
+Churchill	N	7	279											144
+Wellspring	Y	7	280	2	2986	541.113	2304	635.993	15	49819	1352.914	40519	1375.539	2951
+Wellspring	N	7	281											107
+Wellspring	Y	1	282	1	2118	632.153	1642	707.8	7	22353	1031.402	19514	1121.59	1119
+Churchill	N	All10	283											2122
+Wellspring	N	10	284											52.8
+Churchill	N	4	285											331
+Wellspring	Y	3	286	2	3064	705.039	2365	682.247	10	22289	1058.252	20437	1078.718	2414
+Churchill	N	6	287											516
+Churchill	N	4	288											184
+Churchill	Y	7	289	2	3708	535.468	3045	680.869	9	24366	991.62	22949	985.483	2727
+Wellspring	Y	2	290	1	2565	511.236	2029	612.897	11	32057	1294.949	28932	1303.817	3148
+Wellspring	Y	All10	291	3	5790	633.991	5004	680.999	18	48524	1371.727	42944	1340.487	9767
+Wellspring	Y	6	292	2	3887	607.013	3427	568.317	13	38931	1279.009	33438	1329.441	541
+Wellspring	Y	5	293	2	3521	653.769	2639	943.666	13	37856	1265.778	32362	1256.867	4731
+Wellspring	N	9	294											120
+Wellspring	N	8	295											122
+Churchill	N	All10	296											1534
+Wellspring	N	9	297											97.9
+Wellspring	N	10	298											212
+Churchill	Y	5	299	3	4817	716.332	4214	815.138	10	22341	1102.877	19534	1118.153	2316
+Wellspring	Y	1	300	1	1276	644.356	963	563.268	6	12477	836.158	10503	844.854	564
+Wellspring	Y	Control	301	2	3709	690.213	2645	730.934	10	14933	835.959	13320	843.238	519
+Wellspring	N	4	302											128
+Wellspring	Y	3	303	2	2819	553.039	2374	684.087	11	30416	1347.081	26759	1207.066	3473
+Wellspring	Y	7	304	4	4920	680.978	4022	727.939	15	33281	1318.39	30064	1346.435	3439
+Churchill	N	7	305											37.4
+Wellspring	Y	2	306	2	1979	629.791	1429	688.518	7	23032	1152.503	19605	1057.741	4325
+Churchill	N	5	307											112
+Churchill	Y	8	308	2	1167	623.998	921	699.13	7	11364	722.889	10436	804.458	1189
+Churchill	N	All10	309											1167
+Churchill	Y	2	310	2	3604	642.505	2928	849.647	16	36084	1135.981	32483	1205.802	8845
+Wellspring	N	All10	311											1439
+Churchill	Y	Control	312	3	4916	567.073	4237	790.596	14	33340	1136.579	31418	1129.26	2827
+Wellspring	Y	10	313	2	3664	547.83	3465	473.928	12	39801	1228.197	29776	1156.334	5356
+Churchill	N	4	314											256
+Wellspring	Y	Control	315	2	2471	591.719	2312	482.999	9	30584	1353.756	23376	1378.265	1862
+Churchill	Y	3	316	1	1475	542.294	1329	593.854	4	6236	644.007	5007	762.013	1175
+Wellspring	N	All10	317											3614
+Churchill	N	10	318											125
+Wellspring	Y	2	319	2	4122	637.962	3946	640.574	12	33604	1201.942	21680	1256.07	2133
+Churchill	N	2	320											10238
+Churchill	Y	2	321	1	1481	443.972	1360	398.234	7	9347	688.298	7844	688.596	9793
+Churchill	Y	8	322	2	3061	672.755	2821	552.637	8	16488	841.301	12787	895.271	1539
+Wellspring	N	1	323											83.6
+Churchill	Y	10	324	1	1516	323.526	1348	323.911	6	8669	643.919	7577	707.035	857
+Wellspring	N	5	325											271
+Churchill	N	5	326											91.3
+Churchill	N	7	327											125
+Churchill	Y	6	328	1	1974	364.006	1836	402.442	6	6553	838.756	5037	883.189	549
+Churchill	Y	1	329	2	2031	595.953	1853	568.171	8	15551	796.812	12858	896.876	2035
+Wellspring	Y	6	330	2	3993	530.987	3796	588.388	10	28690	1169.203	18462	1162.419	2135
+Wellspring	N	9	331											119
+Wellspring	Y	6	332	2	4809	560.737	4619	587.73	12	46597	1298.304	38429	1391.926	2160
+Wellspring	Y	1	333	1	3987	556.274	3763	601.539	8	28764	1004.996	25145	1050.88	7106
+Wellspring	N	4	334											400
+Churchill	Y	7	335	2	1441	371.378	1354	422.852	9	21806	1057.993	18233	1155.147	3170
+Churchill	N	8	336											152
+Wellspring	Y	8	337	2	654	323.402	510	359.182	2	627	355.561	552	348.102	62.7
+Wellspring	Y	6	338	2	3368	486.577	3088	530.257	10	33484	1333.303	28057	1340.764	613
+Churchill	Y	All10	339	1	2408	626.824	2120	437.043	9	21935	1201.292	18821	1152.845	4754
+Churchill	Y	6	340	1	2691	608.796	2352	643.596	6	15987	841.15	14923	848.917	943
+Churchill	N	10	341											86.9
+Wellspring	Y	9	342	2	4984	591.195	4619	603.572	12	35551	1201.926	30907	1123.782	1318
+Wellspring	N	9	343											105
+Churchill	Y	1	344	2	4090	555.524								1938
+Churchill	Y	8	345	2	3382	587.938	3880	629.46	13	33672	1114.861	31228	1123.115	1295
+Churchill	Y	5	346	3	4094	586.419	2942	541.945	10	19690	1057.854	17986	940.124	427
+Wellspring	N	6	347				3602	644.582	11	15236	821.309	12768	822.976	276
+Churchill	N	3	348											123
+Churchill	N	4	349											416
+Wellspring	Y	1	350	2	1329	481.599	990	479.564	5	8923	674.64	5981	772.834	3715
+Wellspring	Y	4	351	1	2648	595.321	2261	631.453	11	30328	1177.216	23678	1253.97	4447
+Churchill	Y	3	352	2	3458	583.461	3181	589.616	8	27478	1056.764	25215	1034.553	354
+Churchill	Y	2	353	2	3856	581.32	3579	625.05	14	44804	1210.574	39487	1207.681	9321
+Wellspring	N	7	354											1394
+Wellspring	N	All10	355											3179
+Churchill	Y	3	356	2	3711	723.656	3437	646.885	7	15542	816.828	13683	855.564	730
+Churchill	N	7	357											171
+Wellspring	Y	6	358	1	2804	489.572	2483	683.382	8	29574	1156.685	24981	1197.798	1327
+Wellspring	Y	3	359	2	1694	511.56	1480	574.681	8	21829	1043.423	19878	981.877	5400
+Wellspring	Y	3	360	2	1831	479.313	1601	605.261	10	38376	1202.338	34235	1224.628	2563
+Churchill	Y	All10	361	2	2426	552.561	2151	565.063	16	39646	1181.156	32369	1222.746	4177
+Wellspring	Y	1	362	2	2350	622.609	1918	559.297	3	4664	627.478	4241	673.637	2489
+Wellspring	Y	5	363	2	3105	495.701	2862	554.175	15	50268	1332.935	46054	1351.178	312
+Churchill	N	10	364											1634
+Wellspring	Y	4	365	1	878	488.387	623	531.535	3	3468	590.126	2461	601.072	2790
+Wellspring	Y	6	366	1	974	451.054	796	525.469	7	17870	1019.279	16704	996.337	1692
+Wellspring	Y	7	367	2	4072	605.583	3819	554.15	17	53135	1341.821	33899	1372.022	2362
+Churchill	N	6	368											953
+Wellspring	N	6	369											276
+Churchill	N	9	370											1470
+Churchill	Y	6	371	2	1515	535.992	1377	524.24	8	21265	933.9	17578	1067.978	3816
+Churchill	N	2	372											18411
+Wellspring	N	5	373											101
+Churchill	N	7	374											253
+Churchill	N	3	375											409
+Churchill	N	3	376											91.3
+Wellspring	Y	1	377	2	3303	476.195	2863	579.528	13	51292	1212.731	42927	1295.374	5430
+Wellspring	N	9	378											60.5
+Wellspring	Y	3	379	1	1760	595.989	1585	565.032	8	10792	844.211	9284	827.741	4964
+Wellspring	N	All10	380											4687
+Wellspring	Y	7	381	2	3172	682.375	2830	579.131	13	47992	1214.067	39371	1174.604	5801
+Churchill	N	3	382											72.6
+Churchill	Y	7	383	2	3129	571.727	2840	678.075	13	26897	1174.43	23082	1229.445	3482
+Churchill	N	All10	384											5574
+Churchill	N	10	385											111
+Churchill	N	1	386											259
+Wellspring	Y	9	387	1	1133	595.532	825	480.776	5	12969	857.884	10522	724.441	3196
+Wellspring	N	10	388											290
+Wellspring	Y	1	389	2	4813	632.702	4301	630.711	8	21585	1020.17	19388	1040.575	1979
+Wellspring	N	6	390											145
+Churchill	N	9	391											1618
+Wellspring	N	2	392											713
+Wellspring	Y	3	393	1	2904	554.415	2455	628.622	7	18455	938.653	15804	988.683	6012
+Churchill	N	8	394											81.4
+Wellspring	Y	3	395	1	1588	736.265	1453	553.078	4	10849	797.069	8289	912.715	3665
+Churchill	N	5	396											55
+Wellspring	N	9	397											122
+Wellspring	N	4	398											585
+Churchill	N	4	399											472
+Wellspring	Y	8	400	1	1209	679.966	976	525.91	5	14880	795.289	13335	796.069	354
+Churchill	Y	Control	401	3	3887	662.952	3342	686.878	8	13131	793.033	11704	896.832	2641
+Churchill	Y	Control	402	3	3663	598.206	3406	602.113	5	6218	651.043	5748	620.472	110
+Churchill	N	4	403											270
+Churchill	Y	Control	404	1	2744	566.526	2487	581.292	6	11354	815.336	10575	848.144	887
+Churchill	Y	9	405	2	4921	675.12	4436	549.092	8	17505	853.53	16361	896.612	3849
+Wellspring	Y	5	406	2	2029	658.559	1863	491.596	3	3606	479.935	3268	529.374	163
+Wellspring	Y	3	407	2	1998	594.13	1814	529.159	7	16992	998.359	14507	858.764	1987
+Wellspring	Y	Control	408	2	2546	578.741	2303	485.673	10	29511	1091.365	26048	1086.351	2387
+Churchill	N	8	409											117
+Churchill	N	8	410											209
+Churchill	Y	1	411	1	1416	497.088	1097	341.362	8	11564	704.28	10970	878.929	3540
+Wellspring	Y	Control	412	2	524	543.466	368	411.12	11	28438	1140.774	26020	1255.296	2610
+Churchill	Y	6	413	1	2765	706.636	2407	601.974	8	18926	1022.739	16510	1053.406	2214
+Wellspring	Y	7	414	2	727	691.077	573	472.68	9	13128	842.746	11073	893.721	11961
+Churchill	N	8	415											89.1
+Churchill	Y	10	416	2	2205	544.777	1797	450.294	8	18956	847.742	17128	835.434	1398
+Churchill	Y	4	417	2	2328	527.848	1987	654.699	9	17699	822.67	15843	911.002	1898
+Wellspring	Y	2	418	2	2043	418.127	1810	415.698	7	18545	1035.084	14416	1121.473	2497
+Churchill	Y	3	419	3	4929	672.035	4455	589.931	9	18503	942.159	14916	1044.073	197
+Wellspring	N	All10	420											4473
+Churchill	N	All10	421											3866
+Churchill	Y	10	422	2	3384	567.867	3112	495.706	8	19612	1077.354	16537	1092.879	1983
+Wellspring	Y	2	423	2	3059	577.095	2815	543.849	10	27330	1069.633	22715	1115.313	1038
+Wellspring	N	1	424											82.5
+Wellspring	Y	5	425	2	3273	570.024	2499	540.64	11	23522	1031.035	20452	1004.236	1297
+Churchill	Y	All10	426	2	2755	433.85	2556	431.014	12	26897	1153.912	23278	1113.688	3851
+Wellspring	N	All10	427											3583
+Wellspring	N	3	428											736
+Churchill	N	All10	429											4922
+Churchill	N	2	430											8508
+Churchill	Y	All10	431	1	2975	550.376	2580	591.873	11	30612	1066.706	26352	1064.076	1570
+Wellspring	N	6	432											197
+Churchill	N	2	433											51.7
+Churchill	Y	10	434	1	2786	586.756	2564	468.008	9	24471	1259.331	20929	1258.033	3688
+Churchill	Y	4	435	2	3868	506.78	3574	543.768	13	31582	1219.813	27055	1196.956	3100
+Churchill	N	1	436											75.9
+Churchill	Y	6	437	1	1481	543.647	1126	566.777	4	8286	612.638	7342	654.032	1380
+Churchill	Y	5	438	1	1641	420.629	1360	399.865	6	9630	745.242	7916	759.045	794
+Wellspring	Y	Control	439	2	4215	460.083	3969	612.968	12	33298	1222.006	26606	1307.239	2622
+Wellspring	N	10	440											39.6
+Churchill	N	10	441											47.3
+Wellspring	Y	2	442	2	2025	561.239	1880	623.854	7	9048	735.581	7859	757.933	4316
+Wellspring	Y	3	443	1	1381	301.983	1259	366.079	7	18077	954.467	14921	916.799	3183
+Wellspring	Y	9	444	2	2420	592.799	2293	762.161	4	5000	779.92	4643	761.945	55
+Wellspring	N	3	445											942
+Wellspring	N	4	446											135
+Wellspring	N	6	447											153
+Churchill	N	4	448											105
+Churchill	Y	Control	449	2	3230	564.884	2844	709.294	7	12092	753.093	10875	813.443	2742
+Churchill	Y	3	450	2	2623	580.22	2411	592.042	7	13086	817.911	10929	835.749	684
+Churchill	N	All10	451											2312
+Churchill	N	2	452											4382
+Churchill	Y	All10	453											
+Wellspring	N	1	454											38.5
+Churchill	N	4	455											52.8
+Churchill	N	7	456											201
+Wellspring	N	5	457											
+Churchill	Y	All10	458	2	2365	622.35	1906	500.988	8	19375	918.643	18529	970.888	
+Churchill	Y	10	459	3	5541	620.974	5078	507.037	11	29764	1145.063	26196	1185.095	
+Wellspring	N	9	460											
+Wellspring	N	4	461											
+Wellspring	Y	9	462	2	2691	531.921	2475	579.835	7	21167	987.652	17398	1033.382	
+Churchill	N	All10	463											
+Wellspring	N	5	464											
+Wellspring	Y	9	465	1	2224	450.058	2037	550.38	9	31551	1029.724	28405	1063.346	
+Churchill	N	2	466											
+Churchill	Y	9	467	2	2790	466.069	2594	586.527	7	17292	1045.774	14395	1012.41	
+Churchill	Y	9	468	2	4228	573.001	3896	647.696	13	43883	1127.298	37610	1179.245	
+Churchill	Y	6	469	2	2242	564.876	1936	680.144	7	16012	905.641	14008	971.298	
+Wellspring	Y	6	470	2	3248	539.873	2555	800.629	6	15648	1002.652	11787	966.962	
+Churchill	Y	Control	471	2	3420	651.119	3111	603.97	7	22678	1000.857	17902	1015.786	
+Churchill	N	8	472											
+Wellspring	Y	2	473	2	2205	587.505	1789	601.554	6	20313	883.091	18022	870.053	
+Wellspring	N	3	474											
+Wellspring	Y	2	475	3	3950	597.887	3527	692.439	8	9602	839.838	8339	882.051	
+Wellspring	Y	6	476	2	4880	772.701	4461	771.337	9	34594	1257.057	29721	1257.845	
+Churchill	N	8	477											
+Wellspring	N	1	478											
+Churchill	Y	7	479	1	1832	667.41	1448	600.169	5	9582	714.997	8754	785.34	
+Wellspring	Y	Control	480	2	3154	501.89	2869	651.309	11	40888	1222.634	37137	1305.616	
+Wellspring	Y	Control	481	2	2516	608.61	2219	561.542	11	29428	1233.141	25465	1183.723	
+Churchill	Y	2	482	2	3068	563.346	2614	608.428	11	28547	1196.345	24066	1167.406	
+Churchill	N	3	483											
+Churchill	Y	1	484	2	3014	557.416	2681	484.774	7	13458	802.273	12185	911.243	
+Wellspring	Y	7	485	2	2226	554.635	2010	499.441	6	13313	742.01	10378	690.727	
+Wellspring	N	8	486											
+Wellspring	Y	8	487	2	3124	595.982	2845	788.044	10	30609	1152.523	24482	1234.754	
+Wellspring	N	7	488											
+Churchill	Y	3	489	2	1752	547.624	1421	645.429	6	12019	806.787	9816	766.898	
+Churchill	Y	All10	490	1	1704	513.361	1290	667.284	6	12408	785.949	9595	828.294	
+Churchill	N	10	491											
+Churchill	Y	All10	492	2	2627	525.366	2453	750.325	12	28103	1182.67	24318	1211.782	
+Churchill	Y	2	493	2	4311	619.403	3763	672.952	14	37622	1262.381	29828	1303.757	
+Wellspring	Y	8 (put in 5 too…)	494											
+Wellspring	N	3	495											
+Wellspring	Y	2	496	2	2785	568.139	2565	607.252	13	37936	1266.86	30115	1328.01	
+Churchill	Y	2	497	2	2213	537.014	1905	613.206	10	18166	848.994	16358	863.713	
+Wellspring	N	7	498											
+Wellspring	N	4	499											
+Wellspring	N	3	500											
+Wellspring	Y	3	501	2	3596	453.486	3131	501.708	12	51373	1322.277	46428	1311.856	
+Wellspring	Y	All10	502	2	2915	750.058	1999	733.716	10	26934	1091.385	20609	1146.406	
+Churchill	Y	5	503	2	4526	670.929	4051	562.327	13	28052	1132.916	23882	1115.34	
+Wellspring	Y	8	504	3	5218	680.294	4711	629.661	18	49550	1288.688	42196	1323.537	
+Churchill	N	8	505											
+Churchill	N	All10	506											
+Wellspring	N	3	507											
+Churchill	N	5	508											
+Churchill	Y	9	509	1	2193	588.167	2036	551.676	6	11170	827.391	9122	754.045	
+Churchill	Y	2	510	2	1901	663.034	1775	486.097	7	15865	827	12473	871.143	
+Wellspring	N	7	511											
+Wellspring	Y	10	512	2	4394	665.333	4274	563.534	14	50447	1359.095	39919	1313.854	
+Churchill	N	9	513											
+Wellspring	Y	1	514	3	2611	546.274	2431	552.781	8	15913	982.639	11980	990.129	
+Churchill	N	9	515											
+Churchill	N	8	516											
+Churchill	N	4	517											
+Wellspring	N	5	518											
+Churchill	Y	8	519	1	2042	569.407	1899	495.442	7	14857	906.437	11416	908.182	
+Wellspring	Y	All10	520	1	3316	552.417	3171	500.431	15	45430	1355.762	33138	1317.004	
+Churchill	Y	4	521	1	2567	717.811	2411	593.412	2	3664	504.325	3238	570.024	
+Churchill	N	1	522											
+Churchill	N	5	523											
+Churchill	N	6	524											
+Wellspring	Y	All10	525	2	2492	487.409	2354	451.311	10	21044	957.332	17860	999.238	
+Churchill	N	1	526											
+Churchill	N	2	527											
+Churchill	Y	1	528	2	3355	818.708	3205	512.813	9	24800	1120.288	21522	1098.617	
+Wellspring	Y	8	529	2	3621	611.03	3023	514.959	9	27831	1138.421	22513	1117.855	
+Churchill	N	1	530											
+Wellspring	Y	5	531	1	1799	515.573	1705	575.777	6	21821	1111.884	17748	1165.575	
+Wellspring	N	3	532											
+Churchill	N	7	533											
+Wellspring	Y	10	534	2	2604	427.113	2486	475.552	8	30927	1097.356	24497	1085.991	
+Churchill	Y	7	535	1	2684	568.403	2357	503.596	7	12804	789.706	10478	796.97	
+Wellspring	Y	7	536	2	2973	540.649	2872	513.796	12	31144	1183.162	28874	1218.924	
+Wellspring	Y	8	537	2	4441	625.392	4239	551.171	12	32816	1214.931	26107	1225.954	
+Churchill	N	5	538											
+Churchill	Y	10	539	2	3263	579.386	3058	544.446	9	15977	887.782	12202	1039.824	
+Churchill	N	7	540											
+Wellspring	Y	6	541	2	2793	597.497	2566	549.45	11	35462	1440.539	29075	1327.93	
+Churchill	Y	3	542	1	1873	471.557	1553	451.853	5	8094	671.946	5639	713.584	
+Wellspring	N	8	543											
+Wellspring	N	2	544											
+Wellspring	Y	3	545	3	3063	510.482	2892	533.014	12	35998	1478.622	30754	1276.974	
+Churchill	N	3	546											
+Wellspring	N	2	547											
+Churchill	Y	9	548	2	1654	340.131	1567	461.049	13	39525	1135.992	35854	1267.044	
+Churchill	N	8	549											
+Churchill	N	2	550											
+Churchill	N	4	551											
+Churchill	N	6	552											
+Churchill	Y	7	553	2	2054	615.666	1898	445.691	9	20004	1027.457	18581	1007.522	
+Wellspring	N	2	554											
+Churchill	Y	All10	555	2	1987	443.058	1837	448.104	11	23522	989.7	18967	1040.56	
+Wellspring	Y	All10	556	2	1963	490.812	1822	489.34	7	20803	936.915	17613	896.026	
+Wellspring	N	All10	557											
+Churchill	Y	8	558	2	1783	472.195	1686	488.926	5	3380	408.7	2857	453.999	
+Wellspring	Y	2	559	1	2792	532.831	2629	555.323	9	36860	1183.581	31424	1249.302	
+Churchill	Y	All10	560	2	1634	258.76	1463	293.996	13	35127	1120.782	28970	1169.042	
+Wellspring	Y	6	561	2	1749	452.374	1598	436.7	10	29746	1144.846	24326	1125.05	
+Churchill	Y	7	562	3	3300	494.484	3115	547.568	10	20393	934.041	16511	1000.486	
+Wellspring	N	4	563											
+Wellspring	N	8	564											
+Wellspring	Y	All10	565	2	2224	445.384	1907	552.588	8	16370	882.074	12993	854.764	
+Churchill	Y	7	566	2	3571	530.866	3364	541.02	11	25166	1044.821	19888	1149.72	
+Churchill	Y	4	567	2	1841	463.523	1740	425.823	7	12509	819.406	9278	875.486	
+Churchill	Y	3	568	2	2537	456.804	2323	485.551	9	19196	892.543	16458	917.01	
+Wellspring	N	All10	569											
+Wellspring	Y	8	570	2	2684	590.206	2494	676.493	10	28369	1083.143	21214	1133.589	
+Churchill	Y	1	571	1	2004	623.749	1827	524.24	6	12369	772.808	9572	797.544	
+Wellspring	N	3	572											
+Wellspring	Y	3	573	2	4038	508.406	3834	518.133	17	63411	1369.517	54065	1409.94	
+Wellspring	Y	6	574	2	1548	530.413	1389	538.723	7	20468	892.48	16031	1016.689	
+Churchill	Y	7	575	1	1519	457.901	1205	467.663	5	6246	658.976	4993	657.385	
+Churchill	N	2	576											
+Wellspring	N	8	577											
+Churchill	Y	1	578	2	2418	508.473	2294	577.548	2	3332	836.953	3149	815.421	
+Wellspring	Y	9	579	2	2857	574.49	2696	559.231	9	25907	1028.719	22613	1046.181	
+Wellspring	N	4	580											
+Wellspring	Y	Control	581	1	1808	469.659	1614	418.624	4	12116	696.77	11295	824.931	
+Wellspring	Y	1	582	2	2241	602.034	2048	450.389	7	22748	990.649	18118	1050.813	
+Churchill	Y	7	583	2	3006	598.93	2670	514.689	9	24977	1115.925	21015	1165.225	
+Churchill	N	10	584											
+Wellspring	Y	10	585	2	4288	661.361	3554	572.362	8	22575	1009.872	20890	1026.865	
+Wellspring	N	9	586											
+Wellspring	Y	7	587	1	1526	554.126	1403	520.245	6	14620	1131.143	11367	1178.483	
+Churchill	N	5	588											
+Churchill	Y	8	589	1	2114	509.456	1878	647.151	7	20426	996.755	18193	974.246	
+Wellspring	N	7	590											
+Wellspring	Y	6	591	1	1170	626.994	1066	529.367	4	5837	636.134	4605	754.387	
+Wellspring	N	6	592											
+Churchill	Y	3	593	2	4259	682.958	3973	609.003	10	33097	1099.911	30225	1063.845	
+Wellspring	N	1	594											
+Wellspring	N	10	595											
+Wellspring	Y	All10	596	2	4121	526.245	3760	592.933	17	67064	1391.438	57498	1440.115	
+Wellspring	N	10	597											
+Churchill	N	3	598											
+Churchill	N	8	599											
+Wellspring	N	5	600											
+Wellspring	Y	9	601	2	3750	518.857	3415	627.106	11	33990	1082.357	30074	1098.1	
+Wellspring	Y	5	602	1	2894	531.717	2606	566.42	8	30907	1077.241	26627	1088.916	
+Wellspring	Y	1	603	2	3881	529.235	3553	682.273	14	48098	1331.706	43347	1365.973	
+Wellspring	N	6	604											
+Wellspring	Y	6	605	2	1186	408.071	905	490.479	6	8632	609.35	6748	764.094	
+Wellspring	N	2	606											
+Churchill	N	3	607											
+Churchill	N	6	608											
+Wellspring	Y	2	609	2	4218	523.027	3803	488.15	14	43916	1251.05	39495	1227.76	
+Churchill	Y	8	610	2	1908	484.088	1705	536.312	7	10935	682.154	9020	755.311	
+Churchill	Y	9	611	1	2040	326.4	1723	377.97	8	18846	975.08	16884	991.263	
+Churchill	N	3	612											
+Churchill	Y	All10	613	2	2648	427.578	2137	500.788	11	30513	1065.933	24871	1087.053	
+Wellspring	Y	4	614	2	4590	568.508	3973	713.59	14	49552	1383.508	46134	1428.618	
+Churchill	N	7	615											
+Wellspring	N	6	616											
+Churchill	N	3	617											
+Churchill	N	7	618											
+Wellspring	N	10	619											
+Churchill	N	4	620											
+Wellspring	Y	All10	621	2	2517	452.889	1923	583.997	6	12263	769.376	8620	845.743	
+Wellspring	Y	8	622	1	1134	367.69	750	462.529	5	15063	759.529	11668	885.828	
+Churchill	Y	9	623	1	1803	443.269	1561	512.422	7	12611	720.758	9956	797.005	
+Churchill	Y	4	624	1	2857	547.293	2581	500.688	13	38820	1125.382	34481	1210.068	
+Churchill	Y	9	625	2	1788	205.083	1607	312.016	8	26060	1005.039	25143	1068.009	
+Wellspring	Y	3	626	1	1834	397.589	1675	474.513	6	16778	889.239	13175	913.345	
+Wellspring	N	8	627											
+Wellspring	N	All10	628											
+Wellspring	N	5	629											
+Wellspring	Y	2	630	1	1389	339.166	1205	508.058	6	19182	956.747	13829	965.691	
+Churchill	Y	All10	631	1	1824	352.714	1687	352.826	7	17458	793.814	12822	892.349	
+Wellspring	N	3	632											
+Churchill	Y	6	633	2	3065	564.664	2929	497.831	12	28939	1077.104	26376	1126.212	
+Churchill	N	6	634											
+Churchill	Y	Control	635	2	4430	606.763	4294	581.417	11	21033	972.592	18108	1068.978	
+Churchill	Y	3	636	3	5326	557.408	5180	673.619	12	41294	1214.33	36321	1263.169	
+Wellspring	N	6	637											
+Wellspring	Y	3	638	1	2732	511.137	2487	560.637	9	28603	1058.12	25004	1123.164	
+Wellspring	Y	All10	639	2	3226	554.056	3083	600.279	12	44106	1334.108	36973	1340.236	
+Churchill	N	All10	640											
+Churchill	Y	10	641	2	2802	531.885	2668	610.501	10	19103	1138.113	16837	1232.592	
+Wellspring	Y	10	642	2	4951	580.763	4684	587.018	20	45899	1416.847	39867	1395.864	
+Wellspring	N	2	643											
+Wellspring	N	3	644											
+Wellspring	N	3	645											
+Wellspring	Y	4	646	2	2051	436.407	1958	436.759	12	32232	1271.528	26988	1286.668	
+Wellspring	N	4	647											
+Churchill	N	9	648											
+Churchill	Y	9	649	2	1900	487.636	1814	420.095	2	2966	455.809	2754	393.834	
+Wellspring	N	3	650											
+Churchill	N	8	651											
+Wellspring	Y	10	652	2	2190	468.213	1896	512.343	8	23220	1135.603	21109	1202.416	
+Wellspring	Y	4	653	2	3342	557.792	3249	589.397	10	43426	1216.301	35793	1253.83	
+Churchill	Y	5	654	2	2126	592.581	1918	567.677	8	20907	884.849	17744	876.554	
+Churchill	Y	6	655	2	1995	534.435	1886	529.544	9	19988	1113.341	17319	1107.869	
+Churchill	N	9	656											
+Wellspring	N	5	657											
+Wellspring	N	1	658											
+Wellspring	Y	5	659	1	1510	504.237	1283	499.361	6	19424	1039.901	15508	1075.434	
+Wellspring	N	All10	660											
+Churchill	Y	2	661	1	2090	616.637	1915	611.322	8	22035	999.095	17807	921.372	
+Churchill	N	All10	662											
+Wellspring	Y	2	663	1	1033	536.734	963	510.31	4	6570	619.595	5120	635.935	
+Wellspring	N	10	664											
+Churchill	N	5	665											
+Wellspring	N	All10	666											
+Churchill	N	2	667											
+Wellspring	N	4	668											
+Churchill	Y	7	669	2	1472	534.187	1426	417.099	7	14465	673.012	13474	745.618	
+Churchill	N	All10	670											
+Churchill	Y	6	671	2	3431	486.313	3274	496.061	13	26089	1156.894	22450	1232.007	
+Churchill	Y	1	672	2	2171	408.246	2067	441.01	9	25290	974.32	23454	998.864	
+Wellspring	N	7	673											
+Churchill	N	10	674											
+Wellspring	N	10	675											
+Wellspring	N	10	676											
+Churchill	Y	5	677	2	2373	370.129	2272	542.57	8	18018	976.217	17219	964.403	
+Churchill	Y	4	678	1	3297	567.869	2978	590.907	7	15098	746.447	13473	776.776	
+Churchill	N	8	679											
+Wellspring	N	10	680											
+Wellspring	N	2	681											
+Churchill	N	6	682											
+Churchill	N	9	683											
+Churchill	Y	2	684	2	3135	550.961	3018	542.119	13	34123	1021.122	31579	1101.429	
+Wellspring	Y	5	685	2	5033	635.519	4780	686.387	12	40624	1366.141	36653	1356.059	
+Wellspring	Y	8	686	2	2976	599.521	2821	643.213	9	12528	834.952	11897	835.961	
+Wellspring	N	9	687											
+Wellspring	Y	1	688	1	2139	435.569	1883	571.861	9	30712	1535.209	26988	1310.781	
+Churchill	N	9	689											
+Wellspring	N	5	690											
+Wellspring	Y	All10	691	2	3643	502.084	3223	574.597	11	30793	1178.369	26728	1178.2	
+Churchill	N	6	692											
+Churchill	N	1	693											
+Wellspring	Y	8	694	2	3730	493.001	3567	540.347	11	33505	1134.866	31080	1178.288	
+Wellspring	N	6	695											
+Wellspring	Y	1	696	2	3545	551.67	3414	613.928	4	6574	698.467	6291	622.211	
+Wellspring	N	6	697											
+Wellspring	N	2	698											
+Wellspring	N	7	699											
+Churchill	Y	2	700	1	1552	529.348	1454	428.382	10	25559	1018.584	24338	1085.938	
+Wellspring	N	5	701											
+Wellspring	Y	10	702	2	2762	579.085	2662	531.034	12	39045	1156.766	32831	1146.879	
+Churchill	Y	1	703	1	1555	397.452	1441	307.411	7	18930	898.359	15865	946.464	
+Churchill	N	9	704											
+Churchill	N	9	705											
+Wellspring	Y	8	706	2	2648	537.406	2500	566.15	12	26872	1073.452	22908	1103.893	
+Churchill	Y	3	707	2	3359	554.742	3183	696.659	11	22329	984.198	20051	993.913	
+Churchill	N	All10	708											
+Wellspring	N	4	709											
+Churchill	Y	2	710	2	4297	606.259	4118	655.933	15	36242	1181.235	28214	1180.478	
+Churchill	N	4	711											
+Churchill	Y	2	712	2	2066	318.626	1965	335.499	14	41357	1188.201	35059	1206.65	
+Wellspring	Y	9	713	2	2014	517.679	1877	657.025	5	12762	807.409	11418	791.575	
+Churchill	Y	10	714	3	2523	547.298	2354	498.28	10	24914	1098.247	21854	1136.506	
+Churchill	Y	Control	715	2	1669	319.459	1579	314.429	8	17099	896.464	15331	912.525	
+Churchill	Y	Control	716	2	2459	502.153	2324	485.544	6	13141	808.06	11854	814.904	
+Wellspring	Y	10	717	2	2986	759.645	2857	549.043	13	37187	1204.431	34259	1232.665	
+Churchill	Y	6	718	2	3307	594.64	3175	531.228	10	24693	1023.776	23316	1047.39	
+Wellspring	N	6	719											
+Churchill	N	3	720											
+Wellspring	N	9	721											
+Wellspring	N	1	722											
+Wellspring	N	10	723											
+Wellspring	N	3	724											
+Wellspring	Y	7	725	2	2862	628.876	2790	418.779	12	43896	1242.412	37045	1175.952	
+Churchill	N	4	726											
+Churchill	N	2	727											
+Churchill	Y	2	728	2	2396	446.846	2362	484.391	11	32174	1063.976	29753	1053.971	
+Wellspring	N	9	729											
+Wellspring	Y	5	730	2	3253	481.433	3175	661.743	13	42541	1184.93	33446	1213.376	
+Wellspring	N	4	731											
+Wellspring	Y	All10	732	1	2013	510.484	1962	483.558	8	22409	967.646	19328	984.451	
+Wellspring	N	8	733											
+Wellspring	Y	All10	734	2	4427	640.251	4316	570.601	18	56934	1302.661	48348	1420.519	
+Churchill	Y	5	735	2	2432	451.461	2368	500.3	6	23030	1022.44	18903	1010.032	
+Wellspring	Y	5	736	2	1860	536.528	1810	618.937	9	29085	1042.521	25212	995.223	
+Churchill	Y	5	737	1	1929	614.062	1845	687.089	6	13303	775.289	11877	689.832	
+Wellspring	N	1	738											
+Wellspring	N	1	739											
+Churchill	N	8	740											
+Wellspring	N	1	741											
+Churchill	Y	Control	742	1	2250	266.662	2238	258.863	10	27283	981.269	23271	1050.55	
+Wellspring	Y	2	743	1	1593	483.223	1478	435.736	4	7868	755.338	5978	731.393	
+Wellspring	Y	8	744	2	4388	465.535	4276	570.757	12	48460	1256.955	43247	1285.146	
+Wellspring	Y	5	745	2	2897	714.485	2810	619.419	13	46626	1652.029	41821	1172.678	
+Churchill	N	7	746											
+Churchill	Y	Control	747	2	1676	524.011	1605	523.614	3	5313	647.302	4694	651.181	
+Wellspring	Y	5	748	1	980	401.888	907	539.071	2	2783	478.385	1917	553.22	
+Wellspring	N	6	749											
+Churchill	Y	4	750	2	2729	430.52	2651	421.68	6	13544	803.767	10199	887.879	
+Churchill	N	4	751											
+Churchill	N	2	752											
+Churchill	N	9	753											
+Churchill	N	All10	754											
+Wellspring	Y	9	755	2	2803	547.606	2713	484.223	8	23972	993.704	18988	1070.481	
+Churchill	N	1	756											
+Wellspring	Y	Control	757	2	2739	480.366	2566	647.504	10	37472	1205.57	32384	1237.754	
+Wellspring	Y	4	758	3	5153	600.452	4990	581.161	16	54989	1337.817	47791	1386.924	
+Wellspring	Y	7	759	1	2607	503.387	2474	531.697	10	32457	1101.266	28751	1096.091	
+Churchill	Y	2	760	2	1714	525.71	1665	486.263	5	9035	661.905	8487	712.255	
+Wellspring	N	8	761											
+Wellspring	N	10	762											
+Churchill	Y	1	763	2	2406	513.578	2213	452.873	7	18551	884.782	16790	982.38	
+Wellspring	Y	1	764	1	1499	520.217	1432	503.136	5	7654	627.142	7241	599.406	
+Churchill	N	3	765											
+Wellspring	N	6	766											
+Wellspring	Y	5	767	1	2800	642.889	2707	616.247	10	37397	1205.181	34924	1211.967	
+Churchill	Y	10	768	1	1134	290.18	1089	364.554	9	19972	973.499	19015	987.92	
+Wellspring	Y	9	769	2	2057	553.359	1938	624.922	8	18279	823.474	16055	918.006	
+Churchill	Y	9	770	2	3651	661.56	3497	574.395	11	24253	941.683	21091	971.023	
+Wellspring	N	8	771											
+Churchill	Y	Control	772	2	2827	537.672	2690	506.221	10	27687	1112.409	25571	1137.618	
+Wellspring	N	5	773											
+Churchill	N	10	774											
+Wellspring	Y	All10	775	1	1623	484.772	1543	486.546	7	22398	1015.936	19823	1006.637	
+Churchill	N	9	776											
+Wellspring	N	All10	777											
+Churchill	N	1	778											
+Churchill	Y	9	779	2	4933	585.158	4747	590.25	15	41601	1239.06	34496	1261.66	
+Wellspring	N	7	780											
+Churchill	Y	1	781	1	2270	564.955	2023	456.318	8	25176	1043.31	21923	1081.239	
+Wellspring	N	All10	782											
+Churchill	Y	3	783	2	2855	663.705	2739	578.231	10	28128	1325.017	24422	1491.582	
+Wellspring	Y	4	784	2	2776	585.053	2634	536.237	13	48968	1373.009	44048	1425.232	
+Wellspring	N	5	785											
+Wellspring	N	1	786											
+Wellspring	Y	3	787	2	2894	631.065	2715	541.488	10	35060	1128.598	29545	1194.642	
+Wellspring	N	1	788											
+Churchill	Y	10	789	2	3593	365.482	3573	376.723	13	36493	1116.514	34120	1068.462	
+Wellspring	Y	1	790	1	2744	556.896	2622	494.389	10	32500	1317.541	27582	1088.153	
+Wellspring	Y	3	791	1	2178	362.402	2035	384.925	13	49376	1397.591	40644	1425.88	
+Churchill	Y	All10	792	1	2355	437.656	2217	430.226	8	18442	800.089	17271	852.995	
+Wellspring	Y	9	793	2	4400	628.886	4252	554.339	12	46594	1287.784	43875	1227.183	
+Wellspring	N	9	794											
+Churchill	N	3	795											
+Churchill	Y	5	796	2	2257	311.749	2101	462.446	12	33071	1222.39	31339	1304.697	
+Churchill	N	8	797											
+Churchill	Y	4 ( 5 too…)	798											
+Wellspring	Y	1	799	2	3633	555.447	3475	671.655	10	35861	1208.646	32688	1251.937	
+Wellspring	N	3	800											
+Churchill	N	5	801											
+Churchill	N	5	802											
+Wellspring	N	8	803											
+Wellspring	Y	1	804	2	3071	497.256	2947	648.159	14	57067	1427.556	48925	1417.979	
+Wellspring	Y	Control	805	1	1625	455.819	1291	601.229	6	13467	739.112	11432	740.907	
+Churchill	Y	3	806	2	3409	527.386	3258	680.657	12	32409	1131.698	26261	1128.313	
+Churchill	N	3	807											
+Wellspring	N	10	808											
+Churchill	N	2	809											
+Wellspring	N	5	810											
+Wellspring	Y	1	811	2	2370	615.125	2250	910.893	8	27241	1065.593	20749	1119.703	
+Churchill	Y	1	812	2	1767	520.176	1635	499.446	8	15932	872.381	13959	964.141	
+Churchill	N	1	813											
+Wellspring	Y	4	814	2	3960	628.174	3724	640.307	14	35223	1358.607	29509	1239.907	
+Churchill	N	1	815											
+Wellspring	Y	9	816	2	4450	647.368	4241	709.138	13	53170	1331.431	45144	1441.911	
+Churchill	Y	4	817	2	2032	537.353	1953	578.01	7	15244	712.067	13649	827.488	
+Churchill	N	7	818											
+Churchill	Y	All10	819	1	2048	460.555	1808	552.957	7	21803	963.919	18655	939.098	
+Wellspring	Y	2	820	1	1620	516.521	1510	572.023	4	10131	694.607	8674	758.452	
+Churchill	N	4	821											
+Wellspring	Y	5	822	2	2263	510.6	2010	586.067	9	24938	1038.684	19106	1040.838	
+Churchill	N	6	823											
+Churchill	N	2	824											
+Wellspring	Y	All10	825	2	4782	585.358	4501	697.686	16	57474	1300.298	48387	1309.831	
+Wellspring	N	5	826											
+Churchill	N	5	827											
+Wellspring	Y	All10	828	2	2522	482.47	2411	652.147	11	33703	1163.093	28873	1022.012	
+Wellspring	Y	10	829	2	4564	657.325	4259	543.473	13	42630	1160.243	35017	1296.936	
+Churchill	Y	9	830	1	2243	553.945	2087	583.483	10	18753	1041.484	14396	1084.476	
+Churchill	Y	3	831	2	3967	654.729	3809	590.14	10	24296	1056.736	21041	1096.462	
+Wellspring	Y	7	832	2	3018	514.351	2879	820.971	14	50088	1386.043	40912	1378.366	
+Churchill	Y	1	833	1	2549	666.499	2338	691.389	8	22630	958.314	19891	861.461	
+Churchill	N	7	834											
+Churchill	Y	3	835	1	2579	618.306	2367	631.458	7	19826	1005.049	17324	1029.493	
+Churchill	Y	1	836	2	1813	576.46	1730	550.013	7	11415	712.969	10491	659.156	
+Wellspring	Y	5	837	2	5262	654.947	5074	674.583	13	51865	1243.345	46397	1268.774	
+Wellspring	Y	9	838	2	2867	613.593	2696	538.136	9	39131	1243.958	33643	1181.546	
+Churchill	N	All10	839											
+Wellspring	Y	2	840	2	4172	647.576	3923	637.133	13	42045	1037.335	36623	1122.756	
+Wellspring	N	8	841											
+Churchill	N	9	842											
+Wellspring	Y	4	843	2	2612	622.229	2490	444.922	11	30838	1214.755	25131	1215.683	
+Wellspring	Y	Control	844	2	3941	596.212	3788	582.179	11	43377	1300.879	38374	1295.817	
+Churchill	N	8	845											
+Churchill	Y	4	846	1	2385	501.61	2153	557.952	7	19478	978.434	15359	1074.63	
+Wellspring	Y	Control	847	1	1765	497.838	1442	539.928	6	18454	892.285	15124	911.204	
+Wellspring	Y	9	848	1	1286	481.014	1181	506.791	5	18365	958.228	15121	911.234	
+Churchill	Y	1	849	2	4254	562.406	4084	637.118	12	28498	1100.438	26294	1168.878	
+Churchill	Y	5	850	2	2920	734.419	2681	544.877	4	7241	561.38	6339	590.163	
+Churchill	N	All10	851											
+Churchill	Y	5	852	2	2019	431.782	1922	377.568	13	28944	1189.239	26545	1166.973	
+Wellspring	Y	8	853	1	1397	410.049	1289	429.18	6	13848	885.535	11328	930.357	
+Wellspring	Y	5	854	2	2029	540.17	1897	526.574	8	23928	1085.527	19111	1072.556	
+Churchill	N	All10	855											
+Churchill	N	2	856											
+Wellspring	Y	8	857	2	2526	450.184	2324	397.964	9	29640	1263.057	25741	1279.771	
+Wellspring	N	2	858											
+Churchill	N	2	859											
+Churchill	Y	All10	860	2	2512	542.878	2382	497.031	9	22973	975.605	20916	1019.566	
+Wellspring	N	All10	861											
+Wellspring	Y	3	862	1	1923	355.846	1816	477.325	9	25055	939.159	22678	1023.503	
+Churchill	Y	9	863	1	940	287.794	859	408.617	7	17633	843.533	15714	950.808	
+Churchill	Y	2	864	2	2031	454.174	1940	561.297	7	10244	641.078	9726	701.356	
+Churchill	Y	All10	865	2	2187	560.913	2029	475.303	9	19589	743.071	16116	829.548	
+Churchill	N	10	866											
+Wellspring	N	7	867											
+Churchill	N	9	868											
+Wellspring	Y	1	869	1	3161	609.895	2897	544.929	12	36133	1043.802	28448	1089.491	
+Churchill	Y	7	870	3	2127	543.456	1975	544.192	10	18067	914.33	15359	912.959	
+Wellspring	N	8	871											
+Churchill	N	9	872											
+Wellspring	Y	7	873	2	4526	618.994	4269	641.371	14	48743	1334.255	34701	1319.753	
+Wellspring	Y	Control	874	1	2183	473.816	1974	509.063	9	30497	1126.695	22773	1144.928	
+Wellspring	N	4	875											
+Churchill	N	4	876											
+Wellspring	N	6	877											
+Churchill	Y	5	878	2	2218	537.82	2098	604.644	4	4909	491.279	2894	602.567	
+Wellspring	N	2	879											
+Churchill	Y	8	880	2	2669	564.518	2485	596.548	9	17269	918.778	14780	974.512	
+Churchill	N	7	881											
+Wellspring	Y	4	882	1	1787	566.884	1588	529.223	8	29599	1119.075	24166	1185.316	
+Wellspring	N	2	883											
+Wellspring	N	3	884											
+Wellspring	Y	Control	885	2	3931	562.251	3753	612.964	12	48117	1238.958	43630	1255.134	
+Churchill	Y	8	886	1	3855	591.049	3634	588.596	12	36065	1129.703	31428	1140.267	
+Wellspring	N	6	887											
+Churchill	N	9	888											
+Churchill	N	8	889											
+Churchill	Y	1	890	1	1871	571.093	1765	527.271	8	21352	840.214	17935	841.771	
+Churchill	Y	7	891	2	4031	521.834	3836	693.725	11	31996	1158.113	27138	1141.477	
+Wellspring	Y	10	892	1	1451	512.555	1190	467.029	5	16692	743.562	13948	860.485	
+Churchill	Y	5	893	2	3322	648.302	3156	660.614	11	22586	1107.935	18999	1132.194	
+Churchill	N	10	894											
+Wellspring	N	6	895											
+Wellspring	Y	1	896	2	2565	612.859	2419	517.519	10	36939	1081.42	28200	1109.678	
+Wellspring	N	2	897											
+Wellspring	N	10	898											
+Wellspring	Y	Control	899	2	1442	568.675	1314	558.334	3	1701	668.438	894	571.896	
+Wellspring	N	7	900											
+Churchill	N	1	901											
+Churchill	Y	Control	902	1	2256	718.555	1829	550.033	7	17260	1201.801	12992	1219.417	
+Churchill	Y	8	903	1	2281	637.065	1837	707.934	6	17233	880.562	13616	856.898	
+Churchill	Y	Control	904	2	3158	539.067	2950	617.8	9	22046	1164.45	17695	1284.608	
+Wellspring	N	1	905											
+Churchill	Y	10	906	2	1988	639.654	1747	582.743	6	11809	824.494	8792	877.503	
+Wellspring	N	4	907											
+Churchill	Y	4	908	2	3704	655.4	3546	523.274	13	36131	1060.002	28123	1125.261	
+Wellspring	N	7	909											
+Churchill	N	6	910											
+Wellspring	N	4	911											
+Churchill	Y	3	912	1	2137	548.788	1934	499.705	7	18542	831.774	15399	837.377	
+Wellspring	Y	All10	913	2	4084	614.703	3791	630.081	10	38477	1016.223	34759	1064.512	
+Churchill	Y	8	914	2	3999	574.504	3824	607.317	14	34849	1124.803	30143	1168.424	
+Churchill	Y	3	915	2	3376	579.185	3118	648.24	9	21082	878.983	19410	869.58	
+Wellspring	Y	7	916	2	2585	386.711	2384	370.987	14	54136	1383.496	47201	1356.426	
+Wellspring	Y	3	917	1	2244	511.837	2134	607.211	7	19935	863.268	18813	861.132	
+Wellspring	Y	7	918	1	2760	451.589	2604	697.147	4	6481	596.844	5820	598.22	
+Churchill	Y	5	919	2	3134	601.94	2987	570.301	11	23584	1040.702	20956	1033.573	
+Churchill	Y	7	920	1	1761	583.872	1542	538.737	8	20631	959.381	17469	906.325	
