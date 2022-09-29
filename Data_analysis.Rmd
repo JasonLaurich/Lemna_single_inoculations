@@ -16,6 +16,10 @@ library(ggplot2) # we need this for plotting
 library(reshape2) # melting and stuff
 library(plyr) # manipulating data frames
 library(dplyr)
+library(car) # type 3 anovas
+library(lme4) # mixed effects models
+library(emmeans) # allows extraction of bacteria-specific regression estimates.
+library(RLRsim) # test significance of random effects
 ```
 
 SECTION 2: Upload data for the latest round of experiments
@@ -30,6 +34,18 @@ str(df)
 #Fix the structure for bacterial inoculation and plant
 df$bac <- factor(df$bac, levels = c("Control", "1", "2", "3", "4", "5","6","7","8","9","10","All10"))
 df$plt <- as.factor(df$plt)
+
+# Need to add in edge effects. So for each 24 well plate, all but 6,7,10,11,14,15,18, and 19 are edge.
+edge<-c(rep("Y",5), rep("N",2), rep("Y",2),rep("N",2), rep("Y",2), rep("N",2), rep("Y",2),rep("N",2), rep("Y",5))
+
+edge2<-rep(edge,38)
+edge2<-c(edge2, rep("Y",5), rep("N",2), "Y")
+df$edge<-edge2
+
+df$edge <- as.factor(df$edge)
+
+#Take out errors (pipetting errors, wrong bacteria)
+df<-df[-c(453,494,798),]
 
 #Let's generate some summary statistics. Things like greenness (health), growth (fitness), and aggregation.
 
@@ -91,6 +107,536 @@ LRR_grt$SE<-sqrt(LRR_grt$var)
 dfC<-subset(df, df$pop== "Churchill")
 dfW<-subset(df, df$pop== "Wellspring")
 
+# Change factor order of bacteria to reflect their effects on duckweed growth.
+#First, let's change the order of bacteria, ranked by effect. 
+dfC$bac<- factor(dfC$bac, levels = c("Control","1","8","6","3","7","10","9","4","5","2","All10"))
+# Assign names from sequencing
+levels(dfC$bac) <- c("Control","Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown1","Unknown2","Roseomonas sp.","Unknown3","Unknown4","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria")
+
+dfW$bac<- factor(dfW$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
+levels(dfW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
+
 logC<-subset(LRR_grt, LRR_grt$pop== "C")
+logC$bac<- as.factor(logC$bac)
+logC$bac<- factor(logC$bac, levels = c("1","8","6","3","7","10","9","4","5","2","All10"))
+levels(logC$bac) <- c("Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown1","Unknown2","Roseomonas sp.","Unknown3","Unknown4","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria")
+
 logW<-subset(LRR_grt, LRR_grt$pop== "W")
+logW$bac<- as.factor(logW$bac)
+logW$bac<- factor(logW$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
+levels(logW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
+
+```
+
+SECTION 3: Churchill: Modelling.
+
+```{r Churchill models}
+
+#How does bacterial inoculation affect growth?
+modC_Grt<-lm(Grt~bac,data=dfC)
+anova(modC_Grt)
+summary(modC_Grt)
+#not quite significant, but all 10 bacteria and P. protogens are significantly different from the mean. 
+
+#What if we look at initial and final pixel count variation?
+modC_pix<-lm(pix1~bac+pix0,data=dfC)
+Anova(modC_pix, type=3)
+summary(modC_pix)
+#So it seems like the starting pixel count has a highly significant effect on eventual biomass. If you account for this, bacteria comes out as significant.
+#All 10 and P.p still sig
+
+# Let's add in edge effects.
+modC_pixgrt<-lm(pix1~bac+pix0+edge,data=dfC)
+Anova(modC_pixgrt, type=3)
+summary(modC_pixgrt)
+#So edge is significant, and its inclusion retains all other results.
+
+#Let's try that as a random effect
+lmer.grt<-lmer(pix1~pix0 + bac +(1|edge),data=dfC)
+summary(lmer.grt)
+Anova(lmer.grt, type=3)
+
+exactRLRT(lmer.grt)
+#So, yeah...
+
+#How does bacterial identity and the presence of plants affect cell density?
+modC_abs<-lm(logabs~bac*plt+edge,data=dfC)
+anova(modC_abs)
+summary(modC_abs)
+#so bacterial identity, plant presence, and the interaction between them all matter here.
+
+#What do the models say?
+regC<-lm(Grt~logabs+bac+edge,data=dfC)
+Anova(regC, type = 3)
+summary(regC)
+
+regC2<-lm(pix1~logabs+pix0+bac+edge,data=dfC)
+Anova(regC2, type = 3)
+summary(regC2)
+#So regardless of how we measure growth rate, bacterial identity (fixed effect) and logged absolute count are correlated with duckweed fitness. Edge too. 
+
+#What about an interaction term? This will set up emmeans analysis too. 
+regC3<-lm(Grt~logabs*bac+edge,data=dfC)
+Anova(regC3, type = 3)
+summary(regC3)
+#Only interaction term comes out as NEARLY significant. Power?
+
+regC4<-lm(pix1~logabs*bac + pix0+edge,data=dfC)
+Anova(regC4, type = 3)
+summary(regC4)
+#hmm... not much
+
+# So we know (1) there is a relationship between bacterial and DW fitness that is positive and (2) bacterial identity affect duckweed fitness AND bacterial fitness, BUT (3) no interaction between b/w bacterial ID and absolute count can be pulled out here.
+
+```
+
+SECTION 4: Churchill: Plotting.
+
+```{r Churchill plots}
+# Let's plot!
+SumC<-subset(Sum_LRR,Sum_LRR$pop=="Churchill")
+
+#First, let's change the order of bacteria, ranked by effect. 
+SumC$bac<- as.factor(SumC$bac)
+SumC$bac<- factor(SumC$bac, levels = c("Control","1","8","6","3","7","10","9","4","5","2","All10"))
+levels(SumC$bac) <- c("Control","Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown1","Unknown2","Roseomonas sp.","Unknown3","Unknown4","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria")
+
+dwC <- ggplot(SumC,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwC <- dwC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+dwC <- dwC + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+dwC <- dwC + theme(legend.title=element_blank())
+dwC <- dwC + theme(legend.position = "none")
+dwC <- dwC + labs(x= element_blank()) 
+dwC <- dwC + labs(y= "Duckweed growth (change in pixel count)")
+dwC <- dwC + geom_hline(yintercept=15560.8, linetype="dashed", color = "red3",size=1)
+dwC <- dwC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+dwC <- dwC + theme(axis.text = element_text(face="bold", size=12))
+dwC <- dwC + theme(axis.title = element_text(face="bold", size=13))
+dwC
+
+#OK, we want to add a line based on additive interactive effects among bacteria
+#Calculate the effect of each microbe on plant growth
+base_grtC<-SumC[1,4]
+SumC$bac_eff<-(SumC$mean - base_grtC)/10
+add_predC<-sum(SumC$bac_eff[2:12]) +base_grtC
+
+dwC <- dwC + geom_hline(yintercept=add_predC, linetype="dashed", color = "blue3",size=1)
+dwC
+
+#Alright, let's plot LogRRs.
+
+logC_plt <- ggplot(logC,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logC_plt <- logC_plt + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logC_plt <- logC_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+logC_plt <- logC_plt + theme(legend.title=element_blank())
+logC_plt <- logC_plt + theme(legend.position = "none")
+logC_plt <- logC_plt + labs(x= element_blank()) 
+logC_plt <- logC_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
+logC_plt <- logC_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+logC_plt <- logC_plt + theme(axis.text = element_text(face="bold", size=12))
+logC_plt <- logC_plt + theme(axis.title = element_text(face="bold", size=13))
+logC_plt
+
+# OK, let's look at bacteria.
+
+# We need to generate some log rrs here too.
+# We can add this to the logC dataframe
+
+#Generate summary statistics.
+melt_Cabs<-melt(dfC, id.vars=c("pop", "bac"), measure.vars= "logabs", na.rm = T)
+Sum_Cabs<- ddply(melt_Cabs, c("bac","variable"), summarise,
+      mean = mean(value), sd = sd(value), count=n(),
+      sem = sd(value)/sqrt(length(value)))
+
+for (i in 1:11){
+  logC[i,6]<-log(Sum_Cabs[i+1,3]/Sum_Cabs[1,3])
+  logC[i,7]<-Sum_Cabs[i+1,4]^2/(Sum_Cabs[i+1,5]*Sum_Cabs[i+1,3]^2) + Sum_Cabs[1,4]^2/(Sum_Cabs[1,5]*Sum_Cabs[1,3]^2)
+}
+
+names(logC)<-c('pop','bac','LRR','var','SE','absLRR','absvar')
+logC$absSE<-sqrt(logC$absvar)
+
+melt_C_abs<-melt(dfC, id.vars=c("bac","plt"), measure.vars= "logabs", na.rm = T)
+Sum_C_abs<- ddply(melt_C_abs, c("bac","plt","variable"), summarise,
+                mean = mean(value), sd = sd(value),
+                sem = sd(value)/sqrt(length(value)))
+
+absC <- ggplot(Sum_C_abs,aes(y=mean,x=bac,colour=bac,shape=plt))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
+absC <- absC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+absC <- absC + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+absC <- absC + theme(legend.title=element_blank())
+absC <- absC + guides(colour=FALSE)
+absC <- absC + scale_shape_discrete(name = "Treatment", labels = c("Bacteria only", "Plants & Bacteria"))
+absC <- absC + theme(legend.position = c(0.7,0.9))
+absC <- absC + labs(x= element_blank()) 
+absC <- absC + labs(y= "Logged bacterial cell density (cells/µL)")
+absC <- absC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+absC <- absC + ylim(3,9.5)
+absC <- absC + theme(axis.text = element_text(face="bold", size=12))
+absC <- absC + theme(axis.title = element_text(face="bold", size=13))
+absC
+
+#Let's collapse this to LogRR's? This plot would show the importance of plant presence to each bacteria
+
+LRR_absC <- ggplot(logC,aes(y=absLRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
+LRR_absC <- LRR_absC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+LRR_absC <- LRR_absC + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+LRR_absC <- LRR_absC + theme(legend.title=element_blank())
+LRR_absC <- LRR_absC + guides(colour=FALSE)
+LRR_absC <- LRR_absC + theme(legend.title=element_blank())
+LRR_absC <- LRR_absC + theme(legend.position = c(0.7,0.9))
+LRR_absC <- LRR_absC + labs(x= element_blank()) 
+LRR_absC <- LRR_absC + labs(y= "Effect of plant presence (Log Response Ratio)")
+LRR_absC <- LRR_absC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#LRR_absC <- LRR_absC + ylim(3,9.5)
+LRR_absC <- LRR_absC + theme(axis.text = element_text(face="bold", size=12))
+LRR_absC <- LRR_absC + theme(axis.title = element_text(face="bold", size=13))
+LRR_absC <- LRR_absC + scale_x_discrete(labels=c("Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown","Unknown","Roseomonas sp.","Unknown","Unknown","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria"))
+LRR_absC
+
+# Then we can look at fitness regressions?
+# Let's start by just graphing bacterial cell count against the growth rate of plants. This will ask the question "are the fitness estimates of bacteria and plants aligned? Are they broadly mutualistic?"
+
+# Let's plot the raw regression first?
+#Let's try plotting that with the full dataset, not the summary stats
+regC <- ggplot(dfC,aes(y=logabs,x=Grt))+ geom_point()
+regC <- regC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regC <- regC + stat_smooth(method='lm',fullrange=F, se=T, size=2)
+regC <- regC + labs(x= "Duckweed growth (change in pixel count)") 
+regC <- regC + labs(y= "Logged bacterial cell density (cells/µL)")
+regC <- regC + theme(axis.text = element_text(face="bold", size=12))
+regC <- regC + theme(axis.title = element_text(face="bold", size=13))
+regC
+
+# Let's plot the summary statistics. 
+
+SumC$mean.abs<- Sum_Cabs$mean
+SumC$se.abs<- Sum_Cabs$sem
+  
+regC2 <- ggplot(SumC,aes(x=mean,y=mean.abs,colour=bac))+geom_errorbar(aes(xmin=mean-sem,xmax=mean+sem)) +geom_point(size=4.5)
+regC2 <- regC2 + geom_errorbar(aes(ymin=mean.abs-se.abs,ymax=mean.abs+se.abs))
+regC2 <- regC2 + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regC2 <- regC2 + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+regC2 <- regC2 + theme(legend.title=element_blank())
+regC2 <- regC2 + theme(legend.position = "none")
+regC2 <- regC2 + labs(x= "Duckweed growth (change in pixel count)") 
+regC2 <- regC2 + labs(y= "Logged bacterial cell density (cells/µL)")
+regC2 <- regC2 + theme(axis.text = element_text(face="bold", size=12))
+regC2 <- regC2 + theme(axis.title = element_text(face="bold", size=13))
+regC2
+
+# Let's try the LogRR's
+regClRR <- ggplot(logC,aes(y=absLRR,x=LRR))+ geom_point()
+regClRR <- regClRR + geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE))
+regClRR <- regClRR + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
+regClRR <- regClRR + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regClRR <- regClRR + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
+regClRR <- regClRR + labs(y= "Effect size of plant presence (Log Response Ratio)")
+regClRR <- regClRR + theme(axis.text = element_text(face="bold", size=12))
+regClRR <- regClRR + theme(axis.title = element_text(face="bold", size=13))
+regClRR
+
+# OK let's now regress the LogRRs
+
+# Finally, let's plot fitness alignment (or estimate?) for each bacteria separately, and look at this?
+# How about emtrends~ LogRR's (effects on plants)? Are more beneficial bacterial also more closely aligned?
+
+# Let's ask that by plotting raw data for each bacteria
+
+regC.bac <- ggplot(dfC,aes(y=logabs,x=Grt))+ geom_point()
+regC.bac <- regC.bac + facet_wrap(~ bac)
+regC.bac <- regC.bac + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regC.bac <- regC.bac + stat_smooth(method='lm',fullrange=F, se=T, size=2)
+regC.bac <- regC.bac + labs(x= "Duckweed growth (change in pixel count)") 
+regC.bac <- regC.bac + labs(y= "Logged bacterial cell density (cells/µL)")
+regC.bac <- regC.bac + theme(axis.text = element_text(face="bold", size=12))
+regC.bac <- regC.bac + theme(axis.title = element_text(face="bold", size=13))
+regC.bac
+
+
+bac.emtC <- emtrends(regC3, "bac", var = "logabs")
+bac.emtC<-as.data.frame(bac.emtC)
+bac.emtC
+
+# Pairwise comparisons
+pairs(bac.emtC)
+
+#Let's add these estimates to our SumC
+SumC$reg.mean<-bac.emtC$logabs.trend
+SumC$reg.SE<-bac.emtC$SE
+
+#Let's also add this information to logC
+bac.trend<-bac.emtC$logabs[2:12]
+SE.trend<-bac.emtC$SE[2:12]
+
+logC$reg.mean<-bac.trend
+logC$reg.SE<-SE.trend
+
+logemtC <- ggplot(logC,aes(y=reg.mean,x=LRR))+ geom_point()
+logemtC <- logemtC + geom_errorbar(aes(ymin=reg.mean-reg.SE,ymax=reg.mean+reg.SE))
+logemtC <- logemtC + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
+logemtC <- logemtC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logemtC <- logemtC + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
+logemtC <- logemtC + labs(y= "Fitness regression")
+logemtC <- logemtC + theme(axis.text = element_text(face="bold", size=12))
+logemtC <- logemtC + theme(axis.title = element_text(face="bold", size=13))
+logemtC
+
+```
+
+SECTION 5: Wellspring: Modelling.
+
+```{r Wellspring models}
+
+#How does bacterial inoculation affect growth?
+modW_Grt<-lm(Grt~bac,data=dfW)
+anova(modW_Grt)
+summary(modW_Grt)
+#not significant, but all 10 bacteria and bac 2 are almost significantly different from the mean. 
+
+#What if we look at initial and final pixel count variation?
+modW_pix<-lm(pix1~bac+pix0,data=dfW)
+Anova(modW_pix, type=3)
+summary(modW_pix)
+#No change — bacteria remains non-significant
+
+# Let's add in edge effects.
+modW_pixgrt<-lm(pix1~bac+pix0+edge,data=dfW)
+Anova(modW_pixgrt, type=3)
+summary(modW_pixgrt)
+#So edge is significant, nothing else changes.
+
+#Let's try that as a random effect
+lmer.grtW<-lmer(pix1~pix0 + bac +(1|edge),data=dfW)
+summary(lmer.grtW)
+Anova(lmer.grtW, type=3)
+
+exactRLRT(lmer.grtW)
+#Yep! Edge matters.
+
+#How does bacterial identity and the presence of plants affect cell density?
+modW_abs<-lm(logabs~bac*plt+edge,data=dfW)
+anova(modW_abs)
+summary(modW_abs)
+#so bacterial identity, plant presence, and the interaction between them all matter here. Edge too!
+
+regW<-lm(Grt~logabs+bac+edge,data=dfW)
+Anova(regW, type = 3)
+summary(regW)
+#significant correlation b/w logabs and growth, edge nearly significant. No bac!
+
+regW2<-lm(pix1~logabs+pix0+bac+edge,data=dfW)
+Anova(regW2, type = 3)
+summary(regW2)
+#So regardless of how we measure growth rate, logged absolute count is correlated with duckweed fitness. This adds edge as a significant effect. 
+
+#What about an interaction term? This will set up emmeans analysis too. 
+regW3<-lm(Grt~logabs*bac+edge,data=dfW)
+Anova(regW3, type = 3)
+summary(regW3)
+#Wait what? Now bac comes out as highly significant, so long as you include an interaction with the regression. (which is also significant)
+
+regW4<-lm(pix1~logabs*bac + pix0+edge,data=dfW)
+Anova(regW4, type = 3)
+summary(regW4)
+
+# So what do we make of this? (1) We see a correlation b/w duckweed and bacterial fitness UNTIL we incorporate and interaction. (2) If (but only if) we account for the interaction, we then see the effect of bacterial identity. (3) The interaction is also highly significant. (4) This suggests that the bacteria have very different correlations with DW fitness?
+
+```
+
+SECTION 6: Wellspring: Plotting.
+
+```{r Wellspring plots}
+# Let's plot!
+SumW<-subset(Sum_LRR,Sum_LRR$pop=="Wellspring")
+
+#First, let's change the order of bacteria, ranked by effect. 
+SumW$bac<- factor(SumW$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
+levels(SumW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
+
+dwW <- ggplot(SumW,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwW <- dwW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+dwW <- dwW + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+dwW <- dwW + theme(legend.title=element_blank())
+dwW <- dwW + theme(legend.position = "none")
+dwW <- dwW + labs(x= element_blank()) 
+dwW <- dwW + labs(y= "Duckweed growth (change in pixel count)")
+dwW <- dwW + geom_hline(yintercept=23262.70, linetype="dashed", color = "red3",size=1)
+dwW <- dwW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwW <- dwW + ylim(12000,40000)
+dwW <- dwW + theme(axis.text = element_text(face="bold", size=12))
+dwW <- dwW + theme(axis.title = element_text(face="bold", size=13))
+dwW
+
+#OK, we want to add a line based on additive interactive effects among bacteria
+#Calculate the effect of each microbe on plant growth
+base_grtW<-SumW[1,4]
+SumW$bac_eff<-(SumW$mean - base_grtW)/10
+add_predW<-sum(SumW$bac_eff[2:12]) +base_grtW
+
+dwW <- dwW + geom_hline(yintercept=add_predW, linetype="dashed", color = "blue3",size=1)
+dwW
+
+#Alright, let's plot LogRRs.
+
+logW_plt <- ggplot(logW,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logW_plt <- logW_plt + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logW_plt <- logW_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+logW_plt <- logW_plt + theme(legend.title=element_blank())
+logW_plt <- logW_plt + theme(legend.position = "none")
+logW_plt <- logW_plt + labs(x= element_blank()) 
+logW_plt <- logW_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
+logW_plt <- logW_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#logW_plt <- logW_plt + ylim(12000,40000)
+logW_plt <- logW_plt + theme(axis.text = element_text(face="bold", size=12))
+logW_plt <- logW_plt + theme(axis.title = element_text(face="bold", size=13))
+logW_plt <- logW_plt+ scale_x_discrete(labels=c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria"))
+logW_plt
+
+# OK, let's look at bacteria.
+
+# We need to generate some log rrs here too.
+# We can add this to the logC dataframe
+
+#Generate summary statistics.
+melt_Wabs<-melt(dfW, id.vars=c("pop", "bac"), measure.vars= "logabs", na.rm = T)
+Sum_Wabs<- ddply(melt_Wabs, c("bac","variable"), summarise,
+      mean = mean(value), sd = sd(value), count=n(),
+      sem = sd(value)/sqrt(length(value)))
+
+for (i in 1:11){
+  logW[i,6]<-log(Sum_Wabs[i+1,3]/Sum_Wabs[1,3])
+  logW[i,7]<-Sum_Wabs[i+1,4]^2/(Sum_Wabs[i+1,5]*Sum_Wabs[i+1,3]^2) + Sum_Wabs[1,4]^2/(Sum_Wabs[1,5]*Sum_Wabs[1,3]^2)
+}
+
+names(logW)<-c('pop','bac','LRR','var','SE','absLRR','absvar')
+logW$absSE<-sqrt(logW$absvar)
+
+melt_W_abs<-melt(dfW, id.vars=c("bac","plt"), measure.vars= "logabs", na.rm = T)
+Sum_W_abs<- ddply(melt_W_abs, c("bac","plt","variable"), summarise,
+                mean = mean(value), sd = sd(value),
+                sem = sd(value)/sqrt(length(value)))
+
+absW <- ggplot(Sum_W_abs,aes(y=mean,x=bac,colour=bac,shape=plt))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
+absW <- absW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+absW <- absW + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+absW <- absW + theme(legend.title=element_blank())
+absW <- absW + guides(colour=FALSE)
+absW <- absW + scale_shape_discrete(name = "Treatment", labels = c("Bacteria only", "Plants & Bacteria"))
+absW <- absW + theme(legend.position = c(0.7,0.9))
+absW <- absW + labs(x= element_blank()) 
+absW <- absW + labs(y= "Logged bacterial cell density (cells/µL)")
+absW <- absW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+absW <- absW + ylim(3,9.5)
+absW <- absW+ theme(axis.text = element_text(face="bold", size=12))
+absW <- absW + theme(axis.title = element_text(face="bold", size=13))
+absW
+
+#Let's collapse this to LogRR's? This plot would show the importance of plant presence to each bacteria
+
+LRR_absW <- ggplot(logW,aes(y=absLRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
+LRR_absW <- LRR_absW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+LRR_absW <- LRR_absW + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+LRR_absW <- LRR_absW + theme(legend.title=element_blank())
+LRR_absW <- LRR_absW + guides(colour=FALSE)
+LRR_absW <- LRR_absW + theme(legend.title=element_blank())
+LRR_absW <- LRR_absW + theme(legend.position = c(0.7,0.9))
+LRR_absW <- LRR_absW + labs(x= element_blank()) 
+LRR_absW <- LRR_absW + labs(y= "Effect size of plant presence (Log Response Ratio)")
+LRR_absW <- LRR_absW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#LRR_absW <- LRR_absW + ylim(3,9.5)
+LRR_absW <- LRR_absW + theme(axis.text = element_text(face="bold", size=12))
+LRR_absW <- LRR_absW + theme(axis.title = element_text(face="bold", size=13))
+LRR_absW
+
+# Then we can look at fitness regressions?
+# Let's start by just graphing bacterial cell count against the growth rate of plants. This will ask the question "are the fitness estimates of bacteria and plants aligned? Are they broadly mutualistic?"
+
+# Let's plot the raw regression first?
+#Let's try plotting that with the full dataset, not the summary stats
+regW <- ggplot(dfW,aes(y=logabs,x=Grt))+ geom_point()
+regW <- regW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regW <- regW + stat_smooth(method='lm',fullrange=F, se=T, size=2)
+regW <- regW + labs(x= "Duckweed growth (change in pixel count)") 
+regW <- regW + labs(y= "Logged bacterial cell density (cells/µL)")
+regW <- regW + theme(axis.text = element_text(face="bold", size=12))
+regW <- regW + theme(axis.title = element_text(face="bold", size=13))
+regW
+
+# Let's plot the summary statistics. 
+
+SumW$mean.abs<- Sum_Wabs$mean
+SumW$se.abs<- Sum_Wabs$sem
+  
+regW2 <- ggplot(SumW,aes(x=mean,y=mean.abs,colour=bac))+geom_errorbar(aes(xmin=mean-sem,xmax=mean+sem)) +geom_point(size=4.5)
+regW2 <- regW2 + geom_errorbar(aes(ymin=mean.abs-se.abs,ymax=mean.abs+se.abs))
+regW2 <- regW2 + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regW2 <- regW2 + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+regW2 <- regW2 + theme(legend.title=element_blank())
+regW2 <- regW2 + theme(legend.position = "none")
+regW2 <- regW2 + labs(x= "Duckweed growth (change in pixel count)") 
+regW2 <- regW2 + labs(y= "Logged bacterial cell density (cells/µL)")
+regW2 <- regW2 + theme(axis.text = element_text(face="bold", size=12))
+regW2 <- regW2 + theme(axis.title = element_text(face="bold", size=13))
+regW2
+
+# Let's try the LogRR's
+regWlRR <- ggplot(logW,aes(y=absLRR,x=LRR))+ geom_point()
+regWlRR <- regWlRR + geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE))
+regWlRR <- regWlRR + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
+regWlRR <- regWlRR + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regWlRR <- regWlRR + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
+regWlRR <- regWlRR + labs(y= "Effect size of plant presence (Log Response Ratio)")
+regWlRR <- regWlRR + theme(axis.text = element_text(face="bold", size=12))
+regWlRR <- regWlRR + theme(axis.title = element_text(face="bold", size=13))
+regWlRR
+
+# OK let's now regress the LogRRs
+
+# Finally, let's plot fitness alignment (or estimate?) for each bacteria separately, and look at this?
+# How about emtrends~ LogRR's (effects on plants)? Are more beneficial bacterial also more closely aligned?
+
+# Let's ask that by plotting raw data for each bacteria
+
+regW.bac <- ggplot(dfW,aes(y=logabs,x=Grt))+ geom_point()
+regW.bac <- regW.bac + facet_wrap(~ bac)
+regW.bac <- regW.bac + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regW.bac <- regW.bac + stat_smooth(method='lm',fullrange=F, se=T, size=2)
+regW.bac <- regW.bac + labs(x= "Duckweed growth (change in pixel count)") 
+regW.bac <- regW.bac + labs(y= "Logged bacterial cell density (cells/µL)")
+regW.bac <- regW.bac + theme(axis.text = element_text(face="bold", size=12))
+regW.bac <- regW.bac + theme(axis.title = element_text(face="bold", size=13))
+regW.bac
+
+
+bac.emtW <- emtrends(regW3, "bac", var = "logabs")
+bac.emtW<-as.data.frame(bac.emtW)
+bac.emtW
+
+# Pairwise comparisons
+pairs(bac.emtW)
+
+#Let's add these estimates to our SumW
+SumW$reg.mean<-bac.emtW$logabs.trend
+SumW$reg.SE<-bac.emtW$SE
+
+#Let's also add this information to logW
+bac.trend<-bac.emtW$logabs[2:12]
+SE.trend<-bac.emtW$SE[2:12]
+
+logW$reg.mean<-bac.trend
+logW$reg.SE<-SE.trend
+
+logemtW <- ggplot(logW,aes(y=reg.mean,x=LRR))+ geom_point()
+logemtW <- logemtW + geom_errorbar(aes(ymin=reg.mean-reg.SE,ymax=reg.mean+reg.SE))
+logemtW <- logemtW + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
+logemtW <- logemtW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logemtW <- logemtW + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
+logemtW <- logemtW + labs(y= "Fitness regression")
+logemtW <- logemtW + theme(axis.text = element_text(face="bold", size=12))
+logemtW <- logemtW + theme(axis.title = element_text(face="bold", size=13))
+logemtW
+
 ```
