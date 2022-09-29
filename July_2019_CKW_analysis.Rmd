@@ -1,0 +1,322 @@
+---
+title: "CKW_July2019_analysis"
+author: "Jason Laurich"
+date: '2022-09-29'
+output: 
+  html_document: 
+    keep_md: true
+---
+
+Alright, let's look at the results of an earlier experiment. 3 populations, no bacterial fitness data, 10 bacteria and a complete mix treatment. 
+
+SECTION 1: Upload packages
+
+```{r Packages, message=FALSE, warning=FALSE}
+library(ggplot2) # we need this for plotting
+library(reshape2) # melting and stuff
+library(plyr) # manipulating data frames
+library(dplyr)
+library(car) # type 3 anovas
+```
+
+SECTION 2: Upload data for the latest round of experiments
+
+```{r Data, message=FALSE, warning=FALSE}
+setwd("C:/Users/jason/Dropbox/My PC (DESKTOP-IOO274E)/Desktop/Data/Lemna_singleinoculations/Lemna_single_inoculations")
+
+df<-read.table('July2019CKW.txt', header=F, na.strings="", sep="\t")
+names(df)<-c('pop','bac','id','frd0','pix0','per0','grn0','grnper0','frd1','pix1','per1','grn1','grnper1','notes','algae_lvl')
+str(df)
+
+#Fix the structure
+df$pop<-as.factor(df$pop)
+df$bac<-as.factor(df$bac)
+
+# Add in edge (15 plates)
+edge<-c(rep("Y",5), rep("N",2), rep("Y",2),rep("N",2), rep("Y",2), rep("N",2), rep("Y",2),rep("N",2), rep("Y",5))
+
+edge2<-rep(edge,15)
+df$edge<-edge2
+
+df$edge <- as.factor(df$edge)
+
+df$algae_lvl<-as.factor(df$algae_lvl)
+
+#Let's generate some summary statistics. Things like greenness (health), growth (fitness), and aggregation.
+
+df$Grt<-df$pix1 - df$pix0
+df$Agg<-df$pix1/df$per1
+df$Hlth<-df$grn1/df$pix1
+
+#Check normality
+ggplot(data=df, aes(x = Grt)) + geom_histogram(fill = "white", colour = "black")
+# Looks pretty good
+
+ggplot(data=df, aes(x = Agg)) + geom_histogram(fill = "white", colour = "black")
+# Looks pretty good
+
+ggplot(data=df, aes(x = Hlth)) + geom_histogram(fill = "white", colour = "black")
+# Looks pretty good
+
+#OK, let's calculate LogRR's. That way we can compare to previous and subsequent experiments. 
+
+#Generate summary statistics.
+melt_LRR<-melt(df, id.vars=c("pop", "bac"), measure.vars= "Grt", na.rm = T)
+Sum_LRR<- ddply(melt_LRR, c("pop", "bac","variable"), summarise,
+      mean = mean(value), sd = sd(value), count=n(),
+      sem = sd(value)/sqrt(length(value)))
+
+LRR_grt<-data.frame(matrix(ncol=5, nrow=3*11))
+names(LRR_grt)<-c('pop','bac','LRR','var','SE')
+
+LRR_grt$pop<-c(rep('C', 11), rep('K',11), rep('W', 11))
+LRR_grt$bac<-rep(c("1", "10", "2", "3", "4", "5","6","7","8","9","All"), 3)
+
+#Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
+
+for (i in 1:11){
+  LRR_grt[i,3]<-log(Sum_LRR[i+1,4]/Sum_LRR[1,4])
+  LRR_grt[i,4]<-Sum_LRR[i+1,5]^2/(Sum_LRR[i+1,6]*Sum_LRR[i+1,4]^2) + Sum_LRR[1,5]^2/(Sum_LRR[1,6]*Sum_LRR[1,4]^2)
+}
+
+for (i in 12:22){
+  LRR_grt[i,3]<-log(Sum_LRR[i+2,4]/Sum_LRR[13,4])
+  LRR_grt[i,4]<-Sum_LRR[i+2,5]^2/(Sum_LRR[i+2,6]*Sum_LRR[i+2,4]^2) + Sum_LRR[13,5]^2/(Sum_LRR[13,6]*Sum_LRR[13,4]^2)
+}
+
+for (i in 23:33){
+  LRR_grt[i,3]<-log(Sum_LRR[i+3,4]/Sum_LRR[25,4])
+  LRR_grt[i,4]<-Sum_LRR[i+3,5]^2/(Sum_LRR[i+3,6]*Sum_LRR[i+3,4]^2) + Sum_LRR[25,5]^2/(Sum_LRR[25,6]*Sum_LRR[25,4]^2)
+}
+
+LRR_grt$SE<-sqrt(LRR_grt$var)
+
+#Let's create separate dataframes for each population
+dfC<-subset(df, df$pop== "Churchill")
+dfK<-subset(df, df$pop== "Kelso")
+dfW<-subset(df, df$pop== "Wellspring ")
+
+# Change factor order of bacteria to reflect their effects on duckweed growth.
+#First, let's change the order of bacteria, ranked by effect. 
+dfC$bac<- factor(dfC$bac, levels = c("0","7","8","5","6","10","4","9","2","1","3","All"))
+# Assign names from sequencing
+levels(dfC$bac) <- c("Control","Aeromonas sp. 1","Microbacterium sp.","Aeromonas sp. 2","Sediminibacterium sp.","Flavibacterium succinicans 1","Roseomonas sp.","Flavibacterium succinicans 2","Flectobacillus speluncae","Pseudomonas protogens","Cytophagaceae sp.","All 10 bacteria")
+
+dfK$bac<- factor(dfK$bac, levels = c("0","8","6","7","3","9","2","5","1","4","10","All"))
+levels(dfK$bac) <- c("Control","Pseudomonas fluorescens 1","Unknown1","Pseudomonas sp.","Unknown2","Pseudomonas intermedius","Flavobacterium sp. 1","Rhizobium sp.","Flavobacterium chilense","Pseudomonas fluorescens 2","Flavobacterium sp. 2","All 10 bacteria")
+
+dfW$bac<- factor(dfW$bac, levels = c("0","8","5","3","2","4","6","9","7","1","10","All"))
+levels(dfW$bac) <- c("Control","Agrobacterium sp.","Rhizobium sp. 1","Rhizobium rosettiformes","Rhizobium helianthi","Rhizobium sp. 2","Phenylobacterium panacis","Rhizobium sp. 3","Sphingomonas sp.","Rhizobium sp. 4","Sphingomonas wittichii","All 10 bacteria")
+
+logC<-subset(LRR_grt, LRR_grt$pop== "C")
+logC$bac<- as.factor(logC$bac)
+logC$bac<- factor(logC$bac, levels = c("7","8","5","6","10","4","9","2","1","3","All"))
+levels(logC$bac) <- c("Aeromonas sp. 1","Microbacterium sp.","Aeromonas sp. 2","Sediminibacterium sp.","Flavibacterium succinicans 1","Roseomonas sp.","Flavibacterium succinicans 2","Flectobacillus speluncae","Pseudomonas protogens","Cytophagaceae sp.","All 10 bacteria")
+
+logK<-subset(LRR_grt, LRR_grt$pop== "K")
+logK$bac<- as.factor(logK$bac)
+logK$bac<- factor(logK$bac, levels = c("8","6","7","3","9","2","5","1","4","10","All"))
+levels(logK$bac) <- c("Pseudomonas fluorescens 1","Unknown1","Pseudomonas sp.","Unknown2","Pseudomonas intermedius","Flavobacterium sp. 1","Rhizobium sp.","Flavobacterium chilense","Pseudomonas fluorescens 2","Flavobacterium sp. 2","All 10 bacteria")
+
+
+logW<-subset(LRR_grt, LRR_grt$pop== "W")
+logW$bac<- as.factor(logW$bac)
+logW$bac<- factor(logW$bac, levels = c("8","5","3","2","4","6","9","7","1","10","All"))
+levels(logW$bac) <- c("Agrobacterium sp.","Rhizobium sp. 1","Rhizobium rosettiformes","Rhizobium helianthi","Rhizobium sp. 2","Phenylobacterium panacis","Rhizobium sp. 3","Sphingomonas sp.","Rhizobium sp. 4","Sphingomonas wittichii","All 10 bacteria")
+
+```
+
+SECTION 3: Churchill: Plots & Modelling.
+
+```{r Churchill plots & models}
+
+#How does bacterial inoculation affect growth? Let's add algal level too. 
+modC_Grt<-lm(Grt~bac+edge+algae_lvl,data=dfC)
+Anova(modC_Grt,type=3)
+summary(modC_Grt)
+#edge, but not bacteria is significant here.
+
+#What about initial and final pixel count variation?
+modC_pix<-lm(pix1~bac+pix0+edge+algae_lvl,data=dfC)
+Anova(modC_pix, type=3)
+summary(modC_pix)
+#Still just edge and pix0
+
+#So there is really not that much going on in Churchill... let's plot!
+
+SumC<-subset(Sum_LRR,Sum_LRR$pop=="Churchill")
+
+#Let's change the order of bacteria, ranked by effect. 
+SumC$bac<- factor(SumC$bac, levels = c("0","7","8","5","6","10","4","9","2","1","3","All"))
+levels(SumC$bac) <- c("Control","Aeromonas sp. 1","Microbacterium sp.","Aeromonas sp. 2","Sediminibacterium sp.","Flavibacterium succinicans 1","Roseomonas sp.","Flavibacterium succinicans 2","Flectobacillus speluncae","Pseudomonas protogens","Cytophagaceae sp.","All 10 bacteria")
+
+
+dwC <- ggplot(SumC,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwC <- dwC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+dwC <- dwC + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+dwC <- dwC + theme(legend.title=element_blank())
+dwC <- dwC + theme(legend.position = "none")
+dwC <- dwC + labs(x= element_blank()) 
+dwC <- dwC + labs(y= "Duckweed growth (change in pixel count)")
+dwC <- dwC + geom_hline(yintercept=7223.6, linetype="dashed", color = "red3",size=1)
+dwC <- dwC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+dwC <- dwC + theme(axis.text = element_text(face="bold", size=12))
+dwC <- dwC + theme(axis.title = element_text(face="bold", size=13))
+dwC
+
+#Let's add a line predicting additive effects. 
+base_grtC<-SumC[1,4]
+SumC$bac_eff<-(SumC$mean - base_grtC)/10
+add_predC<-sum(SumC$bac_eff[2:12]) +base_grtC
+
+dwC <- dwC + geom_hline(yintercept=add_predC, linetype="dashed", color = "blue3",size=1)
+dwC
+
+#LogRRs
+
+logC_plt <- ggplot(logC,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logC_plt <- logC_plt + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logC_plt <- logC_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+logC_plt <- logC_plt + theme(legend.title=element_blank())
+logC_plt <- logC_plt + theme(legend.position = "none")
+logC_plt <- logC_plt + labs(x= element_blank()) 
+logC_plt <- logC_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
+logC_plt <- logC_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+logC_plt <- logC_plt + theme(axis.text = element_text(face="bold", size=12))
+logC_plt <- logC_plt + theme(axis.title = element_text(face="bold", size=13))
+logC_plt
+```
+
+SECTION 4: Kelso: Plots & Modelling.
+
+```{r Kelso plots & models}
+
+#How does bacterial inoculation affect growth? Let's add algal level too. 
+modK_Grt<-lm(Grt~bac+edge+algae_lvl,data=dfK)
+Anova(modK_Grt,type=3)
+summary(modK_Grt)
+#edge, algae, and bacteria are all significant here. 
+
+#What about initial and final pixel count variation?
+modK_pix<-lm(pix1~bac+pix0+edge+algae_lvl,data=dfK)
+Anova(modK_pix, type=3)
+summary(modK_pix)
+#Still bac, edge, and algae (and pix0 obviously)
+
+#So bacterial identity matters in Kelso
+
+SumK<-subset(Sum_LRR,Sum_LRR$pop=="Kelso")
+
+#Let's change the order of bacteria, ranked by effect. 
+SumK$bac<- factor(SumK$bac, levels = c("0","8","6","7","3","9","2","5","1","4","10","All"))
+levels(SumK$bac) <- c("Control","Pseudomonas fluorescens 1","Unknown1","Pseudomonas sp.","Unknown2","Pseudomonas intermedius","Flavobacterium sp. 1","Rhizobium sp.","Flavobacterium chilense","Pseudomonas fluorescens 2","Flavobacterium sp. 2","All 10 bacteria")
+
+dwK <- ggplot(SumK,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwK <- dwK + theme_classic() + ggtitle("Kelso") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+dwK <- dwK + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+dwK <- dwK + theme(legend.title=element_blank())
+dwK <- dwK + theme(legend.position = "none")
+dwK <- dwK + labs(x= element_blank()) 
+dwK <- dwK + labs(y= "Duckweed growth (change in pixel count)")
+dwK <- dwK + geom_hline(yintercept=12082.6, linetype="dashed", color = "red3",size=1)
+dwK <- dwK + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwK <- dwK + ylim(12000,40000)
+dwK <- dwK + theme(axis.text = element_text(face="bold", size=12))
+dwK <- dwK + theme(axis.title = element_text(face="bold", size=13))
+dwK
+
+#Let's add a line predicting additive effects. 
+base_grtK<-SumK[1,4]
+SumK$bac_eff<-(SumK$mean - base_grtK)/10
+add_predK<-sum(SumK$bac_eff[2:12]) +base_grtK
+
+dwK <- dwK + geom_hline(yintercept=add_predC, linetype="dashed", color = "blue3",size=1)
+dwK
+
+#LogRRs
+
+logK_plt <- ggplot(logK,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logK_plt <- logK_plt + theme_classic() + ggtitle("Kelso") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logK_plt <- logK_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+logK_plt <- logK_plt + theme(legend.title=element_blank())
+logK_plt <- logK_plt + theme(legend.position = "none")
+logK_plt <- logK_plt + labs(x= element_blank()) 
+logK_plt <- logK_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
+logK_plt <- logK_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+logK_plt <- logK_plt + theme(axis.text = element_text(face="bold", size=12))
+logK_plt <- logK_plt + theme(axis.title = element_text(face="bold", size=13))
+logK_plt
+```
+
+SECTION 5: Wellspring: Plots & Modelling.
+
+```{r Wellspring plots & models}
+
+#How does bacterial inoculation affect growth? Let's add algal level too. 
+modW_Grt<-lm(Grt~bac+edge+algae_lvl,data=dfW)
+Anova(modW_Grt,type=3)
+summary(modW_Grt)
+#edge, but not bacteria is significant here. Bac 8 is significantly negative though!
+
+#What about initial and final pixel count variation?
+modW_pix<-lm(pix1~bac+pix0+edge+algae_lvl,data=dfW)
+Anova(modW_pix, type=3)
+summary(modW_pix)
+#Just pix0
+
+#So there is really not that much going on in Wellspring... let's plot!
+
+SumW<-subset(Sum_LRR,Sum_LRR$pop=="Wellspring ")
+
+#Let's change the order of bacteria, ranked by effect. 
+SumW$bac<- factor(SumW$bac, levels = c("0","8","5","3","2","4","6","9","7","1","10","All"))
+levels(SumW$bac) <- c("Control","Agrobacterium sp.","Rhizobium sp. 1","Rhizobium rosettiformes","Rhizobium helianthi","Rhizobium sp. 2","Phenylobacterium panacis","Rhizobium sp. 3","Sphingomonas sp.","Rhizobium sp. 4","Sphingomonas wittichii","All 10 bacteria")
+
+
+dwW <- ggplot(SumW,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwW <- dwW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+dwW <- dwW + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+dwW <- dwW + theme(legend.title=element_blank())
+dwW <- dwW + theme(legend.position = "none")
+dwW <- dwW + labs(x= element_blank()) 
+dwW <- dwW + labs(y= "Duckweed growth (change in pixel count)")
+dwW <- dwW + geom_hline(yintercept=4192.889, linetype="dashed", color = "red3",size=1)
+dwW <- dwW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+dwW <- dwW + theme(axis.text = element_text(face="bold", size=12))
+dwW <- dwW + theme(axis.title = element_text(face="bold", size=13))
+dwW
+
+#Let's add a line predicting additive effects. 
+base_grtW<-SumW[1,4]
+SumW$bac_eff<-(SumW$mean - base_grtW)/10
+add_predW<-sum(SumW$bac_eff[2:12]) +base_grtW
+
+dwW <- dwW + geom_hline(yintercept=add_predW, linetype="dashed", color = "blue3",size=1)
+dwW
+
+#LogRRs
+
+logW_plt <- ggplot(logW,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logW_plt <- logW_plt + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logW_plt <- logW_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+logW_plt <- logW_plt + theme(legend.title=element_blank())
+logW_plt <- logW_plt + theme(legend.position = "none")
+logW_plt <- logW_plt + labs(x= element_blank()) 
+logW_plt <- logW_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
+logW_plt <- logW_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+#dwC <- dwC + ylim(12000,40000)
+logW_plt <- logW_plt + theme(axis.text = element_text(face="bold", size=12))
+logW_plt <- logW_plt + theme(axis.title = element_text(face="bold", size=13))
+logW_plt
+```
+
+Section 6: Summary figure generation
+
+```{r summary figures}
+
+```
+

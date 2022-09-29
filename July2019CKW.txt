@@ -1,4 +1,3 @@
-Population 	Bac	ID	Frond_Start	Pix_Start	Peri_Start	Green_Start	Green_Peri_Start	Frond_End	Pix_End	Peri_End	Green_End	Green_Peri_End	Notes	Algae level
 Wellspring 	5	1	2	1124	582.515	1052	455.979	1	685	156.26	660	196.136	Covered in algal film	High
 Wellspring 	4	2	2	1422	469.725	1333	758.089	2	4515	314.345	3109	337.484	Algal dots	High
 Kelso	6	3	2	923	601.815	768	509.115	1	3670	423.191	735	509.507	Green tint	Low
@@ -359,33 +358,3 @@ Churchill	7	357	2	1848	666.441	1696	633.907	4	8988	652.883	6428	719.945	Few dots
 Churchill	5	358	2	2596	581.568	2416	489.513	4	7366	750.237	6541	801.574	Few dots	Low
 Kelso	3	359	2	6226	814.478	4470	793.537	9	24322	1031.759	20360	1079.76	Few dots	None
 Wellspring 	1	360	2	2722	821.27	2454	724.732	5	11841	586.406	10539	635.123	Dots	Low
-Wellspring 	Bac_only_All	361												
-Kelso	Bac_only_All	362												
-Wellspring 	Bac_only_All	363												
-Kelso	Bac_only_All	364												
-Wellspring 	Bac_only_All	365												
-Kelso	Bac_only_All	366												
-Wellspring 	Bac_only_All	367												
-Wellspring 	Bac_only_All	368												
-Wellspring 	Bac_only_All	369												
-Kelso	Bac_only_All	370												
-Wellspring 	Bac_only_All	371												
-Churchill	Bac_only_All	372												
-Churchill	Bac_only_All	373												
-Churchill	Bac_only_All	374												
-Kelso	Bac_only_All	375												
-Churchill	Bac_only_All	376												
-Kelso	Bac_only_All	377												
-Churchill	Bac_only_All	378												
-Kelso	Bac_only_All	379												
-Churchill	Bac_only_All	380												
-Churchill	Bac_only_All	381												
-Kelso	Bac_only_All	382												
-Wellspring 	Bac_only_All	383												
-Churchill	Bac_only_All	384												
-Churchill	Bac_only_All	385												
-Kelso	Bac_only_All	386												
-Kelso	Bac_only_All	387												
-Wellspring 	Bac_only_All	388												
-Wellspring 	Bac_only_All	389												
-Churchill	Bac_only_All	390												
