@@ -18,6 +18,9 @@ library(reshape2) # melting and stuff
 library(plyr) # manipulating data frames
 library(dplyr)
 library(car) # type 3 anovas
+library(cowplot) # make plot grids
+library(grid)
+library(gridExtra) # adjust and manipulate combined plots. 
 ```
 
 SECTION 2: Upload data for the latest round of experiments
@@ -308,8 +311,8 @@ dwC <- dwC + labs(y= "Duckweed growth (change in pixel count)")
 dwC <- dwC + geom_hline(yintercept=7223.6, linetype="dashed", color = "red3",size=1)
 dwC <- dwC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
 #dwC <- dwC + ylim(12000,40000)
-dwC <- dwC + theme(axis.text = element_text(face="bold", size=12))
-dwC <- dwC + theme(axis.title = element_text(face="bold", size=13))
+#dwC <- dwC + theme(axis.text = element_text(face="bold", size=12))
+dwC <- dwC + theme(axis.title = element_text(face="bold", size=12))
 dwC
 ```
 
@@ -339,8 +342,10 @@ logC_plt <- logC_plt + labs(x= element_blank())
 logC_plt <- logC_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
 logC_plt <- logC_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
 #dwC <- dwC + ylim(12000,40000)
-logC_plt <- logC_plt + theme(axis.text = element_text(face="bold", size=12))
-logC_plt <- logC_plt + theme(axis.title = element_text(face="bold", size=13))
+#logC_plt <- logC_plt + theme(axis.text = element_text(face="bold", size=12))
+logC_plt <- logC_plt + theme(axis.title = element_text(face="bold", size=12))
+logC_plt <- logC_plt + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
+logC_plt <- logC_plt + ylim(-2.5,1.2)
 logC_plt
 ```
 
@@ -492,8 +497,8 @@ dwK <- dwK + labs(y= "Duckweed growth (change in pixel count)")
 dwK <- dwK + geom_hline(yintercept=12082.6, linetype="dashed", color = "red3",size=1)
 dwK <- dwK + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
 #dwK <- dwK + ylim(12000,40000)
-dwK <- dwK + theme(axis.text = element_text(face="bold", size=12))
-dwK <- dwK + theme(axis.title = element_text(face="bold", size=13))
+#dwK <- dwK + theme(axis.text = element_text(face="bold", size=12))
+#dwK <- dwK + theme(axis.title = element_text(face="bold", size=13))
 dwK
 ```
 
@@ -523,8 +528,10 @@ logK_plt <- logK_plt + labs(x= element_blank())
 logK_plt <- logK_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
 logK_plt <- logK_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
 #dwC <- dwC + ylim(12000,40000)
-logK_plt <- logK_plt + theme(axis.text = element_text(face="bold", size=12))
-logK_plt <- logK_plt + theme(axis.title = element_text(face="bold", size=13))
+#logK_plt <- logK_plt + theme(axis.text = element_text(face="bold", size=12))
+#logK_plt <- logK_plt + theme(axis.title = element_text(face="bold", size=13))
+logK_plt <- logK_plt + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
+logK_plt <- logK_plt + ylim(-2.5,1.2)
 logK_plt
 ```
 
@@ -679,8 +686,8 @@ dwW <- dwW + labs(y= "Duckweed growth (change in pixel count)")
 dwW <- dwW + geom_hline(yintercept=4192.889, linetype="dashed", color = "red3",size=1)
 dwW <- dwW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
 #dwC <- dwC + ylim(12000,40000)
-dwW <- dwW + theme(axis.text = element_text(face="bold", size=12))
-dwW <- dwW + theme(axis.title = element_text(face="bold", size=13))
+#dwW <- dwW + theme(axis.text = element_text(face="bold", size=12))
+#dwW <- dwW + theme(axis.title = element_text(face="bold", size=13))
 dwW
 ```
 
@@ -709,9 +716,11 @@ logW_plt <- logW_plt + theme(legend.position = "none")
 logW_plt <- logW_plt + labs(x= element_blank()) 
 logW_plt <- logW_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
 logW_plt <- logW_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
+logW_plt <- logW_plt + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
 #dwC <- dwC + ylim(12000,40000)
-logW_plt <- logW_plt + theme(axis.text = element_text(face="bold", size=12))
-logW_plt <- logW_plt + theme(axis.title = element_text(face="bold", size=13))
+#logW_plt <- logW_plt + theme(axis.text = element_text(face="bold", size=12))
+#logW_plt <- logW_plt + theme(axis.title = element_text(face="bold", size=13))
+logW_plt <- logW_plt + ylim(-2.5,1.2)
 logW_plt
 ```
 
@@ -720,4 +729,49 @@ logW_plt
 Section 6: Summary figure generation
 
 
+```r
+#Let's start by compiling the 3 raw data figures (dwC-dwW)
+
+#Things to do: (1) take off y-axis labels (will grob), (2) check text size, (3) check range of data
+dwK<-dwK+labs(y= element_blank())
+dwW<-dwW+labs(y= element_blank())
+
+#Try changing the bac labels to 45?
+dwC <- dwC + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+dwK <- dwK + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+dwW <- dwW + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+
+dwC <- dwC + theme(axis.text = element_text(size=11))
+dwK <- dwK + theme(axis.text = element_text(size=11))
+dwW <- dwW + theme(axis.text = element_text(size=11))
+
+plot_dw<-plot_grid(dwC, dwK, dwW, ncol=3,nrow=1, align='h')
+
+x.grob_dwCKW <- textGrob(expression(bold("Bacterial strain")), gp=gpar(fontsize=12))
+
+grid.arrange(arrangeGrob(plot_dw, bottom = x.grob_dwCKW))
+```
+
+![](July_2019_CKW_analysis_files/figure-html/summary figures-1.png)<!-- -->
+
+```r
+#OK, now let's compile the LogRR figures. 
+logK_plt<-logK_plt+labs(y= element_blank())
+logW_plt<-logW_plt+labs(y= element_blank())
+
+#Try changing the bac labels to 45?
+logC_plt<-logC_plt + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+logK_plt<-logK_plt + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+logW_plt<-logW_plt+ theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+
+logC_plt<-logC_plt + theme(axis.text = element_text(size=11))
+logK_plt<-logK_plt + theme(axis.text = element_text(size=11))
+logW_plt<-logW_plt + theme(axis.text = element_text(size=11))
+
+plot_LRR<-plot_grid(logC_plt, logK_plt, logW_plt, ncol=3,nrow=1, align='h')
+
+grid.arrange(arrangeGrob(plot_LRR, bottom = x.grob_dwCKW))
+```
+
+![](July_2019_CKW_analysis_files/figure-html/summary figures-2.png)<!-- -->
 
