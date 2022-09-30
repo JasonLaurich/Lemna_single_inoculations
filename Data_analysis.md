@@ -21,6 +21,9 @@ library(car) # type 3 anovas
 library(lme4) # mixed effects models
 library(emmeans) # allows extraction of bacteria-specific regression estimates.
 library(RLRsim) # test significance of random effects
+library(cowplot) # make plot grids
+library(grid)
+library(gridExtra) # adjust and manipulate combined plots. 
 ```
 
 SECTION 2: Upload data for the latest round of experiments
@@ -128,34 +131,6 @@ ggplot(data=df, aes(x = logabs)) + geom_histogram(fill = "white", colour = "blac
 ```r
 # That looks better still!
 
-#OK, one last thing. We want to generate LogRR's for each of these bacterial inoculation treatments, because we want to compare across experiments.
-
-#Generate summary statistics.
-melt_LRR<-melt(df, id.vars=c("pop", "bac"), measure.vars= "Grt", na.rm = T)
-Sum_LRR<- ddply(melt_LRR, c("pop", "bac","variable"), summarise,
-      mean = mean(value), sd = sd(value), count=n(),
-      sem = sd(value)/sqrt(length(value)))
-
-LRR_grt<-data.frame(matrix(ncol=5, nrow=2*11))
-names(LRR_grt)<-c('pop','bac','LRR','var','SE')
-
-LRR_grt$pop<-c(rep('C', 11), rep('W', 11))
-LRR_grt$bac<-rep(c("1", "2", "3", "4", "5","6","7","8","9","10","All10"), 2)
-
-#Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
-
-for (i in 1:11){
-  LRR_grt[i,3]<-log(Sum_LRR[i+1,4]/Sum_LRR[1,4])
-  LRR_grt[i,4]<-Sum_LRR[i+1,5]^2/(Sum_LRR[i+1,6]*Sum_LRR[i+1,4]^2) + Sum_LRR[1,5]^2/(Sum_LRR[1,6]*Sum_LRR[1,4]^2)
-}
-
-for (i in 12:22){
-  LRR_grt[i,3]<-log(Sum_LRR[i+2,4]/Sum_LRR[13,4])
-  LRR_grt[i,4]<-Sum_LRR[i+2,5]^2/(Sum_LRR[i+2,6]*Sum_LRR[i+2,4]^2) + Sum_LRR[13,5]^2/(Sum_LRR[13,6]*Sum_LRR[13,4]^2)
-}
-
-LRR_grt$SE<-sqrt(LRR_grt$var)
-
 #Let's create separate dataframes for each population
 dfC<-subset(df, df$pop== "Churchill")
 dfW<-subset(df, df$pop== "Wellspring")
@@ -167,17 +142,46 @@ dfC$bac<- factor(dfC$bac, levels = c("Control","1","8","6","3","7","10","9","4",
 levels(dfC$bac) <- c("Control","Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown1","Unknown2","Roseomonas sp.","Unknown3","Unknown4","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria")
 
 dfW$bac<- factor(dfW$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
-levels(dfW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
+levels(dfW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae 1","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae 2","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
 
-logC<-subset(LRR_grt, LRR_grt$pop== "C")
-logC$bac<- as.factor(logC$bac)
-logC$bac<- factor(logC$bac, levels = c("1","8","6","3","7","10","9","4","5","2","All10"))
-levels(logC$bac) <- c("Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown1","Unknown2","Roseomonas sp.","Unknown3","Unknown4","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria")
+#Generate summary statistics.
 
-logW<-subset(LRR_grt, LRR_grt$pop== "W")
-logW$bac<- as.factor(logW$bac)
-logW$bac<- factor(logW$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
-levels(logW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
+melt_LRRC<-melt(dfC, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
+Sum_LRRC<- ddply(melt_LRRC, c("bac","variable"), summarise,
+      mean = mean(value), sd = sd(value), count=n(),
+      sem = sd(value)/sqrt(length(value)))
+
+lrrC<-data.frame(matrix(ncol=4, nrow=11))
+names(lrrC)<-c('bac','LRR','var','SE')
+
+lrrC$bac<-Sum_LRRC$bac[2:12]
+
+#Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
+
+for (i in 1:11){
+  lrrC[i,2]<-log(Sum_LRRC[i+1,3]/Sum_LRRC[1,3])
+  lrrC[i,3]<-Sum_LRRC[i+1,4]^2/(Sum_LRRC[i+1,5]*Sum_LRRC[i+1,3]^2) + Sum_LRRC[1,5]^2/(Sum_LRRC[1,6]*Sum_LRRC[1,4]^2)
+}
+
+lrrC$SE<-sqrt(lrrC$var)
+
+#Wellspring
+melt_LRRW<-melt(dfW, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
+Sum_LRRW<- ddply(melt_LRRW, c("bac","variable"), summarise,
+      mean = mean(value), sd = sd(value), count=n(),
+      sem = sd(value)/sqrt(length(value)))
+
+lrrW<-data.frame(matrix(ncol=4, nrow=11))
+names(lrrW)<-c('bac','LRR','var','SE')
+
+lrrW$bac<-Sum_LRRW$bac[2:12]
+
+for (i in 1:11){
+  lrrW[i,2]<-log(Sum_LRRW[i+1,3]/Sum_LRRW[1,3])
+  lrrW[i,3]<-Sum_LRRW[i+1,4]^2/(Sum_LRRW[i+1,5]*Sum_LRRW[i+1,3]^2) + Sum_LRRW[1,5]^2/(Sum_LRRW[1,6]*Sum_LRRW[1,4]^2)
+}
+
+lrrW$SE<-sqrt(lrrW$var)
 ```
 
 SECTION 3: Churchill: Modelling.
@@ -778,14 +782,8 @@ SECTION 4: Churchill: Plotting.
 
 ```r
 # Let's plot!
-SumC<-subset(Sum_LRR,Sum_LRR$pop=="Churchill")
 
-#First, let's change the order of bacteria, ranked by effect. 
-SumC$bac<- as.factor(SumC$bac)
-SumC$bac<- factor(SumC$bac, levels = c("Control","1","8","6","3","7","10","9","4","5","2","All10"))
-levels(SumC$bac) <- c("Control","Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown1","Unknown2","Roseomonas sp.","Unknown3","Unknown4","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria")
-
-dwC <- ggplot(SumC,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwC <- ggplot(Sum_LRRC,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
 dwC <- dwC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 dwC <- dwC + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 dwC <- dwC + theme(legend.title=element_blank())
@@ -793,129 +791,74 @@ dwC <- dwC + theme(legend.position = "none")
 dwC <- dwC + labs(x= element_blank()) 
 dwC <- dwC + labs(y= "Duckweed growth (change in pixel count)")
 dwC <- dwC + geom_hline(yintercept=15560.8, linetype="dashed", color = "red3",size=1)
-dwC <- dwC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-#dwC <- dwC + ylim(12000,40000)
-dwC <- dwC + theme(axis.text = element_text(face="bold", size=12))
-dwC <- dwC + theme(axis.title = element_text(face="bold", size=13))
-dwC
-```
+dwC <- dwC + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+dwC <- dwC + theme(axis.title = element_text(face="bold", size=12))
 
-![](Data_analysis_files/figure-html/Churchill plots-1.png)<!-- -->
-
-```r
 #OK, we want to add a line based on additive interactive effects among bacteria
 #Calculate the effect of each microbe on plant growth
-base_grtC<-SumC[1,4]
-SumC$bac_eff<-(SumC$mean - base_grtC)/10
-add_predC<-sum(SumC$bac_eff[2:12]) +base_grtC
+base_grtC<-Sum_LRRC[1,3]
+Sum_LRRC$bac_eff<-(Sum_LRRC$mean - base_grtC)/10
+add_predC<-sum(Sum_LRRC$bac_eff[2:12]) +base_grtC
 
 dwC <- dwC + geom_hline(yintercept=add_predC, linetype="dashed", color = "blue3",size=1)
-dwC
-```
 
-![](Data_analysis_files/figure-html/Churchill plots-2.png)<!-- -->
-
-```r
 #Alright, let's plot LogRRs.
 
-logC_plt <- ggplot(logC,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logC_plt <- ggplot(lrrC,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
 logC_plt <- logC_plt + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 logC_plt <- logC_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 logC_plt <- logC_plt + theme(legend.title=element_blank())
 logC_plt <- logC_plt + theme(legend.position = "none")
 logC_plt <- logC_plt + labs(x= element_blank()) 
 logC_plt <- logC_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
-logC_plt <- logC_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-#dwC <- dwC + ylim(12000,40000)
-logC_plt <- logC_plt + theme(axis.text = element_text(face="bold", size=12))
-logC_plt <- logC_plt + theme(axis.title = element_text(face="bold", size=13))
-logC_plt
-```
+logC_plt <- logC_plt + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+logC_plt <- logC_plt + theme(axis.title = element_text(face="bold", size=12))
+logC_plt <- logC_plt + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
 
-![](Data_analysis_files/figure-html/Churchill plots-3.png)<!-- -->
-
-```r
 # OK, let's look at bacteria.
+# We need to generate some log rrs here too. Add to lrrC
 
-# We need to generate some log rrs here too.
-# We can add this to the logC dataframe
-
-#Generate summary statistics.
-melt_Cabs<-melt(dfC, id.vars=c("pop", "bac"), measure.vars= "logabs", na.rm = T)
-Sum_Cabs<- ddply(melt_Cabs, c("bac","variable"), summarise,
-      mean = mean(value), sd = sd(value), count=n(),
-      sem = sd(value)/sqrt(length(value)))
-
-for (i in 1:11){
-  logC[i,6]<-log(Sum_Cabs[i+1,3]/Sum_Cabs[1,3])
-  logC[i,7]<-Sum_Cabs[i+1,4]^2/(Sum_Cabs[i+1,5]*Sum_Cabs[i+1,3]^2) + Sum_Cabs[1,4]^2/(Sum_Cabs[1,5]*Sum_Cabs[1,3]^2)
-}
-
-names(logC)<-c('pop','bac','LRR','var','SE','absLRR','absvar')
-logC$absSE<-sqrt(logC$absvar)
-
+#Generate summary estimates of bacterial abundance, with plant presence and absence 
 melt_C_abs<-melt(dfC, id.vars=c("bac","plt"), measure.vars= "logabs", na.rm = T)
 Sum_C_abs<- ddply(melt_C_abs, c("bac","plt","variable"), summarise,
-                mean = mean(value), sd = sd(value),
+                mean = mean(value), sd = sd(value), count=n(),
                 sem = sd(value)/sqrt(length(value)))
+
+for (i in 1:11){
+  a<-i*2
+  lrrC[i,5]<-log(Sum_C_abs[a+1,4]/Sum_C_abs[a,4])
+  lrrC[i,6]<-Sum_C_abs[a+1,5]^2/(Sum_C_abs[a+1,6]*Sum_C_abs[a+1,4]^2) + Sum_C_abs[a,5]^2/(Sum_C_abs[1,6]*Sum_C_abs[1,4]^2)
+}
+
+names(lrrC)<-c('bac','LRR','var','SE','absLRR','absvar')
+lrrC$absSE<-sqrt(lrrC$absvar)
 
 absC <- ggplot(Sum_C_abs,aes(y=mean,x=bac,colour=bac,shape=plt))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
 absC <- absC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 absC <- absC + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 absC <- absC + theme(legend.title=element_blank())
-absC <- absC + guides(colour=FALSE)
-```
-
-```
-## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
-## "none")` instead.
-```
-
-```r
+absC <- absC + guides(colour='none')
 absC <- absC + scale_shape_discrete(name = "Treatment", labels = c("Bacteria only", "Plants & Bacteria"))
 absC <- absC + theme(legend.position = c(0.7,0.9))
 absC <- absC + labs(x= element_blank()) 
 absC <- absC + labs(y= "Logged bacterial cell density (cells/µL)")
-absC <- absC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-absC <- absC + ylim(3,9.5)
-absC <- absC + theme(axis.text = element_text(face="bold", size=12))
-absC <- absC + theme(axis.title = element_text(face="bold", size=13))
-absC
-```
+absC <- absC + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+absC <- absC + theme(axis.title = element_text(face="bold", size=12))
 
-![](Data_analysis_files/figure-html/Churchill plots-4.png)<!-- -->
-
-```r
 #Let's collapse this to LogRR's? This plot would show the importance of plant presence to each bacteria
 
-LRR_absC <- ggplot(logC,aes(y=absLRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
+LRR_absC <- ggplot(lrrC,aes(y=absLRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
 LRR_absC <- LRR_absC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 LRR_absC <- LRR_absC + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+LRR_absC <- LRR_absC + guides(colour='none')
 LRR_absC <- LRR_absC + theme(legend.title=element_blank())
-LRR_absC <- LRR_absC + guides(colour=FALSE)
-```
-
-```
-## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
-## "none")` instead.
-```
-
-```r
 LRR_absC <- LRR_absC + theme(legend.title=element_blank())
-LRR_absC <- LRR_absC + theme(legend.position = c(0.7,0.9))
 LRR_absC <- LRR_absC + labs(x= element_blank()) 
 LRR_absC <- LRR_absC + labs(y= "Effect of plant presence (Log Response Ratio)")
-LRR_absC <- LRR_absC + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-#LRR_absC <- LRR_absC + ylim(3,9.5)
-LRR_absC <- LRR_absC + theme(axis.text = element_text(face="bold", size=12))
-LRR_absC <- LRR_absC + theme(axis.title = element_text(face="bold", size=13))
-LRR_absC <- LRR_absC + scale_x_discrete(labels=c("Uncultured bacterium","Bosea sp.","Aeromonas salmonicida","Unknown","Unknown","Roseomonas sp.","Unknown","Unknown","Microbacterium sp.","Pseudomonas protogens","All 10 bacteria"))
-LRR_absC
-```
+LRR_absC <- LRR_absC + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+LRR_absC <- LRR_absC + theme(axis.title = element_text(face="bold", size=12))
+LRR_absC <- LRR_absC + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
 
-![](Data_analysis_files/figure-html/Churchill plots-5.png)<!-- -->
-
-```r
 # Then we can look at fitness regressions?
 # Let's start by just graphing bacterial cell count against the growth rate of plants. This will ask the question "are the fitness estimates of bacteria and plants aligned? Are they broadly mutualistic?"
 
@@ -924,94 +867,57 @@ LRR_absC
 regC <- ggplot(dfC,aes(y=logabs,x=Grt))+ geom_point()
 regC <- regC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 regC <- regC + stat_smooth(method='lm',fullrange=F, se=T, size=2)
-regC <- regC + labs(x= "Duckweed growth (change in pixel count)") 
 regC <- regC + labs(y= "Logged bacterial cell density (cells/µL)")
-regC <- regC + theme(axis.text = element_text(face="bold", size=12))
-regC <- regC + theme(axis.title = element_text(face="bold", size=13))
-regC
-```
+regC <- regC + labs(x= element_blank()) 
+regC <- regC + theme(axis.title = element_text(face="bold", size=12))
 
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```
-## Warning: Removed 340 rows containing non-finite values (stat_smooth).
-```
-
-```
-## Warning: Removed 340 rows containing missing values (geom_point).
-```
-
-![](Data_analysis_files/figure-html/Churchill plots-6.png)<!-- -->
-
-```r
 # Let's plot the summary statistics. 
+# Here, we want the mean absorbance for wells with plants ONLY
+dfC.plt<-subset(dfC, dfC$plt=='Y')
 
-SumC$mean.abs<- Sum_Cabs$mean
-SumC$se.abs<- Sum_Cabs$sem
+melt_C_abs.plt<-melt(dfC.plt, id.vars=c("bac"), measure.vars= "logabs", na.rm = T)
+Sum_C_abs.plt<- ddply(melt_C_abs, c("bac","variable"), summarise,
+                mean = mean(value), sd = sd(value), count=n(),
+                sem = sd(value)/sqrt(length(value)))
+
+Sum_LRRC$mean.abs<- Sum_C_abs.plt$mean
+Sum_LRRC$se.abs<- Sum_C_abs.plt$sem
   
-regC2 <- ggplot(SumC,aes(x=mean,y=mean.abs,colour=bac))+geom_errorbar(aes(xmin=mean-sem,xmax=mean+sem)) +geom_point(size=4.5)
+regC2 <- ggplot(Sum_LRRC,aes(x=mean,y=mean.abs,colour=bac))+geom_errorbar(aes(xmin=mean-sem,xmax=mean+sem)) +geom_point(size=4.5)
 regC2 <- regC2 + geom_errorbar(aes(ymin=mean.abs-se.abs,ymax=mean.abs+se.abs))
 regC2 <- regC2 + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 regC2 <- regC2 + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 regC2 <- regC2 + theme(legend.title=element_blank())
 regC2 <- regC2 + theme(legend.position = "none")
-regC2 <- regC2 + labs(x= "Duckweed growth (change in pixel count)") 
+regC2 <- regC2 + labs(x= element_blank()) 
 regC2 <- regC2 + labs(y= "Logged bacterial cell density (cells/µL)")
-regC2 <- regC2 + theme(axis.text = element_text(face="bold", size=12))
-regC2 <- regC2 + theme(axis.title = element_text(face="bold", size=13))
-regC2
-```
+regC2 <- regC2 + theme(axis.title = element_text(face="bold", size=12))
 
-![](Data_analysis_files/figure-html/Churchill plots-7.png)<!-- -->
-
-```r
 # Let's try the LogRR's
-regClRR <- ggplot(logC,aes(y=absLRR,x=LRR))+ geom_point()
+regClRR <- ggplot(lrrC,aes(y=absLRR,x=LRR,colour=bac))+ geom_point()
 regClRR <- regClRR + geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE))
 regClRR <- regClRR + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
 regClRR <- regClRR + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
-regClRR <- regClRR + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
+regClRR <- regClRR + theme(legend.title=element_blank())
+regClRR <- regClRR + theme(legend.position = "none")
+regClRR <- regClRR + labs(x= element_blank())  
 regClRR <- regClRR + labs(y= "Effect size of plant presence (Log Response Ratio)")
-regClRR <- regClRR + theme(axis.text = element_text(face="bold", size=12))
-regClRR <- regClRR + theme(axis.title = element_text(face="bold", size=13))
-regClRR
-```
-
-![](Data_analysis_files/figure-html/Churchill plots-8.png)<!-- -->
-
-```r
-# OK let's now regress the LogRRs
+regClRR <- regClRR + theme(axis.title = element_text(face="bold", size=12))
+regClRR <- regClRR + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 
 # Finally, let's plot fitness alignment (or estimate?) for each bacteria separately, and look at this?
 # How about emtrends~ LogRR's (effects on plants)? Are more beneficial bacterial also more closely aligned?
 
 # Let's ask that by plotting raw data for each bacteria
-
 regC.bac <- ggplot(dfC,aes(y=logabs,x=Grt))+ geom_point()
 regC.bac <- regC.bac + facet_wrap(~ bac)
 regC.bac <- regC.bac + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 regC.bac <- regC.bac + stat_smooth(method='lm',fullrange=F, se=T, size=2)
-regC.bac <- regC.bac + labs(x= "Duckweed growth (change in pixel count)") 
+regC.bac <- regC.bac + labs(x= element_blank()) 
 regC.bac <- regC.bac + labs(y= "Logged bacterial cell density (cells/µL)")
-regC.bac <- regC.bac + theme(axis.text = element_text(face="bold", size=12))
-regC.bac <- regC.bac + theme(axis.title = element_text(face="bold", size=13))
-regC.bac
-```
+regC.bac <- regC.bac + theme(axis.title = element_text(face="bold", size=12))
+regC.bac <- regC.bac + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
 
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```
-## Warning: Removed 340 rows containing non-finite values (stat_smooth).
-## Removed 340 rows containing missing values (geom_point).
-```
-
-![](Data_analysis_files/figure-html/Churchill plots-9.png)<!-- -->
-
-```r
 bac.emtC <- emtrends(regC3, "bac", var = "logabs")
 bac.emtC<-as.data.frame(bac.emtC)
 bac.emtC
@@ -1037,36 +943,28 @@ bac.emtC
 ```
 
 ```r
-# Pairwise comparisons
-pairs(bac.emtC)
-```
-
-![](Data_analysis_files/figure-html/Churchill plots-10.png)<!-- -->
-
-```r
 #Let's add these estimates to our SumC
-SumC$reg.mean<-bac.emtC$logabs.trend
-SumC$reg.SE<-bac.emtC$SE
+Sum_LRRC$reg.mean<-bac.emtC$logabs.trend
+Sum_LRRC$reg.SE<-bac.emtC$SE
 
 #Let's also add this information to logC
 bac.trend<-bac.emtC$logabs[2:12]
 SE.trend<-bac.emtC$SE[2:12]
 
-logC$reg.mean<-bac.trend
-logC$reg.SE<-SE.trend
+lrrC$reg.mean<-bac.trend
+lrrC$reg.SE<-SE.trend
 
-logemtC <- ggplot(logC,aes(y=reg.mean,x=LRR))+ geom_point()
+logemtC <- ggplot(lrrC,aes(y=reg.mean,x=LRR,colour=bac))+ geom_point()
 logemtC <- logemtC + geom_errorbar(aes(ymin=reg.mean-reg.SE,ymax=reg.mean+reg.SE))
 logemtC <- logemtC + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
 logemtC <- logemtC + theme_classic() + ggtitle("Churchill") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
-logemtC <- logemtC + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
+logemtC <- logemtC + theme(legend.title=element_blank())
+logemtC <- logemtC + theme(legend.position = "none")
+logemtC <- logemtC + labs(x= element_blank()) 
 logemtC <- logemtC + labs(y= "Fitness regression")
-logemtC <- logemtC + theme(axis.text = element_text(face="bold", size=12))
-logemtC <- logemtC + theme(axis.title = element_text(face="bold", size=13))
-logemtC
+logemtC <- logemtC + theme(axis.title = element_text(face="bold", size=12))
+logemtC <- logemtC + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 ```
-
-![](Data_analysis_files/figure-html/Churchill plots-11.png)<!-- -->
 
 SECTION 5: Wellspring: Modelling.
 
@@ -1100,19 +998,19 @@ summary(modW_Grt)
 ## -30170  -9439    763   8517  33505 
 ## 
 ## Coefficients:
-##                               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                   23262.70    2988.04   7.785 2.48e-13 ***
-## bacSphingomonas sp. 1          -158.91    4280.96  -0.037   0.9704    
-## bacRhizobiales sp.              -90.75    4280.96  -0.021   0.9831    
-## bacRhizobium sp. 1              728.15    4225.72   0.172   0.8633    
-## bacRhizorhabdus phycospaerae   1201.10    4225.72   0.284   0.7765    
-## bacUnknown1                    1363.15    4225.72   0.323   0.7473    
-## bacPseudomonas protogens       2605.65    4225.72   0.617   0.5381    
-## bacRhizorhabdus phycosphaerae  3808.95    4225.72   0.901   0.3683    
-## bacRhizobium sp. 2             4873.25    4225.72   1.153   0.2500    
-## bacSphingomonas sp. 2          5693.35    4225.72   1.347   0.1792    
-## bacPseudomonas aeruginosa      7764.50    4225.72   1.837   0.0675 .  
-## bacAll 10 bacteria             7179.10    4225.72   1.699   0.0907 .  
+##                                 Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                     23262.70    2988.04   7.785 2.48e-13 ***
+## bacSphingomonas sp. 1            -158.91    4280.96  -0.037   0.9704    
+## bacRhizobiales sp.                -90.75    4280.96  -0.021   0.9831    
+## bacRhizobium sp. 1                728.15    4225.72   0.172   0.8633    
+## bacRhizorhabdus phycospaerae 1   1201.10    4225.72   0.284   0.7765    
+## bacUnknown1                      1363.15    4225.72   0.323   0.7473    
+## bacPseudomonas protogens         2605.65    4225.72   0.617   0.5381    
+## bacRhizorhabdus phycosphaerae 2  3808.95    4225.72   0.901   0.3683    
+## bacRhizobium sp. 2               4873.25    4225.72   1.153   0.2500    
+## bacSphingomonas sp. 2            5693.35    4225.72   1.347   0.1792    
+## bacPseudomonas aeruginosa        7764.50    4225.72   1.837   0.0675 .  
+## bacAll 10 bacteria               7179.10    4225.72   1.699   0.0907 .  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1157,20 +1055,20 @@ summary(modW_pix)
 ## -26136.8  -6846.6   -108.6   7173.3  28062.7 
 ## 
 ## Coefficients:
-##                                 Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                    5353.5167  3147.1708   1.701   0.0903 .  
-## bacSphingomonas sp. 1          1511.4336  3624.0657   0.417   0.6770    
-## bacRhizobiales sp.            -1121.3467  3621.4476  -0.310   0.7571    
-## bacRhizobium sp. 1             1202.3335  3573.4733   0.336   0.7368    
-## bacRhizorhabdus phycospaerae    -73.8006  3575.6239  -0.021   0.9836    
-## bacUnknown1                    1258.7224  3573.1447   0.352   0.7250    
-## bacPseudomonas protogens       5090.4601  3582.6002   1.421   0.1567    
-## bacRhizorhabdus phycosphaerae  4644.3712  3574.1999   1.299   0.1951    
-## bacRhizobium sp. 2             4193.0506  3573.8386   1.173   0.2419    
-## bacSphingomonas sp. 2          5694.6120  3573.1279   1.594   0.1124    
-## bacPseudomonas aeruginosa      1929.1715  3625.0593   0.532   0.5951    
-## bacAll 10 bacteria             5326.5347  3578.3962   1.489   0.1380    
-## pix0                              7.3098     0.6611  11.057   <2e-16 ***
+##                                   Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                      5353.5167  3147.1708   1.701   0.0903 .  
+## bacSphingomonas sp. 1            1511.4336  3624.0657   0.417   0.6770    
+## bacRhizobiales sp.              -1121.3467  3621.4476  -0.310   0.7571    
+## bacRhizobium sp. 1               1202.3335  3573.4733   0.336   0.7368    
+## bacRhizorhabdus phycospaerae 1    -73.8006  3575.6239  -0.021   0.9836    
+## bacUnknown1                      1258.7224  3573.1447   0.352   0.7250    
+## bacPseudomonas protogens         5090.4601  3582.6002   1.421   0.1567    
+## bacRhizorhabdus phycosphaerae 2  4644.3712  3574.1999   1.299   0.1951    
+## bacRhizobium sp. 2               4193.0506  3573.8386   1.173   0.2419    
+## bacSphingomonas sp. 2            5694.6120  3573.1279   1.594   0.1124    
+## bacPseudomonas aeruginosa        1929.1715  3625.0593   0.532   0.5951    
+## bacAll 10 bacteria               5326.5347  3578.3962   1.489   0.1380    
+## pix0                                7.3098     0.6611  11.057   <2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1216,21 +1114,21 @@ summary(modW_pixgrt)
 ## -27218.7  -6422.7    891.9   6964.5  26713.4 
 ## 
 ## Coefficients:
-##                                Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                   2776.0136  3286.6401   0.845   0.3992    
-## bacSphingomonas sp. 1         2174.9183  3594.9014   0.605   0.5458    
-## bacRhizobiales sp.            -845.3889  3583.8304  -0.236   0.8137    
-## bacRhizobium sp. 1            1393.3943  3535.4637   0.394   0.6939    
-## bacRhizorhabdus phycospaerae  -453.1019  3540.1286  -0.128   0.8983    
-## bacUnknown1                   1064.4678  3535.1678   0.301   0.7636    
-## bacPseudomonas protogens      5264.1544  3544.3395   1.485   0.1389    
-## bacRhizorhabdus phycosphaerae 4441.9988  3536.2875   1.256   0.2104    
-## bacRhizobium sp. 2            4394.0822  3535.9174   1.243   0.2153    
-## bacSphingomonas sp. 2         6280.0706  3542.3627   1.773   0.0776 .  
-## bacPseudomonas aeruginosa     1589.2603  3588.3194   0.443   0.6583    
-## bacAll 10 bacteria            4952.2229  3542.7793   1.398   0.1635    
-## pix0                             7.2553     0.6543  11.089   <2e-16 ***
-## edgeY                         3903.1299  1596.5997   2.445   0.0153 *  
+##                                  Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                     2776.0136  3286.6401   0.845   0.3992    
+## bacSphingomonas sp. 1           2174.9183  3594.9014   0.605   0.5458    
+## bacRhizobiales sp.              -845.3889  3583.8304  -0.236   0.8137    
+## bacRhizobium sp. 1              1393.3943  3535.4637   0.394   0.6939    
+## bacRhizorhabdus phycospaerae 1  -453.1019  3540.1286  -0.128   0.8983    
+## bacUnknown1                     1064.4678  3535.1678   0.301   0.7636    
+## bacPseudomonas protogens        5264.1544  3544.3395   1.485   0.1389    
+## bacRhizorhabdus phycosphaerae 2 4441.9988  3536.2875   1.256   0.2104    
+## bacRhizobium sp. 2              4394.0822  3535.9174   1.243   0.2153    
+## bacSphingomonas sp. 2           6280.0706  3542.3627   1.773   0.0776 .  
+## bacPseudomonas aeruginosa       1589.2603  3588.3194   0.443   0.6583    
+## bacAll 10 bacteria              4952.2229  3542.7793   1.398   0.1635    
+## pix0                               7.2553     0.6543  11.089   <2e-16 ***
+## edgeY                           3903.1299  1596.5997   2.445   0.0153 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1274,20 +1172,20 @@ summary(lmer.grtW)
 ## Number of obs: 238, groups:  edge, 2
 ## 
 ## Fixed effects:
-##                                Estimate Std. Error t value
-## (Intercept)                   4832.3149  3593.9218   1.345
-## pix0                             7.2644     0.6542  11.104
-## bacSphingomonas sp. 1         2063.8994  3593.1867   0.574
-## bacRhizobiales sp.            -891.5641  3583.5329  -0.249
-## bacRhizobium sp. 1            1361.4247  3535.3191   0.385
-## bacRhizorhabdus phycospaerae  -389.6345  3539.5597  -0.110
-## bacUnknown1                   1096.9719  3535.0184   0.310
-## bacPseudomonas protogens      5235.0906  3544.2204   1.477
-## bacRhizorhabdus phycosphaerae 4475.8612  3536.1253   1.266
-## bacRhizobium sp. 2            4360.4442  3535.7574   1.233
-## bacSphingomonas sp. 2         6182.1075  3541.0079   1.746
-## bacPseudomonas aeruginosa     1646.1367  3587.8686   0.459
-## bacAll 10 bacteria            5014.8554  3542.2257   1.416
+##                                  Estimate Std. Error t value
+## (Intercept)                     4832.3149  3593.9218   1.345
+## pix0                               7.2644     0.6542  11.104
+## bacSphingomonas sp. 1           2063.8994  3593.1867   0.574
+## bacRhizobiales sp.              -891.5641  3583.5329  -0.249
+## bacRhizobium sp. 1              1361.4247  3535.3191   0.385
+## bacRhizorhabdus phycospaerae 1  -389.6345  3539.5597  -0.110
+## bacUnknown1                     1096.9719  3535.0184   0.310
+## bacPseudomonas protogens        5235.0906  3544.2204   1.477
+## bacRhizorhabdus phycosphaerae 2 4475.8612  3536.1253   1.266
+## bacRhizobium sp. 2              4360.4442  3535.7574   1.233
+## bacSphingomonas sp. 2           6182.1075  3541.0079   1.746
+## bacPseudomonas aeruginosa       1646.1367  3587.8686   0.459
+## bacAll 10 bacteria              5014.8554  3542.2257   1.416
 ```
 
 ```
@@ -1329,7 +1227,7 @@ exactRLRT(lmer.grtW)
 ## 	(p-value based on 10000 simulated values)
 ## 
 ## data:  
-## RLRT = 3.1343, p-value = 0.0157
+## RLRT = 3.1343, p-value = 0.0151
 ```
 
 ```r
@@ -1368,32 +1266,32 @@ summary(modW_abs)
 ## -3.8295 -0.4481  0.0101  0.5251  3.4732 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                    Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                          7.1795     0.5757  12.471  < 2e-16 ***
-## bacSphingomonas sp. 1               -0.6253     0.6543  -0.956 0.340421    
-## bacRhizobiales sp.                  -3.1637     0.6576  -4.811 2.99e-06 ***
-## bacRhizobium sp. 1                  -1.5589     0.6491  -2.402 0.017257 *  
-## bacRhizorhabdus phycospaerae        -2.3414     0.6259  -3.741 0.000241 ***
-## bacUnknown1                         -1.6361     0.6616  -2.473 0.014255 *  
-## bacPseudomonas protogens             0.2159     0.6767   0.319 0.750023    
-## bacRhizorhabdus phycosphaerae       -2.2068     0.6660  -3.313 0.001098 ** 
-## bacRhizobium sp. 2                  -1.8933     0.6543  -2.894 0.004241 ** 
-## bacSphingomonas sp. 2               -1.1529     0.6476  -1.780 0.076591 .  
-## bacPseudomonas aeruginosa           -1.5216     0.6508  -2.338 0.020399 *  
-## bacAll 10 bacteria                   1.2602     0.5057   2.492 0.013534 *  
-## pltY                                 0.5809     0.5020   1.157 0.248598    
-## edgeY                               -0.3826     0.1380  -2.772 0.006108 ** 
-## bacSphingomonas sp. 1:pltY           0.6685     0.6572   1.017 0.310312    
-## bacRhizobiales sp.:pltY              2.0244     0.6871   2.946 0.003607 ** 
-## bacRhizobium sp. 1:pltY              1.8640     0.6665   2.797 0.005675 ** 
-## bacRhizorhabdus phycospaerae:pltY    2.1072     0.6332   3.328 0.001045 ** 
-## bacUnknown1:pltY                     0.9042     0.6463   1.399 0.163405    
-## bacPseudomonas protogens:pltY        0.3542     0.6738   0.526 0.599683    
-## bacRhizorhabdus phycosphaerae:pltY   2.1085     0.6792   3.104 0.002190 ** 
-## bacRhizobium sp. 2:pltY              2.6299     0.6439   4.085 6.43e-05 ***
-## bacSphingomonas sp. 2:pltY           2.2520     0.6458   3.487 0.000603 ***
-## bacPseudomonas aeruginosa:pltY       2.3538     0.6416   3.669 0.000314 ***
-## bacAll 10 bacteria:pltY                  NA         NA      NA       NA    
+##                                      Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                            7.1795     0.5757  12.471  < 2e-16 ***
+## bacSphingomonas sp. 1                 -0.6253     0.6543  -0.956 0.340421    
+## bacRhizobiales sp.                    -3.1637     0.6576  -4.811 2.99e-06 ***
+## bacRhizobium sp. 1                    -1.5589     0.6491  -2.402 0.017257 *  
+## bacRhizorhabdus phycospaerae 1        -2.3414     0.6259  -3.741 0.000241 ***
+## bacUnknown1                           -1.6361     0.6616  -2.473 0.014255 *  
+## bacPseudomonas protogens               0.2159     0.6767   0.319 0.750023    
+## bacRhizorhabdus phycosphaerae 2       -2.2068     0.6660  -3.313 0.001098 ** 
+## bacRhizobium sp. 2                    -1.8933     0.6543  -2.894 0.004241 ** 
+## bacSphingomonas sp. 2                 -1.1529     0.6476  -1.780 0.076591 .  
+## bacPseudomonas aeruginosa             -1.5216     0.6508  -2.338 0.020399 *  
+## bacAll 10 bacteria                     1.2602     0.5057   2.492 0.013534 *  
+## pltY                                   0.5809     0.5020   1.157 0.248598    
+## edgeY                                 -0.3826     0.1380  -2.772 0.006108 ** 
+## bacSphingomonas sp. 1:pltY             0.6685     0.6572   1.017 0.310312    
+## bacRhizobiales sp.:pltY                2.0244     0.6871   2.946 0.003607 ** 
+## bacRhizobium sp. 1:pltY                1.8640     0.6665   2.797 0.005675 ** 
+## bacRhizorhabdus phycospaerae 1:pltY    2.1072     0.6332   3.328 0.001045 ** 
+## bacUnknown1:pltY                       0.9042     0.6463   1.399 0.163405    
+## bacPseudomonas protogens:pltY          0.3542     0.6738   0.526 0.599683    
+## bacRhizorhabdus phycosphaerae 2:pltY   2.1085     0.6792   3.104 0.002190 ** 
+## bacRhizobium sp. 2:pltY                2.6299     0.6439   4.085 6.43e-05 ***
+## bacSphingomonas sp. 2:pltY             2.2520     0.6458   3.487 0.000603 ***
+## bacPseudomonas aeruginosa:pltY         2.3538     0.6416   3.669 0.000314 ***
+## bacAll 10 bacteria:pltY                    NA         NA      NA       NA    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1438,21 +1336,21 @@ summary(regW)
 ## -24047.7  -6740.9     13.4   7487.3  29157.8 
 ## 
 ## Coefficients:
-##                               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                   -18837.8    10967.0  -1.718 0.088951 .  
-## logabs                          4914.7     1299.8   3.781 0.000266 ***
-## bacSphingomonas sp. 1           3808.6     5523.8   0.689 0.492112    
-## bacRhizobiales sp.              2953.8     6070.9   0.487 0.627647    
-## bacRhizobium sp. 1             -3270.1     5672.4  -0.577 0.565572    
-## bacRhizorhabdus phycospaerae    1178.4     5490.1   0.215 0.830486    
-## bacUnknown1                     9490.1     5106.7   1.858 0.066058 .  
-## bacPseudomonas protogens       -4142.6     5275.2  -0.785 0.434137    
-## bacRhizorhabdus phycosphaerae   3712.8     5674.5   0.654 0.514424    
-## bacRhizobium sp. 2             -2987.1     5194.4  -0.575 0.566543    
-## bacSphingomonas sp. 2           2000.1     5433.4   0.368 0.713573    
-## bacPseudomonas aeruginosa       4875.8     5350.9   0.911 0.364378    
-## bacAll 10 bacteria              -912.1     6782.2  -0.134 0.893294    
-## edgeY                           4996.8     2624.5   1.904 0.059792 .  
+##                                 Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                     -18837.8    10967.0  -1.718 0.088951 .  
+## logabs                            4914.7     1299.8   3.781 0.000266 ***
+## bacSphingomonas sp. 1             3808.6     5523.8   0.689 0.492112    
+## bacRhizobiales sp.                2953.8     6070.9   0.487 0.627647    
+## bacRhizobium sp. 1               -3270.1     5672.4  -0.577 0.565572    
+## bacRhizorhabdus phycospaerae 1    1178.4     5490.1   0.215 0.830486    
+## bacUnknown1                       9490.1     5106.7   1.858 0.066058 .  
+## bacPseudomonas protogens         -4142.6     5275.2  -0.785 0.434137    
+## bacRhizorhabdus phycosphaerae 2   3712.8     5674.5   0.654 0.514424    
+## bacRhizobium sp. 2               -2987.1     5194.4  -0.575 0.566543    
+## bacSphingomonas sp. 2             2000.1     5433.4   0.368 0.713573    
+## bacPseudomonas aeruginosa         4875.8     5350.9   0.911 0.364378    
+## bacAll 10 bacteria                -912.1     6782.2  -0.134 0.893294    
+## edgeY                             4996.8     2624.5   1.904 0.059792 .  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1498,22 +1396,22 @@ summary(regW2)
 ## -23617  -6132  -1054   6275  26220 
 ## 
 ## Coefficients:
-##                                 Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                   -2.569e+04  1.023e+04  -2.510 0.013705 *  
-## logabs                         4.156e+03  1.211e+03   3.431 0.000877 ***
-## pix0                           4.892e+00  9.013e-01   5.428 4.06e-07 ***
-## bacSphingomonas sp. 1          6.444e+03  5.129e+03   1.256 0.211955    
-## bacRhizobiales sp.             3.844e+03  5.601e+03   0.686 0.494118    
-## bacRhizobium sp. 1            -1.279e+03  5.250e+03  -0.244 0.808079    
-## bacRhizorhabdus phycospaerae   5.604e+02  5.064e+03   0.111 0.912103    
-## bacUnknown1                    9.085e+03  4.709e+03   1.929 0.056566 .  
-## bacPseudomonas protogens       7.519e+01  4.961e+03   0.015 0.987936    
-## bacRhizorhabdus phycosphaerae  5.380e+03  5.246e+03   1.026 0.307610    
-## bacRhizobium sp. 2            -6.754e+02  4.819e+03  -0.140 0.888821    
-## bacSphingomonas sp. 2          4.093e+03  5.033e+03   0.813 0.418018    
-## bacPseudomonas aeruginosa      1.759e+03  4.986e+03   0.353 0.724956    
-## bacAll 10 bacteria            -8.637e+02  6.253e+03  -0.138 0.890415    
-## edgeY                          5.296e+03  2.421e+03   2.188 0.031030 *  
+##                                   Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                     -2.569e+04  1.023e+04  -2.510 0.013705 *  
+## logabs                           4.156e+03  1.211e+03   3.431 0.000877 ***
+## pix0                             4.892e+00  9.013e-01   5.428 4.06e-07 ***
+## bacSphingomonas sp. 1            6.444e+03  5.129e+03   1.256 0.211955    
+## bacRhizobiales sp.               3.844e+03  5.601e+03   0.686 0.494118    
+## bacRhizobium sp. 1              -1.279e+03  5.250e+03  -0.244 0.808079    
+## bacRhizorhabdus phycospaerae 1   5.604e+02  5.064e+03   0.111 0.912103    
+## bacUnknown1                      9.085e+03  4.709e+03   1.929 0.056566 .  
+## bacPseudomonas protogens         7.519e+01  4.961e+03   0.015 0.987936    
+## bacRhizorhabdus phycosphaerae 2  5.380e+03  5.246e+03   1.026 0.307610    
+## bacRhizobium sp. 2              -6.754e+02  4.819e+03  -0.140 0.888821    
+## bacSphingomonas sp. 2            4.093e+03  5.033e+03   0.813 0.418018    
+## bacPseudomonas aeruginosa        1.759e+03  4.986e+03   0.353 0.724956    
+## bacAll 10 bacteria              -8.637e+02  6.253e+03  -0.138 0.890415    
+## edgeY                            5.296e+03  2.421e+03   2.188 0.031030 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1560,32 +1458,58 @@ summary(regW3)
 ## -21626  -6488   1015   5714  27830 
 ## 
 ## Coefficients:
-##                                       Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                           -28614.5    39022.0  -0.733 0.465307    
-## logabs                                  6273.6     5193.6   1.208 0.230266    
-## bacSphingomonas sp. 1                 152524.3    68473.1   2.228 0.028435 *  
-## bacRhizobiales sp.                    -15859.9    45281.1  -0.350 0.726975    
-## bacRhizobium sp. 1                    -13753.0    54454.6  -0.253 0.801191    
-## bacRhizorhabdus phycospaerae            4460.7    41396.3   0.108 0.914431    
-## bacUnknown1                            26063.8    49094.9   0.531 0.596820    
-## bacPseudomonas protogens              -24737.0    78439.7  -0.315 0.753224    
-## bacRhizorhabdus phycosphaerae          34729.2    45493.8   0.763 0.447253    
-## bacRhizobium sp. 2                    -61176.4    53906.6  -1.135 0.259482    
-## bacSphingomonas sp. 2                 245367.4    65819.2   3.728 0.000339 ***
-## bacPseudomonas aeruginosa              47142.4    64258.2   0.734 0.465097    
-## bacAll 10 bacteria                   -107974.3    87771.0  -1.230 0.221871    
-## edgeY                                   4418.5     2460.1   1.796 0.075877 .  
-## logabs:bacSphingomonas sp. 1          -19109.4     8867.6  -2.155 0.033865 *  
-## logabs:bacRhizobiales sp.               3158.3     6278.1   0.503 0.616162    
-## logabs:bacRhizobium sp. 1               1275.9     7088.9   0.180 0.857569    
-## logabs:bacRhizorhabdus phycospaerae     -398.2     5505.5  -0.072 0.942498    
-## logabs:bacUnknown1                     -2302.1     6797.8  -0.339 0.735662    
-## logabs:bacPseudomonas protogens         2419.4     9854.8   0.246 0.806632    
-## logabs:bacRhizorhabdus phycosphaerae   -4188.5     6066.1  -0.690 0.491691    
-## logabs:bacRhizobium sp. 2               6934.2     6871.3   1.009 0.315641    
-## logabs:bacSphingomonas sp. 2          -28222.8     8018.2  -3.520 0.000683 ***
-## logabs:bacPseudomonas aeruginosa       -5235.8     8067.9  -0.649 0.518032    
-## logabs:bacAll 10 bacteria              12234.2    10460.7   1.170 0.245311    
+##                                         Estimate Std. Error t value Pr(>|t|)
+## (Intercept)                             -28614.5    39022.0  -0.733 0.465307
+## logabs                                    6273.6     5193.6   1.208 0.230266
+## bacSphingomonas sp. 1                   152524.3    68473.1   2.228 0.028435
+## bacRhizobiales sp.                      -15859.9    45281.1  -0.350 0.726975
+## bacRhizobium sp. 1                      -13753.0    54454.6  -0.253 0.801191
+## bacRhizorhabdus phycospaerae 1            4460.7    41396.3   0.108 0.914431
+## bacUnknown1                              26063.8    49094.9   0.531 0.596820
+## bacPseudomonas protogens                -24737.0    78439.7  -0.315 0.753224
+## bacRhizorhabdus phycosphaerae 2          34729.2    45493.8   0.763 0.447253
+## bacRhizobium sp. 2                      -61176.4    53906.6  -1.135 0.259482
+## bacSphingomonas sp. 2                   245367.4    65819.2   3.728 0.000339
+## bacPseudomonas aeruginosa                47142.4    64258.2   0.734 0.465097
+## bacAll 10 bacteria                     -107974.3    87771.0  -1.230 0.221871
+## edgeY                                     4418.5     2460.1   1.796 0.075877
+## logabs:bacSphingomonas sp. 1            -19109.4     8867.6  -2.155 0.033865
+## logabs:bacRhizobiales sp.                 3158.3     6278.1   0.503 0.616162
+## logabs:bacRhizobium sp. 1                 1275.9     7088.9   0.180 0.857569
+## logabs:bacRhizorhabdus phycospaerae 1     -398.2     5505.5  -0.072 0.942498
+## logabs:bacUnknown1                       -2302.1     6797.8  -0.339 0.735662
+## logabs:bacPseudomonas protogens           2419.4     9854.8   0.246 0.806632
+## logabs:bacRhizorhabdus phycosphaerae 2   -4188.5     6066.1  -0.690 0.491691
+## logabs:bacRhizobium sp. 2                 6934.2     6871.3   1.009 0.315641
+## logabs:bacSphingomonas sp. 2            -28222.8     8018.2  -3.520 0.000683
+## logabs:bacPseudomonas aeruginosa         -5235.8     8067.9  -0.649 0.518032
+## logabs:bacAll 10 bacteria                12234.2    10460.7   1.170 0.245311
+##                                           
+## (Intercept)                               
+## logabs                                    
+## bacSphingomonas sp. 1                  *  
+## bacRhizobiales sp.                        
+## bacRhizobium sp. 1                        
+## bacRhizorhabdus phycospaerae 1            
+## bacUnknown1                               
+## bacPseudomonas protogens                  
+## bacRhizorhabdus phycosphaerae 2           
+## bacRhizobium sp. 2                        
+## bacSphingomonas sp. 2                  ***
+## bacPseudomonas aeruginosa                 
+## bacAll 10 bacteria                        
+## edgeY                                  .  
+## logabs:bacSphingomonas sp. 1           *  
+## logabs:bacRhizobiales sp.                 
+## logabs:bacRhizobium sp. 1                 
+## logabs:bacRhizorhabdus phycospaerae 1     
+## logabs:bacUnknown1                        
+## logabs:bacPseudomonas protogens           
+## logabs:bacRhizorhabdus phycosphaerae 2    
+## logabs:bacRhizobium sp. 2                 
+## logabs:bacSphingomonas sp. 2           ***
+## logabs:bacPseudomonas aeruginosa          
+## logabs:bacAll 10 bacteria                 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1632,33 +1556,60 @@ summary(regW4)
 ## -23248.6  -5653.3    822.3   5938.7  24233.1 
 ## 
 ## Coefficients:
-##                                        Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                          -4.100e+04  3.812e+04  -1.076 0.285034    
-## logabs                                6.876e+03  5.039e+03   1.365 0.175873    
-## bacSphingomonas sp. 1                 1.461e+05  6.641e+04   2.200 0.030454 *  
-## bacRhizobiales sp.                    1.603e+02  4.432e+04   0.004 0.997122    
-## bacRhizobium sp. 1                    4.785e+03  5.326e+04   0.090 0.928619    
-## bacRhizorhabdus phycospaerae          1.363e+04  4.028e+04   0.338 0.735875    
-## bacUnknown1                           3.517e+04  4.771e+04   0.737 0.463013    
-## bacPseudomonas protogens             -8.789e+03  7.627e+04  -0.115 0.908522    
-## bacRhizorhabdus phycosphaerae         3.941e+04  4.413e+04   0.893 0.374262    
-## bacRhizobium sp. 2                   -5.179e+04  5.237e+04  -0.989 0.325368    
-## bacSphingomonas sp. 2                 2.117e+05  6.509e+04   3.252 0.001626 ** 
-## bacPseudomonas aeruginosa             4.844e+04  6.228e+04   0.778 0.438773    
-## bacAll 10 bacteria                   -6.661e+04  8.654e+04  -0.770 0.443554    
-## pix0                                  3.405e+00  9.258e-01   3.678 0.000404 ***
-## edgeY                                 4.788e+03  2.389e+03   2.005 0.048068 *  
-## logabs:bacSphingomonas sp. 1         -1.811e+04  8.603e+03  -2.106 0.038097 *  
-## logabs:bacRhizobiales sp.             9.281e+02  6.145e+03   0.151 0.880292    
-## logabs:bacRhizobium sp. 1            -9.793e+02  6.925e+03  -0.141 0.887864    
-## logabs:bacRhizorhabdus phycospaerae  -1.682e+03  5.359e+03  -0.314 0.754318    
-## logabs:bacUnknown1                   -3.573e+03  6.606e+03  -0.541 0.590028    
-## logabs:bacPseudomonas protogens       6.973e+02  9.574e+03   0.073 0.942108    
-## logabs:bacRhizorhabdus phycosphaerae -4.667e+03  5.882e+03  -0.793 0.429672    
-## logabs:bacRhizobium sp. 2             5.873e+03  6.672e+03   0.880 0.381163    
-## logabs:bacSphingomonas sp. 2         -2.434e+04  7.914e+03  -3.075 0.002801 ** 
-## logabs:bacPseudomonas aeruginosa     -5.729e+03  7.822e+03  -0.733 0.465807    
-## logabs:bacAll 10 bacteria             7.301e+03  1.031e+04   0.708 0.480948    
+##                                          Estimate Std. Error t value Pr(>|t|)
+## (Intercept)                            -4.100e+04  3.812e+04  -1.076 0.285034
+## logabs                                  6.876e+03  5.039e+03   1.365 0.175873
+## bacSphingomonas sp. 1                   1.461e+05  6.641e+04   2.200 0.030454
+## bacRhizobiales sp.                      1.603e+02  4.432e+04   0.004 0.997122
+## bacRhizobium sp. 1                      4.785e+03  5.326e+04   0.090 0.928619
+## bacRhizorhabdus phycospaerae 1          1.363e+04  4.028e+04   0.338 0.735875
+## bacUnknown1                             3.517e+04  4.771e+04   0.737 0.463013
+## bacPseudomonas protogens               -8.789e+03  7.627e+04  -0.115 0.908522
+## bacRhizorhabdus phycosphaerae 2         3.941e+04  4.413e+04   0.893 0.374262
+## bacRhizobium sp. 2                     -5.179e+04  5.237e+04  -0.989 0.325368
+## bacSphingomonas sp. 2                   2.117e+05  6.509e+04   3.252 0.001626
+## bacPseudomonas aeruginosa               4.844e+04  6.228e+04   0.778 0.438773
+## bacAll 10 bacteria                     -6.661e+04  8.654e+04  -0.770 0.443554
+## pix0                                    3.405e+00  9.258e-01   3.678 0.000404
+## edgeY                                   4.788e+03  2.389e+03   2.005 0.048068
+## logabs:bacSphingomonas sp. 1           -1.811e+04  8.603e+03  -2.106 0.038097
+## logabs:bacRhizobiales sp.               9.281e+02  6.145e+03   0.151 0.880292
+## logabs:bacRhizobium sp. 1              -9.793e+02  6.925e+03  -0.141 0.887864
+## logabs:bacRhizorhabdus phycospaerae 1  -1.682e+03  5.359e+03  -0.314 0.754318
+## logabs:bacUnknown1                     -3.573e+03  6.606e+03  -0.541 0.590028
+## logabs:bacPseudomonas protogens         6.973e+02  9.574e+03   0.073 0.942108
+## logabs:bacRhizorhabdus phycosphaerae 2 -4.667e+03  5.882e+03  -0.793 0.429672
+## logabs:bacRhizobium sp. 2               5.873e+03  6.672e+03   0.880 0.381163
+## logabs:bacSphingomonas sp. 2           -2.434e+04  7.914e+03  -3.075 0.002801
+## logabs:bacPseudomonas aeruginosa       -5.729e+03  7.822e+03  -0.733 0.465807
+## logabs:bacAll 10 bacteria               7.301e+03  1.031e+04   0.708 0.480948
+##                                           
+## (Intercept)                               
+## logabs                                    
+## bacSphingomonas sp. 1                  *  
+## bacRhizobiales sp.                        
+## bacRhizobium sp. 1                        
+## bacRhizorhabdus phycospaerae 1            
+## bacUnknown1                               
+## bacPseudomonas protogens                  
+## bacRhizorhabdus phycosphaerae 2           
+## bacRhizobium sp. 2                        
+## bacSphingomonas sp. 2                  ** 
+## bacPseudomonas aeruginosa                 
+## bacAll 10 bacteria                        
+## pix0                                   ***
+## edgeY                                  *  
+## logabs:bacSphingomonas sp. 1           *  
+## logabs:bacRhizobiales sp.                 
+## logabs:bacRhizobium sp. 1                 
+## logabs:bacRhizorhabdus phycospaerae 1     
+## logabs:bacUnknown1                        
+## logabs:bacPseudomonas protogens           
+## logabs:bacRhizorhabdus phycosphaerae 2    
+## logabs:bacRhizobium sp. 2                 
+## logabs:bacSphingomonas sp. 2           ** 
+## logabs:bacPseudomonas aeruginosa          
+## logabs:bacAll 10 bacteria                 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1676,157 +1627,230 @@ SECTION 6: Wellspring: Plotting.
 
 
 ```r
-# Let's plot!
-SumW<-subset(Sum_LRR,Sum_LRR$pop=="Wellspring")
-
-#First, let's change the order of bacteria, ranked by effect. 
-SumW$bac<- factor(SumW$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
-levels(SumW$bac) <- c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria")
-
-dwW <- ggplot(SumW,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
+dwW <- ggplot(Sum_LRRW,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=4.5)
 dwW <- dwW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 dwW <- dwW + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 dwW <- dwW + theme(legend.title=element_blank())
 dwW <- dwW + theme(legend.position = "none")
 dwW <- dwW + labs(x= element_blank()) 
-dwW <- dwW + labs(y= "Duckweed growth (change in pixel count)")
+dwW <- dwW + labs(y= element_blank())
 dwW <- dwW + geom_hline(yintercept=23262.70, linetype="dashed", color = "red3",size=1)
-dwW <- dwW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-#dwW <- dwW + ylim(12000,40000)
-dwW <- dwW + theme(axis.text = element_text(face="bold", size=12))
-dwW <- dwW + theme(axis.title = element_text(face="bold", size=13))
-dwW
-```
+dwW <- dwW + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
 
-![](Data_analysis_files/figure-html/Wellspring plots-1.png)<!-- -->
-
-```r
 #OK, we want to add a line based on additive interactive effects among bacteria
 #Calculate the effect of each microbe on plant growth
-base_grtW<-SumW[1,4]
-SumW$bac_eff<-(SumW$mean - base_grtW)/10
-add_predW<-sum(SumW$bac_eff[2:12]) +base_grtW
+base_grtW<-Sum_LRRW[1,3]
+Sum_LRRW$bac_eff<-(Sum_LRRW$mean - base_grtW)/10
+add_predW<-sum(Sum_LRRW$bac_eff[2:12]) +base_grtW
 
 dwW <- dwW + geom_hline(yintercept=add_predW, linetype="dashed", color = "blue3",size=1)
-dwW
-```
 
-![](Data_analysis_files/figure-html/Wellspring plots-2.png)<!-- -->
-
-```r
 #Alright, let's plot LogRRs.
 
-logW_plt <- ggplot(logW,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
+logW_plt <- ggplot(lrrW,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=4.5)
 logW_plt <- logW_plt + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 logW_plt <- logW_plt + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 logW_plt <- logW_plt + theme(legend.title=element_blank())
 logW_plt <- logW_plt + theme(legend.position = "none")
 logW_plt <- logW_plt + labs(x= element_blank()) 
-logW_plt <- logW_plt + labs(y= "Effect size of bacterial inoculation (Log Response Ratio)")
-logW_plt <- logW_plt + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-#logW_plt <- logW_plt + ylim(12000,40000)
-logW_plt <- logW_plt + theme(axis.text = element_text(face="bold", size=12))
-logW_plt <- logW_plt + theme(axis.title = element_text(face="bold", size=13))
-logW_plt <- logW_plt+ scale_x_discrete(labels=c("Control","Sphingomonas sp. 1","Rhizobiales sp.","Rhizobium sp. 1","Rhizorhabdus phycospaerae","Unknown1","Pseudomonas protogens","Rhizorhabdus phycosphaerae","Rhizobium sp. 2","Sphingomonas sp. 2","Pseudomonas aeruginosa","All 10 bacteria"))
-logW_plt
-```
+logW_plt <- logW_plt + labs(y= element_blank())
+logW_plt <- logW_plt + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+logW_plt <- logW_plt + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
 
-![](Data_analysis_files/figure-html/Wellspring plots-3.png)<!-- -->
-
-```r
-# OK, let's look at bacteria.
-
-# We need to generate some log rrs here too.
-# We can add this to the logC dataframe
-
-#Generate summary statistics.
-melt_Wabs<-melt(dfW, id.vars=c("pop", "bac"), measure.vars= "logabs", na.rm = T)
-Sum_Wabs<- ddply(melt_Wabs, c("bac","variable"), summarise,
-      mean = mean(value), sd = sd(value), count=n(),
-      sem = sd(value)/sqrt(length(value)))
-
-for (i in 1:11){
-  logW[i,6]<-log(Sum_Wabs[i+1,3]/Sum_Wabs[1,3])
-  logW[i,7]<-Sum_Wabs[i+1,4]^2/(Sum_Wabs[i+1,5]*Sum_Wabs[i+1,3]^2) + Sum_Wabs[1,4]^2/(Sum_Wabs[1,5]*Sum_Wabs[1,3]^2)
-}
-
-names(logW)<-c('pop','bac','LRR','var','SE','absLRR','absvar')
-logW$absSE<-sqrt(logW$absvar)
+# OK, bacteria.
 
 melt_W_abs<-melt(dfW, id.vars=c("bac","plt"), measure.vars= "logabs", na.rm = T)
 Sum_W_abs<- ddply(melt_W_abs, c("bac","plt","variable"), summarise,
-                mean = mean(value), sd = sd(value),
+                mean = mean(value), sd = sd(value), count=n(),
                 sem = sd(value)/sqrt(length(value)))
+
+for (i in 1:11){
+  a<-i*2
+  lrrW[i,5]<-log(Sum_W_abs[a+1,4]/Sum_W_abs[a,4])
+  lrrW[i,6]<-Sum_W_abs[a+1,5]^2/(Sum_W_abs[a+1,6]*Sum_W_abs[a+1,4]^2) + Sum_W_abs[a,5]^2/(Sum_W_abs[1,6]*Sum_W_abs[1,4]^2)
+}
+
+names(lrrW)<-c('bac','LRR','var','SE','absLRR','absvar')
+lrrW$absSE<-sqrt(lrrW$absvar)
 
 absW <- ggplot(Sum_W_abs,aes(y=mean,x=bac,colour=bac,shape=plt))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
 absW <- absW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 absW <- absW + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 absW <- absW + theme(legend.title=element_blank())
-absW <- absW + guides(colour=FALSE)
-```
-
-```
-## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
-## "none")` instead.
-```
-
-```r
+absW <- absW + guides(colour='none')
 absW <- absW + scale_shape_discrete(name = "Treatment", labels = c("Bacteria only", "Plants & Bacteria"))
-absW <- absW + theme(legend.position = c(0.7,0.9))
+absW <- absW + theme(legend.position = 'none')
 absW <- absW + labs(x= element_blank()) 
-absW <- absW + labs(y= "Logged bacterial cell density (cells/µL)")
-absW <- absW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-absW <- absW + ylim(3,9.5)
-absW <- absW+ theme(axis.text = element_text(face="bold", size=12))
-absW <- absW + theme(axis.title = element_text(face="bold", size=13))
-absW
-```
+absW <- absW + labs(y= element_blank())
+absW <- absW + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
 
-![](Data_analysis_files/figure-html/Wellspring plots-4.png)<!-- -->
-
-```r
 #Let's collapse this to LogRR's? This plot would show the importance of plant presence to each bacteria
 
-LRR_absW <- ggplot(logW,aes(y=absLRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
+LRR_absW <- ggplot(lrrW,aes(y=absLRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE),width=0.5, position=position_dodge(width=0.4)) +geom_point(position=position_dodge(width=0.4), size=4.5)
 LRR_absW <- LRR_absW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 LRR_absW <- LRR_absW + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
 LRR_absW <- LRR_absW + theme(legend.title=element_blank())
-LRR_absW <- LRR_absW + guides(colour=FALSE)
-```
-
-```
-## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
-## "none")` instead.
-```
-
-```r
+LRR_absW <- LRR_absW + guides(colour='none')
 LRR_absW <- LRR_absW + theme(legend.title=element_blank())
-LRR_absW <- LRR_absW + theme(legend.position = c(0.7,0.9))
+LRR_absW <- LRR_absW + theme(legend.position = 'none')
 LRR_absW <- LRR_absW + labs(x= element_blank()) 
-LRR_absW <- LRR_absW + labs(y= "Effect size of plant presence (Log Response Ratio)")
-LRR_absW <- LRR_absW + theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.5))
-#LRR_absW <- LRR_absW + ylim(3,9.5)
-LRR_absW <- LRR_absW + theme(axis.text = element_text(face="bold", size=12))
-LRR_absW <- LRR_absW + theme(axis.title = element_text(face="bold", size=13))
-LRR_absW
-```
+LRR_absW <- LRR_absW + labs(y= element_blank())
+LRR_absW <- LRR_absW + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+LRR_absW <- LRR_absW + geom_hline(yintercept=0, linetype="dashed", color = "red3",size=1)
 
-![](Data_analysis_files/figure-html/Wellspring plots-5.png)<!-- -->
-
-```r
-# Then we can look at fitness regressions?
-# Let's start by just graphing bacterial cell count against the growth rate of plants. This will ask the question "are the fitness estimates of bacteria and plants aligned? Are they broadly mutualistic?"
-
-# Let's plot the raw regression first?
-#Let's try plotting that with the full dataset, not the summary stats
 regW <- ggplot(dfW,aes(y=logabs,x=Grt))+ geom_point()
 regW <- regW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 regW <- regW + stat_smooth(method='lm',fullrange=F, se=T, size=2)
-regW <- regW + labs(x= "Duckweed growth (change in pixel count)") 
-regW <- regW + labs(y= "Logged bacterial cell density (cells/µL)")
-regW <- regW + theme(axis.text = element_text(face="bold", size=12))
-regW <- regW + theme(axis.title = element_text(face="bold", size=13))
-regW
+regW <- regW + labs(x= element_blank()) 
+regW <- regW + labs(y= element_blank()) 
+
+dfW.plt<-subset(dfW, dfW$plt=='Y')
+
+melt_W_abs.plt<-melt(dfW.plt, id.vars=c("bac"), measure.vars= "logabs", na.rm = T)
+Sum_W_abs.plt<- ddply(melt_W_abs, c("bac","variable"), summarise,
+                mean = mean(value), sd = sd(value), count=n(),
+                sem = sd(value)/sqrt(length(value)))
+
+Sum_LRRW$mean.abs<- Sum_W_abs.plt$mean
+Sum_LRRW$se.abs<- Sum_W_abs.plt$sem
+  
+regW2 <- ggplot(Sum_LRRW,aes(x=mean,y=mean.abs,colour=bac))+geom_errorbar(aes(xmin=mean-sem,xmax=mean+sem)) +geom_point(size=4.5)
+regW2 <- regW2 + geom_errorbar(aes(ymin=mean.abs-se.abs,ymax=mean.abs+se.abs))
+regW2 <- regW2 + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regW2 <- regW2 + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+regW2 <- regW2 + theme(legend.title=element_blank())
+regW2 <- regW2 + theme(legend.position = "none")
+regW2 <- regW2 + labs(x= element_blank()) 
+regW2 <- regW2 + labs(y= element_blank()) 
+
+regWlRR <- ggplot(lrrW,aes(y=absLRR,x=LRR,colour=bac))+ geom_point()
+regWlRR <- regWlRR + geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE))
+regWlRR <- regWlRR + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
+regWlRR <- regWlRR + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regWlRR <- regWlRR + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+regWlRR <- regWlRR + theme(legend.title=element_blank())
+regWlRR <- regWlRR + theme(legend.position = "none")
+regWlRR <- regWlRR + labs(x= element_blank()) 
+regWlRR <- regWlRR + labs(y= element_blank()) 
+
+regW.bac <- ggplot(dfW,aes(y=logabs,x=Grt))+ geom_point()
+regW.bac <- regW.bac + facet_wrap(~ bac)
+regW.bac <- regW.bac + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+regW.bac <- regW.bac + stat_smooth(method='lm',fullrange=F, se=T, size=2)
+regW.bac <- regW.bac + labs(x= element_blank())  
+regW.bac <- regW.bac + labs(y= element_blank())
+regW.bac <- regW.bac + theme(axis.text.x = element_text(angle = 45, hjust=1,vjust=1))
+
+bac.emtW <- emtrends(regW3, "bac", var = "logabs")
+bac.emtW<-as.data.frame(bac.emtW)
+bac.emtW
+```
+
+```
+##  bac                          logabs.trend   SE df lower.CL upper.CL
+##  Control                              6274 5194 89    -4046    16593
+##  Sphingomonas sp. 1                 -12836 7184 89   -27110     1438
+##  Rhizobiales sp.                      9432 3491 89     2496    16368
+##  Rhizobium sp. 1                      7550 4827 89    -2041    17140
+##  Rhizorhabdus phycospaerae 1          5875 1817 89     2266     9485
+##  Unknown1                             3971 4352 89    -4677    12620
+##  Pseudomonas protogens                8693 8346 89    -7891    25277
+##  Rhizorhabdus phycosphaerae 2         2085 3127 89    -4127     8298
+##  Rhizobium sp. 2                     13208 4451 89     4364    22051
+##  Sphingomonas sp. 2                 -21949 6066 89   -34003    -9896
+##  Pseudomonas aeruginosa               1038 6174 89   -11229    13305
+##  All 10 bacteria                     18508 9080 89      465    36550
+## 
+## Results are averaged over the levels of: edge 
+## Confidence level used: 0.95
+```
+
+```r
+#Let's add these estimates to our SumW
+Sum_LRRW$reg.mean<-bac.emtW$logabs.trend
+Sum_LRRW$reg.SE<-bac.emtW$SE
+
+#Let's also add this information to lrrW
+bac.trend<-bac.emtW$logabs[2:12]
+SE.trend<-bac.emtW$SE[2:12]
+
+lrrW$reg.mean<-bac.trend
+lrrW$reg.SE<-SE.trend
+
+logemtW <- ggplot(lrrW,aes(y=reg.mean,x=LRR,colour=bac))+ geom_point()
+logemtW <- logemtW + geom_errorbar(aes(ymin=reg.mean-reg.SE,ymax=reg.mean+reg.SE))
+logemtW <- logemtW + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
+logemtW <- logemtW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+logemtW <- logemtW + theme(legend.title=element_blank())
+logemtW <- logemtW + theme(legend.position = "none")
+logemtW <- logemtW + labs(x= element_blank()) 
+logemtW <- logemtW + labs(y= element_blank()) 
+logemtW <- logemtW + theme(axis.title = element_text(face="bold", size=12))
+logemtW <- logemtW + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+```
+
+SECTION 7: Putting figures together
+
+
+```r
+#1 — Raw duckweed growth ~ bac
+plot_dw<-plot_grid(dwC, dwW, ncol=2,nrow=1, align='h')
+
+x.grob_bac <- textGrob(expression(bold("Bacterial strain")), gp=gpar(fontsize=12))
+grid.arrange(arrangeGrob(plot_dw, bottom = x.grob_bac))
+```
+
+![](Data_analysis_files/figure-html/summary figs-1.png)<!-- -->
+
+```r
+#2 — LogRR's of dw grt
+# Re-scale y axes
+logC_plt <- logC_plt + ylim(-0.3,0.55)
+logW_plt <- logW_plt + ylim(-0.3,0.55)
+
+plot_dwLRR<-plot_grid(logC_plt, logW_plt, ncol=2,nrow=1, align='h')
+grid.arrange(arrangeGrob(plot_dwLRR, bottom = x.grob_bac))
+```
+
+![](Data_analysis_files/figure-html/summary figs-2.png)<!-- -->
+
+```r
+#3 - Bacterial 'fitness' ~ bac
+#Relocate legend. 
+absC <- absC + theme(legend.position = c(0.2,0.9))
+plot_bac<-plot_grid(absC, absW, ncol=2,nrow=1, align='h')
+grid.arrange(arrangeGrob(plot_bac, bottom = x.grob_bac))
+```
+
+![](Data_analysis_files/figure-html/summary figs-3.png)<!-- -->
+
+```r
+#4 - LogRR of effect of plants on bacterial 'fitness' ~ bac
+#Rescale ys
+LRR_absC <- LRR_absC + ylim(-0.05,0.65)
+LRR_absW <- LRR_absW + ylim(-0.05,0.65)
+
+plot_bacLRR<-plot_grid(LRR_absC, LRR_absW, ncol=2,nrow=1, align='h')
+grid.arrange(arrangeGrob(plot_bacLRR, bottom = x.grob_bac))
+```
+
+![](Data_analysis_files/figure-html/summary figs-4.png)<!-- -->
+
+```r
+#5 - Regression of bacterial and dw fitness
+plot_reg<-plot_grid(regC, regW, ncol=2,nrow=1, align='h')
+```
+
+```
+## `geom_smooth()` using formula 'y ~ x'
+```
+
+```
+## Warning: Removed 340 rows containing non-finite values (stat_smooth).
+```
+
+```
+## Warning: Removed 340 rows containing missing values (geom_point).
 ```
 
 ```
@@ -1841,61 +1865,46 @@ regW
 ## Warning: Removed 345 rows containing missing values (geom_point).
 ```
 
-![](Data_analysis_files/figure-html/Wellspring plots-6.png)<!-- -->
-
 ```r
-# Let's plot the summary statistics. 
-
-SumW$mean.abs<- Sum_Wabs$mean
-SumW$se.abs<- Sum_Wabs$sem
-  
-regW2 <- ggplot(SumW,aes(x=mean,y=mean.abs,colour=bac))+geom_errorbar(aes(xmin=mean-sem,xmax=mean+sem)) +geom_point(size=4.5)
-regW2 <- regW2 + geom_errorbar(aes(ymin=mean.abs-se.abs,ymax=mean.abs+se.abs))
-regW2 <- regW2 + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
-regW2 <- regW2 + scale_colour_manual(values=c("red3","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
-regW2 <- regW2 + theme(legend.title=element_blank())
-regW2 <- regW2 + theme(legend.position = "none")
-regW2 <- regW2 + labs(x= "Duckweed growth (change in pixel count)") 
-regW2 <- regW2 + labs(y= "Logged bacterial cell density (cells/µL)")
-regW2 <- regW2 + theme(axis.text = element_text(face="bold", size=12))
-regW2 <- regW2 + theme(axis.title = element_text(face="bold", size=13))
-regW2
+x.grob_dwgrt <- textGrob(expression(bold("Duckweed growth (change in pixel count)")), gp=gpar(fontsize=12))
+grid.arrange(arrangeGrob(plot_reg, bottom = x.grob_dwgrt))
 ```
 
-![](Data_analysis_files/figure-html/Wellspring plots-7.png)<!-- -->
+![](Data_analysis_files/figure-html/summary figs-5.png)<!-- -->
 
 ```r
-# Let's try the LogRR's
-regWlRR <- ggplot(logW,aes(y=absLRR,x=LRR))+ geom_point()
-regWlRR <- regWlRR + geom_errorbar(aes(ymin=absLRR-absSE,ymax=absLRR+absSE))
-regWlRR <- regWlRR + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
-regWlRR <- regWlRR + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
-regWlRR <- regWlRR + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
-regWlRR <- regWlRR + labs(y= "Effect size of plant presence (Log Response Ratio)")
-regWlRR <- regWlRR + theme(axis.text = element_text(face="bold", size=12))
-regWlRR <- regWlRR + theme(axis.title = element_text(face="bold", size=13))
-regWlRR
+#6 - Regression of bacterial and dw fitness (summary stats by bacteria)
+plot_reg_sum<-plot_grid(regC2, regW2, ncol=2,nrow=1, align='h')
+grid.arrange(arrangeGrob(plot_reg_sum, bottom = x.grob_dwgrt))
 ```
 
-![](Data_analysis_files/figure-html/Wellspring plots-8.png)<!-- -->
+![](Data_analysis_files/figure-html/summary figs-6.png)<!-- -->
 
 ```r
-# OK let's now regress the LogRRs
+#7 - Regression of lRRs (effects of plts on bac & effects of bac on plants)
+plot_regClRR<-plot_grid(regClRR, regWlRR, ncol=2,nrow=1, align='h')
 
-# Finally, let's plot fitness alignment (or estimate?) for each bacteria separately, and look at this?
-# How about emtrends~ LogRR's (effects on plants)? Are more beneficial bacterial also more closely aligned?
+x.grob_dwLRRgrt <- textGrob(expression(bold("Effect of bacterial inoculation (Log Response Ratio)")), gp=gpar(fontsize=12))
+grid.arrange(arrangeGrob(plot_regClRR, bottom = x.grob_dwLRRgrt))
+```
 
-# Let's ask that by plotting raw data for each bacteria
+![](Data_analysis_files/figure-html/summary figs-7.png)<!-- -->
 
-regW.bac <- ggplot(dfW,aes(y=logabs,x=Grt))+ geom_point()
-regW.bac <- regW.bac + facet_wrap(~ bac)
-regW.bac <- regW.bac + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
-regW.bac <- regW.bac + stat_smooth(method='lm',fullrange=F, se=T, size=2)
-regW.bac <- regW.bac + labs(x= "Duckweed growth (change in pixel count)") 
-regW.bac <- regW.bac + labs(y= "Logged bacterial cell density (cells/µL)")
-regW.bac <- regW.bac + theme(axis.text = element_text(face="bold", size=12))
-regW.bac <- regW.bac + theme(axis.title = element_text(face="bold", size=13))
-regW.bac
+```r
+#8 - Bacteria-specific regressions
+plot_reg.bac<-plot_grid(regC.bac, regW.bac, ncol=2,nrow=1, align='h')
+```
+
+```
+## `geom_smooth()` using formula 'y ~ x'
+```
+
+```
+## Warning: Removed 340 rows containing non-finite values (stat_smooth).
+```
+
+```
+## Warning: Removed 340 rows containing missing values (geom_point).
 ```
 
 ```
@@ -1904,64 +1913,23 @@ regW.bac
 
 ```
 ## Warning: Removed 345 rows containing non-finite values (stat_smooth).
-## Removed 345 rows containing missing values (geom_point).
-```
-
-![](Data_analysis_files/figure-html/Wellspring plots-9.png)<!-- -->
-
-```r
-bac.emtW <- emtrends(regW3, "bac", var = "logabs")
-bac.emtW<-as.data.frame(bac.emtW)
-bac.emtW
 ```
 
 ```
-##  bac                        logabs.trend   SE df lower.CL upper.CL
-##  Control                            6274 5194 89    -4046    16593
-##  Sphingomonas sp. 1               -12836 7184 89   -27110     1438
-##  Rhizobiales sp.                    9432 3491 89     2496    16368
-##  Rhizobium sp. 1                    7550 4827 89    -2041    17140
-##  Rhizorhabdus phycospaerae          5875 1817 89     2266     9485
-##  Unknown1                           3971 4352 89    -4677    12620
-##  Pseudomonas protogens              8693 8346 89    -7891    25277
-##  Rhizorhabdus phycosphaerae         2085 3127 89    -4127     8298
-##  Rhizobium sp. 2                   13208 4451 89     4364    22051
-##  Sphingomonas sp. 2               -21949 6066 89   -34003    -9896
-##  Pseudomonas aeruginosa             1038 6174 89   -11229    13305
-##  All 10 bacteria                   18508 9080 89      465    36550
-## 
-## Results are averaged over the levels of: edge 
-## Confidence level used: 0.95
+## Warning: Removed 345 rows containing missing values (geom_point).
 ```
 
 ```r
-# Pairwise comparisons
-pairs(bac.emtW)
+grid.arrange(arrangeGrob(plot_reg.bac, bottom = x.grob_dwgrt))
 ```
 
-![](Data_analysis_files/figure-html/Wellspring plots-10.png)<!-- -->
+![](Data_analysis_files/figure-html/summary figs-8.png)<!-- -->
 
 ```r
-#Let's add these estimates to our SumW
-SumW$reg.mean<-bac.emtW$logabs.trend
-SumW$reg.SE<-bac.emtW$SE
-
-#Let's also add this information to logW
-bac.trend<-bac.emtW$logabs[2:12]
-SE.trend<-bac.emtW$SE[2:12]
-
-logW$reg.mean<-bac.trend
-logW$reg.SE<-SE.trend
-
-logemtW <- ggplot(logW,aes(y=reg.mean,x=LRR))+ geom_point()
-logemtW <- logemtW + geom_errorbar(aes(ymin=reg.mean-reg.SE,ymax=reg.mean+reg.SE))
-logemtW <- logemtW + geom_errorbar(aes(xmin=LRR-SE, xmax=LRR+SE))
-logemtW <- logemtW + theme_classic() + ggtitle("Wellspring") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
-logemtW <- logemtW + labs(x= "Effect size of bacterial inoculation (Log Response Ratio)") 
-logemtW <- logemtW + labs(y= "Fitness regression")
-logemtW <- logemtW + theme(axis.text = element_text(face="bold", size=12))
-logemtW <- logemtW + theme(axis.title = element_text(face="bold", size=13))
-logemtW
+#9 - Fitness regressions ~ effects on plant growth
+plot_emt<-plot_grid(logemtC, logemtW, ncol=2,nrow=1, align='h')
+grid.arrange(arrangeGrob(plot_emt, bottom = x.grob_dwLRRgrt))
 ```
 
-![](Data_analysis_files/figure-html/Wellspring plots-11.png)<!-- -->
+![](Data_analysis_files/figure-html/summary figs-9.png)<!-- -->
+
