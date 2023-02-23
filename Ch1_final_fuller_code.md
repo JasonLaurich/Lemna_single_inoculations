@@ -21,6 +21,7 @@ library(cowplot) # luxury plotting
 library(grid) # arranging and labelling plots
 library(gridExtra)
 library(emmeans) # allows extraction of bacteria-specific regression estimates.
+library(ggrepel)
 ```
 
 SECTION 2: Upload data for 2020 and 2019 experiments.
@@ -781,92 +782,53 @@ plot(lmer.grt.W2020)
 
 # Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
 
+# Let's do this more straightforwardly. For each bacterial treatment, we need count, mean, and SD.
+
 melt.C.2019<-melt(df.C.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
 Sum.C.2019<- ddply(melt.C.2019, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(),  sem = sd(value)/sqrt(length(value)))
 
-lrr.C.2019<-data.frame(matrix(ncol=4, nrow=11))
-names(lrr.C.2019)<-c('bac','LRR','var','SD')
-lrr.C.2019$bac<-Sum.C.2019$bac[2:12]
-
-for (i in 1:11){
-  lrr.C.2019[i,2]<-log(Sum.C.2019[i+1,3]/Sum.C.2019[1,3])
-  lrr.C.2019[i,3]<-Sum.C.2019[i+1,4]^2/(Sum.C.2019[i+1,5]*Sum.C.2019[i+1,3]^2) + Sum.C.2019[1,5]^2/(Sum.C.2019[1,6]*Sum.C.2019[1,4]^2)
-}
-lrr.C.2019$SD<-sqrt(lrr.C.2019$var)
-lrr.C.2019$cnt<-Sum.C.2019$count[2:12]
-lrr.C.2019$SE<-lrr.C.2019$SD/sqrt(lrr.C.2019$cnt)
-lrr.C.2019$CI<-qnorm(0.975)*lrr.C.2019$SE
+lrr.C.2019<-Sum.C.2019[2:12,]
+lrr.C.2019$LRR<-log(lrr.C.2019$mean) - log(Sum.C.2019$mean[1])
+lrr.C.2019$var<-lrr.C.2019$sd^2/(lrr.C.2019$count*lrr.C.2019$mean^2) + Sum.C.2019$sd[1]^2/(Sum.C.2019$count[1]*Sum.C.2019$mean[1]^2)
+lrr.C.2019$CI<-qnorm(0.975)*sqrt(lrr.C.2019$var)
 
 # Kelso 2019
 
 melt.K.2019<-melt(df.K.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
 Sum.K.2019<- ddply(melt.K.2019, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
-lrr.K.2019<-data.frame(matrix(ncol=4, nrow=11))
-names(lrr.K.2019)<-c('bac','LRR','var','SD')
-lrr.K.2019$bac<-Sum.K.2019$bac[2:12]
-
-for (i in 1:11){
-  lrr.K.2019[i,2]<-log(Sum.K.2019[i+1,3]/Sum.K.2019[1,3])
-  lrr.K.2019[i,3]<-Sum.K.2019[i+1,4]^2/(Sum.K.2019[i+1,5]*Sum.K.2019[i+1,3]^2) + Sum.K.2019[1,5]^2/(Sum.K.2019[1,6]*Sum.K.2019[1,4]^2)
-}
-lrr.K.2019$SD<-sqrt(lrr.K.2019$var)
-lrr.K.2019$cnt<-Sum.K.2019$count[2:12]
-lrr.K.2019$SE<-lrr.K.2019$SD/sqrt(lrr.K.2019$cnt)
-lrr.K.2019$CI<-qnorm(0.975)*lrr.K.2019$SE
-
+lrr.K.2019<-Sum.K.2019[2:12,]
+lrr.K.2019$LRR<-log(lrr.K.2019$mean) - log(Sum.K.2019$mean[1])
+lrr.K.2019$var<-lrr.K.2019$sd^2/(lrr.K.2019$count*lrr.K.2019$mean^2) + Sum.K.2019$sd[1]^2/(Sum.K.2019$count[1]*Sum.K.2019$mean[1]^2)
+lrr.K.2019$CI<-qnorm(0.975)*sqrt(lrr.K.2019$var)
 # Wellspring 2019
 
 melt.W.2019<-melt(df.W.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
 Sum.W.2019<- ddply(melt.W.2019, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
-lrr.W.2019<-data.frame(matrix(ncol=4, nrow=11))
-names(lrr.W.2019)<-c('bac','LRR','var','SD')
-lrr.W.2019$bac<-Sum.W.2019$bac[2:12]
-
-for (i in 1:11){
-  lrr.W.2019[i,2]<-log(Sum.W.2019[i+1,3]/Sum.W.2019[1,3])
-  lrr.W.2019[i,3]<-Sum.W.2019[i+1,4]^2/(Sum.W.2019[i+1,5]*Sum.W.2019[i+1,3]^2) + Sum.W.2019[1,5]^2/(Sum.W.2019[1,6]*Sum.W.2019[1,4]^2)
-}
-lrr.W.2019$SD<-sqrt(lrr.W.2019$var)
-lrr.W.2019$cnt<-Sum.W.2019$count[2:12]
-lrr.W.2019$SE<-lrr.W.2019$SD/sqrt(lrr.W.2019$cnt)
-lrr.W.2019$CI<-qnorm(0.975)*lrr.W.2019$SE
+lrr.W.2019<-Sum.W.2019[2:12,]
+lrr.W.2019$LRR<-log(lrr.W.2019$mean) - log(Sum.W.2019$mean[1])
+lrr.W.2019$var<-lrr.W.2019$sd^2/(lrr.W.2019$count*lrr.W.2019$mean^2) + Sum.W.2019$sd[1]^2/(Sum.W.2019$count[1]*Sum.W.2019$mean[1]^2)
+lrr.W.2019$CI<-qnorm(0.975)*sqrt(lrr.W.2019$var)
 
 # Churchill 2020
 
 melt.C.2020<-melt(df.C.2020, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
 Sum.C.2020<- ddply(melt.C.2020, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
-lrr.C.2020<-data.frame(matrix(ncol=4, nrow=11))
-names(lrr.C.2020)<-c('bac','LRR','var','SD')
-lrr.C.2020$bac<-Sum.C.2020$bac[2:12]
-
-for (i in 1:11){
-  lrr.C.2020[i,2]<-log(Sum.C.2020[i+1,3]/Sum.C.2020[1,3])
-  lrr.C.2020[i,3]<-Sum.C.2020[i+1,4]^2/(Sum.C.2020[i+1,5]*Sum.C.2020[i+1,3]^2) + Sum.C.2020[1,5]^2/(Sum.C.2020[1,6]*Sum.C.2020[1,4]^2)
-}
-lrr.C.2020$SD<-sqrt(lrr.C.2020$var)
-lrr.C.2020$cnt<-Sum.C.2020$count[2:12]
-lrr.C.2020$SE<-lrr.C.2020$SD/sqrt(lrr.C.2020$cnt)
-lrr.C.2020$CI<-qnorm(0.975)*lrr.C.2020$SE
+lrr.C.2020<-Sum.C.2020[2:12,]
+lrr.C.2020$LRR<-log(lrr.C.2020$mean) - log(Sum.C.2020$mean[1])
+lrr.C.2020$var<-lrr.C.2020$sd^2/(lrr.C.2020$count*lrr.C.2020$mean^2) + Sum.C.2020$sd[1]^2/(Sum.C.2020$count[1]*Sum.C.2020$mean[1]^2)
+lrr.C.2020$CI<-qnorm(0.975)*sqrt(lrr.C.2020$var)
 
 #Wellspring
 melt.W.2020<-melt(df.W.2020, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
 Sum.W.2020<- ddply(melt.W.2020, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
-lrr.W.2020<-data.frame(matrix(ncol=4, nrow=11))
-names(lrr.W.2020)<-c('bac','LRR','var','SD')
-lrr.W.2020$bac<-Sum.W.2020$bac[2:12]
-
-for (i in 1:11){
-  lrr.W.2020[i,2]<-log(Sum.W.2020[i+1,3]/Sum.W.2020[1,3])
-  lrr.W.2020[i,3]<-Sum.W.2020[i+1,4]^2/(Sum.W.2020[i+1,5]*Sum.W.2020[i+1,3]^2) + Sum.W.2020[1,5]^2/(Sum.W.2020[1,6]*Sum.W.2020[1,4]^2)
-}
-lrr.W.2020$SD<-sqrt(lrr.W.2020$var)
-lrr.W.2020$cnt<-Sum.W.2020$count[2:12]
-lrr.W.2020$SE<-lrr.W.2020$SD/sqrt(lrr.W.2020$cnt)
-lrr.W.2020$CI<-qnorm(0.975)*lrr.W.2020$SE
+lrr.W.2020<-Sum.W.2020[2:12,]
+lrr.W.2020$LRR<-log(lrr.W.2020$mean) - log(Sum.W.2020$mean[1])
+lrr.W.2020$var<-lrr.W.2020$sd^2/(lrr.W.2020$count*lrr.W.2020$mean^2) + Sum.W.2020$sd[1]^2/(Sum.W.2020$count[1]*Sum.W.2020$mean[1]^2)
+lrr.W.2020$CI<-qnorm(0.975)*sqrt(lrr.W.2020$var)
 
 #OK, let's get to plotting!
 
@@ -985,12 +947,12 @@ x.grob_bac <- textGrob(expression(bold("Bacterial strain")), gp=gpar(fontsize=12
 y.grob_lrrdw <- textGrob(expression(bold("                     Duckweed growth (LRR)")), gp=gpar(fontsize=12), rot=90)
 
 # Re-scale y axes
-plot1.C1 <- plot1.C1 + ylim(-2.4,0.85)
-plot1.K1 <- plot1.K1 + ylim(-2.4,0.85)
-plot1.W1 <- plot1.W1 + ylim(-2.4,0.85)
+plot1.C1 <- plot1.C1 + ylim(-3,1.5)
+plot1.K1 <- plot1.K1 + ylim(-3,1.5)
+plot1.W1 <- plot1.W1 + ylim(-3,1.5)
 
-plot1.C2 <- plot1.C2 + ylim(-0.2,0.4)
-plot1.W2 <- plot1.W2 + ylim(-0.2,0.4)
+plot1.C2 <- plot1.C2 + ylim(-0.5,0.7)
+plot1.W2 <- plot1.W2 + ylim(-0.5,0.7)
 
 plot1.2019<-plot_grid(plot1.C1, plot1.K1, plot1.W1, ncol=3,nrow=1, align='h', labels=c('A','B','C'))
 plot1.2020<-plot_grid(plot1.C2, plot1.W2, plot.leg, ncol=3,nrow=1, align='h', labels=c('D','E'))
@@ -1004,7 +966,10 @@ grid.arrange(arrangeGrob(plot1, bottom = x.grob_bac, left = y.grob_lrrdw))
 ```r
 # PDF , 10 x 12.5 " works well
 ```
-SECTION 3: Microbial growth models and figures
+
+
+
+SECTION 4: Microbial growth models and figures
 
 
 ```r
@@ -1648,3 +1613,186 @@ grid.arrange(arrangeGrob(plot2.2, left = y.grob_abs, bottom = x.grob_bac2))
 
 ![](Ch1_final_fuller_code_files/figure-html/Microbial growth models-4.png)<!-- -->
 
+SECTION 5: Fitness regression
+
+
+```r
+# We will fit models (with full random effect structure) from which we can extract 'genotype' (i.e. bacterial inocula) means for their (1) effects on duckweed growth, and (2) microbial density when grown with plants.
+# We will use scaled data so that we can center fitness proxy data around 0.
+
+df.C.fit<-subset(df.C.2020, df.C.2020$bac!="Control" & df.C.2020$plt=="Y")
+df.C.fit$Grt.scaled<-(df.C.fit$Grt-mean(df.C.fit$Grt,na.rm=T))/sd(df.C.fit$Grt,na.rm=T)
+df.C.fit$pix0.scaled<-(df.C.fit$pix0-mean(df.C.fit$pix0,na.rm=T))/sd(df.C.fit$pix0,na.rm=T)
+df.C.fit$abs.scaled<-(df.C.fit$abs-mean(df.C.fit$abs,na.rm=T))/sd(df.C.fit$abs,na.rm=T)
+
+# Now we create models that we can extract strain/genotype means from
+modC.grt<-lmer(Grt.scaled ~ bac + pix0.scaled + (1|edge) +(1|plate), data=df.C.fit)
+em.C.grt<-as.data.frame(emmeans(modC.grt, "bac", var="Grt.scaled"))
+em.C.grt$CI<-em.C.grt$SE*qnorm(0.975)
+
+modC.abs<-lmer(abs.scaled ~ bac + (1|edge) +(1|plate), data=df.C.fit)
+```
+
+```
+## boundary (singular) fit: see help('isSingular')
+```
+
+```r
+em.C.abs<-as.data.frame(emmeans(modC.abs, "bac", var="abs.scaled"))
+em.C.abs$CI<-em.C.abs$SE*qnorm(0.975)
+
+em.C.grt$abs<-em.C.abs$emmean
+em.C.grt$abs.CI<-em.C.abs$CI
+em.C.grt$abs.SE<-em.C.abs$SE
+
+em.C.grt$num<-1:11
+
+# Is there a significant correlation between bacterial cell density and duckweed growth?
+regC<-lm(emmean~abs,data=em.C.grt)
+summary(regC)
+```
+
+```
+## 
+## Call:
+## lm(formula = emmean ~ abs, data = em.C.grt)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.24481 -0.11200 -0.05293  0.06383  0.46403 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)   
+## (Intercept) -0.07871    0.06023  -1.307  0.22367   
+## abs          0.26343    0.06942   3.795  0.00425 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1988 on 9 degrees of freedom
+## Multiple R-squared:  0.6154,	Adjusted R-squared:  0.5726 
+## F-statistic:  14.4 on 1 and 9 DF,  p-value: 0.004252
+```
+
+```r
+plot3.C1 <- ggplot(em.C.grt, aes(x = abs, y = emmean, colour = bac, fill=bac)) + geom_point(size=3,key_glyph=draw_key_blank) + geom_pointrange(aes(ymin=emmean-SE,ymax=emmean+SE),key_glyph=draw_key_blank) + geom_pointrange(aes(xmin=abs-abs.SE, xmax=abs+abs.SE),key_glyph=draw_key_blank)
+plot3.C1 <- plot3.C1 + theme_classic() + ggtitle("Churchill, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+plot3.C1 <- plot3.C1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+plot3.C1 <- plot3.C1 + labs(x= element_blank())
+plot3.C1 <- plot3.C1 + labs(y= "Duckweed growth")
+plot3.C1 <- plot3.C1 + theme(axis.title = element_text(face="bold", size=12))
+plot3.C1 <- plot3.C1 + geom_text_repel(aes(label = num), point.padding = 0.25, box.padding =0.25, fontface="bold", show.legend = FALSE)
+plot3.C1 <- plot3.C1 + theme(legend.title=element_blank())
+plot3.C1 <- plot3.C1 + scale_fill_discrete(labels = c(
+  substitute(paste(bold("1 "), bolditalic("Flavobacterium succinicans "),bold("1"))), 
+  substitute(paste(bold("2 "), bolditalic("Bosea massiliensis"))),
+  substitute(paste(bold("3 "), bolditalic("Aeromonas salmonicida"))), 
+  substitute(paste(bold("4 "), bolditalic("Ohtaekwangia koreensis"))), 
+  substitute(paste(bold("5 "), bolditalic("Flavobacterium succinicans "),bold("2"))),
+  substitute(paste(bold("6 "), bolditalic("Falsiroseomonas stagni"))), 
+  substitute(paste(bold("7 "), bolditalic("Parasediminibacterium paludis"))), 
+  substitute(paste(bold("8 "), bolditalic("Arcicella "), bold("sp."))), 
+  substitute(paste(bold("9 "), bolditalic("Microbacterium oxydans"))), 
+  substitute(paste(bold("10 "), bolditalic("Pseudomonas protogens"))),
+  substitute(paste(bold("11 "), bold("All 10 bacteria")))
+))
+plot3.C1 <- plot3.C1 + guides(colour = FALSE)
+```
+
+```
+## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
+## "none")` instead.
+```
+
+```r
+df.W.fit<-subset(df.W.2020, df.W.2020$bac!="Control" & df.W.2020$plt=="Y")
+df.W.fit$Grt.scaled<-(df.W.fit$Grt-mean(df.W.fit$Grt,na.rm=T))/sd(df.W.fit$Grt,na.rm=T)
+df.W.fit$pix0.scaled<-(df.W.fit$pix0-mean(df.W.fit$pix0,na.rm=T))/sd(df.W.fit$pix0,na.rm=T)
+df.W.fit$abs.scaled<-(df.W.fit$abs-mean(df.W.fit$abs,na.rm=T))/sd(df.W.fit$abs,na.rm=T)
+
+modW.grt<-lmer(Grt.scaled ~ bac + pix0.scaled + (1|edge) +(1|plate), data=df.W.fit)
+em.W.grt<-as.data.frame(emmeans(modW.grt, "bac", var="Grt.scaled"))
+em.W.grt$CI<-em.W.grt$SE*qnorm(0.975)
+
+modW.abs<-lmer(abs.scaled ~ bac + (1|edge) +(1|plate), data=df.W.fit)
+em.W.abs<-as.data.frame(emmeans(modW.abs, "bac", var="abs.scaled"))
+em.W.abs$CI<-em.W.abs$SE*qnorm(0.975)
+
+em.W.grt$abs<-em.W.abs$emmean
+em.W.grt$abs.CI<-em.W.abs$CI
+em.W.grt$abs.SE<-em.W.abs$SE
+em.W.grt$num<-1:11
+
+# Is there a significant correlation between bacterial cell density and duckweed growth?
+regW<-lm(emmean~abs,data=em.W.grt)
+summary(regW)
+```
+
+```
+## 
+## Call:
+## lm(formula = emmean ~ abs, data = em.W.grt)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.19245 -0.10656  0.01918  0.07309  0.19960 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)  
+## (Intercept) -0.05355    0.04099  -1.306   0.2238  
+## abs          0.16355    0.06141   2.663   0.0259 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1347 on 9 degrees of freedom
+## Multiple R-squared:  0.4408,	Adjusted R-squared:  0.3786 
+## F-statistic: 7.093 on 1 and 9 DF,  p-value: 0.0259
+```
+
+```r
+plot3.W1 <- ggplot(em.W.grt, aes(x = abs, y = emmean, colour = bac, fill=bac)) + geom_point(size=3,key_glyph=draw_key_blank) + geom_pointrange(aes(ymin=emmean-SE,ymax=emmean+SE),key_glyph=draw_key_blank) + geom_pointrange(aes(xmin=abs-abs.SE, xmax=abs+abs.SE),key_glyph=draw_key_blank)
+plot3.W1 <- plot3.W1 + theme_classic() + ggtitle("Wellspring, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
+plot3.W1 <- plot3.W1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
+plot3.W1 <- plot3.W1 + labs(x= element_blank())
+plot3.W1 <- plot3.W1 + labs(y= element_blank())
+plot3.W1 <- plot3.W1 + theme(axis.title = element_text(face="bold", size=12))
+plot3.W1 <- plot3.W1 + geom_text_repel(aes(label = num), point.padding = 0.25, box.padding =0.25, fontface="bold", show.legend = FALSE)
+plot3.W1 <- plot3.W1 + theme(legend.title=element_blank())
+plot3.W1 <- plot3.W1 + scale_fill_discrete(labels = c(
+  substitute(paste(bold("1 "), bolditalic("Sphingomonas pituitosa "), bold("1"))), 
+  substitute(paste(bold("2 "), bolditalic("Flaviflagellibacter deserti"))),
+  substitute(paste(bold("3 "), bolditalic("Rhizobium rosettiformans"))), 
+  substitute(paste(bold("4 "), bolditalic("Rhizorhabdus wittichii "), bold("1"))), 
+  substitute(paste(bold("5 "), bolditalic("Rhizobium capsici "), bold("1"))),
+  substitute(paste(bold("6 "), bolditalic("Pseudomonas protogens"))), 
+  substitute(paste(bold("7 "), bolditalic("Rhizorhabdus wittichii "), bold("2"))), 
+  substitute(paste(bold("8 "), bolditalic("Rhizobium capsici "), bold("2"))),
+  substitute(paste(bold("9 "), bolditalic("Sphingomonas pituitosa "), bold("2"))),
+  substitute(paste(bold("10 "), bolditalic("Fervidobacterium riparium"))),
+  substitute(paste(bold("11 "), bold("All 10 bacteria")))
+))
+plot3.W1 <- plot3.W1 + guides(colour = FALSE)
+```
+
+```
+## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
+## "none")` instead.
+```
+
+```r
+# Re-scale axes?
+#plot3.C1 <- plot3.C1 + ylim(-0.75,1)
+#plot3.W1 <- plot3.W1 + ylim(-0.75,1)
+#plot3.C1 <- plot3.C1 + xlim(-1.5,3)
+#plot3.W1 <- plot3.W1 + xlim(-1.5,3)
+
+plot3<-plot_grid(plot3.C1, plot3.W1, ncol=2,nrow=1, align='h', labels = c('A','B'))
+
+x.grob_abs <- textGrob(expression(bold("Microbial density")), gp=gpar(fontsize=12))
+grid.arrange(arrangeGrob(plot3, bottom = x.grob_abs))
+```
+
+![](Ch1_final_fuller_code_files/figure-html/Fitness regression-1.png)<!-- -->
+
+```r
+# 15 x 5?
+```
