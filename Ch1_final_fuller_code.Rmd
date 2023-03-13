@@ -137,6 +137,13 @@ ranova(lmer.grt.C2019)
 summary(lmer.grt.C2019)
 plot(lmer.grt.C2019)
 
+# Try running an ANCOVA style model (e.g. checking for variaiton in slope effects of pix0vpix1 for each bac.)
+lmer.grt.C2019.2<-lmer(pix1 ~ pix0*bac + alg.ord + (1|edge) + (1|plate), data=df.C.2019)
+anova(lmer.grt.C2019.2)
+ranova(lmer.grt.C2019.2)
+summary(lmer.grt.C2019.2)
+plot(lmer.grt.C2019.2)
+
 #Kelso 2019
 
 lmer.grt.K2019<-lmer(pix1 ~ pix0 + bac + alg.ord + (1|edge) + (1|plate), data=df.K.2019)
@@ -144,6 +151,12 @@ anova(lmer.grt.K2019)
 ranova(lmer.grt.K2019)
 summary(lmer.grt.K2019)
 plot(lmer.grt.K2019)
+
+lmer.grt.K2019.2<-lmer(pix1 ~ pix0*bac + alg.ord + (1|edge) + (1|plate), data=df.K.2019)
+anova(lmer.grt.K2019.2)
+ranova(lmer.grt.K2019.2)
+summary(lmer.grt.K2019.2)
+plot(lmer.grt.K2019.2)
 
 #Wellspring 2019
 
@@ -153,6 +166,12 @@ ranova(lmer.grt.W2019)
 summary(lmer.grt.W2019)
 plot(lmer.grt.W2019)
 
+lmer.grt.W2019.2<-lmer(pix1 ~ pix0*bac + alg.ord + (1|edge) + (1|plate), data=df.W.2019)
+anova(lmer.grt.W2019.2)
+ranova(lmer.grt.W2019.2)
+summary(lmer.grt.W2019.2)
+plot(lmer.grt.W2019.2)
+
 #Churchill 2020
 
 lmer.grt.C2020<-lmer(pix1 ~ pix0 + bac + (1|edge) + (1|plate), data=df.C.2020)
@@ -161,6 +180,12 @@ ranova(lmer.grt.C2020)
 summary(lmer.grt.C2020)
 plot(lmer.grt.C2020)
 
+lmer.grt.C2020.2<-lmer(pix1 ~ pix0*bac + (1|edge) + (1|plate), data=df.C.2020)
+anova(lmer.grt.C2020.2)
+ranova(lmer.grt.C2020.2)
+summary(lmer.grt.C2020.2)
+plot(lmer.grt.C2020.2)
+
 #Wellspring 2020
 
 lmer.grt.W2020<-lmer(pix1 ~ pix0 + bac + (1|edge) + (1|plate), data=df.W.2020)
@@ -168,6 +193,12 @@ anova(lmer.grt.W2020)
 ranova(lmer.grt.W2020)
 summary(lmer.grt.W2020)
 plot(lmer.grt.W2020)
+
+lmer.grt.W2020.2<-lmer(pix1 ~ pix0*bac + (1|edge) + (1|plate), data=df.W.2020)
+anova(lmer.grt.W2020.2)
+ranova(lmer.grt.W2020.2)
+summary(lmer.grt.W2020.2)
+plot(lmer.grt.W2020.2)
 
 ##########################################################################################
 
@@ -180,56 +211,61 @@ plot(lmer.grt.W2020)
 # Let's do this more straightforwardly. For each bacterial treatment, we need count, mean, and SD.
 
 melt.C.2019<-melt(df.C.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.C.2019<- ddply(melt.C.2019, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(),  sem = sd(value)/sqrt(length(value)))
+Sum.C.2019<- ddply(melt.C.2019, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(),  sem = sd(value)/sqrt(length(value)))
 
 lrr.C.2019<-Sum.C.2019[2:12,]
 lrr.C.2019$LRR<-log(lrr.C.2019$mean) - log(Sum.C.2019$mean[1])
 lrr.C.2019$var<-lrr.C.2019$sd^2/(lrr.C.2019$count*lrr.C.2019$mean^2) + Sum.C.2019$sd[1]^2/(Sum.C.2019$count[1]*Sum.C.2019$mean[1]^2)
 lrr.C.2019$CI<-qnorm(0.975)*sqrt(lrr.C.2019$var)
+lrr.C.2019$SE<-sqrt(lrr.C.2019$var)/sqrt(lrr.C.2019$count)
 
 # Kelso 2019
 
 melt.K.2019<-melt(df.K.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.K.2019<- ddply(melt.K.2019, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.K.2019<- ddply(melt.K.2019, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
 lrr.K.2019<-Sum.K.2019[2:12,]
 lrr.K.2019$LRR<-log(lrr.K.2019$mean) - log(Sum.K.2019$mean[1])
 lrr.K.2019$var<-lrr.K.2019$sd^2/(lrr.K.2019$count*lrr.K.2019$mean^2) + Sum.K.2019$sd[1]^2/(Sum.K.2019$count[1]*Sum.K.2019$mean[1]^2)
 lrr.K.2019$CI<-qnorm(0.975)*sqrt(lrr.K.2019$var)
+lrr.K.2019$SE<-sqrt(lrr.K.2019$var)/sqrt(lrr.K.2019$count)
 # Wellspring 2019
 
 melt.W.2019<-melt(df.W.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.W.2019<- ddply(melt.W.2019, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.W.2019<- ddply(melt.W.2019, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
 lrr.W.2019<-Sum.W.2019[2:12,]
 lrr.W.2019$LRR<-log(lrr.W.2019$mean) - log(Sum.W.2019$mean[1])
 lrr.W.2019$var<-lrr.W.2019$sd^2/(lrr.W.2019$count*lrr.W.2019$mean^2) + Sum.W.2019$sd[1]^2/(Sum.W.2019$count[1]*Sum.W.2019$mean[1]^2)
 lrr.W.2019$CI<-qnorm(0.975)*sqrt(lrr.W.2019$var)
+lrr.W.2019$SE<-sqrt(lrr.W.2019$var)/sqrt(lrr.W.2019$count)
 
 # Churchill 2020
 
 melt.C.2020<-melt(df.C.2020, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.C.2020<- ddply(melt.C.2020, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.C.2020<- ddply(melt.C.2020, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
 lrr.C.2020<-Sum.C.2020[2:12,]
 lrr.C.2020$LRR<-log(lrr.C.2020$mean) - log(Sum.C.2020$mean[1])
 lrr.C.2020$var<-lrr.C.2020$sd^2/(lrr.C.2020$count*lrr.C.2020$mean^2) + Sum.C.2020$sd[1]^2/(Sum.C.2020$count[1]*Sum.C.2020$mean[1]^2)
 lrr.C.2020$CI<-qnorm(0.975)*sqrt(lrr.C.2020$var)
+lrr.C.2020$SE<-sqrt(lrr.C.2020$var)/sqrt(lrr.C.2020$count)
 
 #Wellspring
 melt.W.2020<-melt(df.W.2020, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.W.2020<- ddply(melt.W.2020, c("bac","variable"), summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.W.2020<- ddply(melt.W.2020, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
 
 lrr.W.2020<-Sum.W.2020[2:12,]
 lrr.W.2020$LRR<-log(lrr.W.2020$mean) - log(Sum.W.2020$mean[1])
 lrr.W.2020$var<-lrr.W.2020$sd^2/(lrr.W.2020$count*lrr.W.2020$mean^2) + Sum.W.2020$sd[1]^2/(Sum.W.2020$count[1]*Sum.W.2020$mean[1]^2)
 lrr.W.2020$CI<-qnorm(0.975)*sqrt(lrr.W.2020$var)
+lrr.W.2020$SE<-sqrt(lrr.W.2020$var)/sqrt(lrr.W.2020$count)
 
 #OK, let's get to plotting!
 
 pred.C.2019<-mean(lrr.C.2019$LRR[1:10])
 
-plot1.C1 <- ggplot(lrr.C.2019,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-CI,ymax=LRR+CI),width=0.5)+geom_point(size=3)
+plot1.C1 <- ggplot(lrr.C.2019,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=3)
 plot1.C1 <- plot1.C1 + geom_hline(yintercept=pred.C.2019, linetype="dashed", color = "blue3",size=1)
 plot1.C1 <- plot1.C1 + theme_classic() + ggtitle("Churchill, 2019") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot1.C1 <- plot1.C1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -243,7 +279,7 @@ plot1.C1 <- plot1.C1 + geom_hline(yintercept=0, linetype="dashed", color = "red3
 
 pred.K.2019<-mean(lrr.K.2019$LRR[1:10])
 
-plot1.K1 <- ggplot(lrr.K.2019,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-CI,ymax=LRR+CI),width=0.5)+geom_point(size=3)
+plot1.K1 <- ggplot(lrr.K.2019,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=3)
 plot1.K1 <- plot1.K1 + geom_hline(yintercept=pred.K.2019, linetype="dashed", color = "blue3",size=1)
 plot1.K1 <- plot1.K1 + theme_classic() + ggtitle("Kelso, 2019") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot1.K1 <- plot1.K1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -257,7 +293,7 @@ plot1.K1 <- plot1.K1 + geom_hline(yintercept=0, linetype="dashed", color = "red3
 
 pred.W.2019<-mean(lrr.W.2019$LRR[1:10])
 
-plot1.W1 <- ggplot(lrr.W.2019,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-CI,ymax=LRR+CI),width=0.5)+geom_point(size=3)
+plot1.W1 <- ggplot(lrr.W.2019,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=3)
 plot1.W1 <- plot1.W1 + geom_hline(yintercept=pred.W.2019, linetype="dashed", color = "blue3",size=1)
 plot1.W1 <- plot1.W1 + theme_classic() + ggtitle("Wellspring, 2019") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot1.W1 <- plot1.W1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -271,7 +307,7 @@ plot1.W1 <- plot1.W1 + geom_hline(yintercept=0, linetype="dashed", color = "red3
 
 pred.C.2020<-mean(lrr.C.2020$LRR[1:10])
 
-plot1.C2 <- ggplot(lrr.C.2020,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-CI,ymax=LRR+CI),width=0.5)+geom_point(size=3)
+plot1.C2 <- ggplot(lrr.C.2020,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=3)
 plot1.C2 <- plot1.C2 + geom_hline(yintercept=pred.C.2020, linetype="dashed", color = "blue3",size=1)
 plot1.C2 <- plot1.C2 + theme_classic() + ggtitle("Churchill, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot1.C2 <- plot1.C2 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -285,7 +321,7 @@ plot1.C2 <- plot1.C2 + geom_hline(yintercept=0, linetype="dashed", color = "red3
 
 pred.W.2020<-mean(lrr.W.2020$LRR[1:10])
 
-plot1.W2 <- ggplot(lrr.W.2020,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-CI,ymax=LRR+CI),width=0.5)+geom_point(size=3)
+plot1.W2 <- ggplot(lrr.W.2020,aes(y=LRR,x=bac,colour=bac))+geom_errorbar(aes(ymin=LRR-SE,ymax=LRR+SE),width=0.5)+geom_point(size=3)
 plot1.W2 <- plot1.W2 + geom_hline(yintercept=pred.W.2020, linetype="dashed", color = "blue3",size=1)
 plot1.W2 <- plot1.W2 + theme_classic() + ggtitle("Wellspring, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot1.W2 <- plot1.W2 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -332,12 +368,12 @@ x.grob_bac <- textGrob(expression(bold("Bacterial strain")), gp=gpar(fontsize=12
 y.grob_lrrdw <- textGrob(expression(bold("                     Duckweed growth (LRR)")), gp=gpar(fontsize=12), rot=90)
 
 # Re-scale y axes
-plot1.C1 <- plot1.C1 + ylim(-3,1.5)
-plot1.K1 <- plot1.K1 + ylim(-3,1.5)
-plot1.W1 <- plot1.W1 + ylim(-3,1.5)
+plot1.C1 <- plot1.C1 + ylim(-2.5,1)
+plot1.K1 <- plot1.K1 + ylim(-2.5,1)
+plot1.W1 <- plot1.W1 + ylim(-2.5,1)
 
-plot1.C2 <- plot1.C2 + ylim(-0.5,0.7)
-plot1.W2 <- plot1.W2 + ylim(-0.5,0.7)
+plot1.C2 <- plot1.C2 + ylim(-0.2,0.4)
+plot1.W2 <- plot1.W2 + ylim(-0.2,0.4)
 
 plot1.2019<-plot_grid(plot1.C1, plot1.K1, plot1.W1, ncol=3,nrow=1, align='h', labels=c('A','B','C'))
 plot1.2020<-plot_grid(plot1.C2, plot1.W2, plot.leg, ncol=3,nrow=1, align='h', labels=c('D','E'))
@@ -406,7 +442,7 @@ Sum.C.bac$CI<-qnorm(0.975)*Sum.C.bac$sd/sqrt(Sum.C.bac$count)
 pred.C.plt<-mean(Sum.C.plt$mean[1:10])
 pred.C.bac<-mean(Sum.C.bac$mean[1:10])
 
-plot2.C1 <- ggplot(Sum.C.bac,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-CI,ymax=mean+CI),width=0.5)+geom_point(size=3)
+plot2.C1 <- ggplot(Sum.C.bac,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=3)
 plot2.C1 <- plot2.C1 + geom_hline(yintercept=pred.C.bac, linetype="dashed", color = "blue3",size=1)
 plot2.C1 <- plot2.C1 + theme_classic() + ggtitle("Churchill, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot2.C1 <- plot2.C1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -415,7 +451,7 @@ plot2.C1 <- plot2.C1 + labs(x= element_blank())
 plot2.C1 <- plot2.C1 + labs(y= element_blank())
 plot2.C1 <- plot2.C1 + theme(axis.text.x = element_text(face="italic",angle = 90,vjust=0.5,hjust=1))
 
-plot2.C2 <- ggplot(Sum.C.plt,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-CI,ymax=mean+CI),width=0.5)+geom_point(size=3)
+plot2.C2 <- ggplot(Sum.C.plt,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=3)
 plot2.C2 <- plot2.C2 + geom_hline(yintercept=pred.C.plt, linetype="dashed", color = "blue3",size=1)
 plot2.C2 <- plot2.C2 + theme_classic() + ggtitle("Churchill, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot2.C2 <- plot2.C2 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -444,7 +480,7 @@ Sum.W.bac$CI<-qnorm(0.975)*Sum.W.bac$sd/sqrt(Sum.W.bac$count)
 pred.W.plt<-mean(Sum.W.plt$mean[1:10])
 pred.W.bac<-mean(Sum.W.bac$mean[1:10])
 
-plot2.W1 <- ggplot(Sum.W.bac,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-CI,ymax=mean+CI),width=0.5)+geom_point(size=3)
+plot2.W1 <- ggplot(Sum.W.bac,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=3)
 plot2.W1 <- plot2.W1 + geom_hline(yintercept=pred.W.bac, linetype="dashed", color = "blue3",size=1)
 plot2.W1 <- plot2.W1 + theme_classic() + ggtitle("Wellspring, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot2.W1 <- plot2.W1 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -453,7 +489,7 @@ plot2.W1 <- plot2.W1 + labs(x= element_blank())
 plot2.W1 <- plot2.W1 + labs(y= element_blank())
 plot2.W1 <- plot2.W1 + theme(axis.text.x = element_text(face="italic",angle = 90,vjust=0.5,hjust=1))
 
-plot2.W2 <- ggplot(Sum.W.plt,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-CI,ymax=mean+CI),width=0.5)+geom_point(size=3)
+plot2.W2 <- ggplot(Sum.W.plt,aes(y=mean,x=bac,colour=bac))+geom_errorbar(aes(ymin=mean-sem,ymax=mean+sem),width=0.5)+geom_point(size=3)
 plot2.W2 <- plot2.W2 + geom_hline(yintercept=pred.W.plt, linetype="dashed", color = "blue3",size=1)
 plot2.W2 <- plot2.W2 + theme_classic() + ggtitle("Wellspring, 2020") + theme(plot.title = element_text(size=14, face='bold', hjust = 0.5))
 plot2.W2 <- plot2.W2 + scale_colour_manual(values=c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","blue3"))
@@ -463,11 +499,11 @@ plot2.W2 <- plot2.W2 + labs(y= element_blank())
 plot2.W2 <- plot2.W2 + theme(axis.text.x = element_text(face="italic",angle = 90,vjust=0.5,hjust=1))
 
 # Re-scale y axes
-plot2.C1 <- plot2.C1 + ylim(-500,15000)
-plot2.W1 <- plot2.W1 + ylim(-500,15000)
+plot2.C1 <- plot2.C1 + ylim(0,11000)
+plot2.W1 <- plot2.W1 + ylim(0,11000)
 
-plot2.C2 <- plot2.C2 + ylim(0,12000)
-plot2.W2 <- plot2.W2 + ylim(0,12000)
+plot2.C2 <- plot2.C2 + ylim(0,10500)
+plot2.W2 <- plot2.W2 + ylim(0,10500)
 
 #OK, now we need to combine them both and make a reaction norm plot.
 
@@ -504,7 +540,7 @@ y.grob_abs <- textGrob(expression(bold("                       Microbial density
 
 x.grob_bac2 <- textGrob(expression(bold("Bacteria                                                                     ")), gp=gpar(fontsize=12))
 
-x.grob.plt <- textGrob(expression(bold("No plants                                                                      Plants                                                                           ")), gp=gpar(fontsize=12))
+x.grob.plt <- textGrob(expression(bold("No plants                                                                             Plants                                                                                ")), gp=gpar(fontsize=12))
 
 grid.arrange(arrangeGrob(plot2.1, left = y.grob_abs, bottom = x.grob_bac2, top=x.grob.plt))
 
