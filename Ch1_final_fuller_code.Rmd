@@ -1,10 +1,10 @@
 ---
-title: "Final code with more full exploration of data and errors"
-author: "JasonL"
-date: "2023-02-06"
-output: 
-  html_document: 
-    keep_md: yes
+title: "Single versus mixed inoculations of bacteria on Lemna minor"
+author: "Jason Laurich and Megan Frederickson"
+date:  Sys.Date()
+output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 SECTION 1: Upload packages
@@ -12,22 +12,19 @@ SECTION 1: Upload packages
 ```{r Packages, message=FALSE, warning=FALSE}
 library(lme4) # mixed effects models
 library(lmerTest) # get results of lmer models
-library(reshape2) # melting dataframes
-library(plyr) # manipulating data frames
-library(dplyr) # manipulating data frames
-library(ggplot2) # plotting
+library(tidyverse) #manipulating data frames
 library(cowplot) # luxury plotting
-library(grid) # arranging and labelling plots
-library(gridExtra)
-library(emmeans) # allows extraction of bacteria-specific regression estimates.
-library(ggrepel)
+library(emmeans) # allows extraction of bacteria-specific regression estimates
+library(ggrepel) # fine tune figures
+library(ggtext) # fine tune figures
+library(knitr) # render markdown
+library(kableExtra) # exports tables to LaTeX format
 ```
 
 SECTION 2: Upload data for 2020 and 2019 experiments.
 
-```{r data, message=FALSE, warning=FALSE}
-setwd("C:/Users/jason/Dropbox/My PC (DESKTOP-IOO274E)/Desktop/Data/Lemna_singleinoculations/Lemna_single_inoculations")
-
+```{r Data, message=FALSE, warning=FALSE}
+#####################Load 2020 data#######################
 df.CW<-read.table('CW_mixed_inoculation_data.txt', header=F, na.strings="", sep="\t")
 names(df.CW)<-c('pop','plt','bac','id','frd0','pix0','per0','grn0','grnper0','frd1','pix1','per1','grn1','grnper1','abs')
 
@@ -61,7 +58,7 @@ df.CW<-df.CW[-c(453,494,798),]
 # Calculate growth.
 df.CW$Grt<-df.CW$pix1 - df.CW$pix0
 
-# Let's log abs count
+# Log abs count
 df.CW$logabs<-log(df.CW$abs)
 
 #Let's create separate dataframes for each population # Going to get the label 2020
@@ -72,10 +69,12 @@ df.W.2020<-subset(df.CW, df.CW$pop== "Wellspring")
 #First, let's change the order of bacteria, ranked by effect. 
 df.C.2020$bac<- factor(df.C.2020$bac, levels = c("Control","1","8","6","3","7","10","9","4","5","2","All10"))
 # Assign names from sequencing
-levels(df.C.2020$bac) <- c("Control","Flavobacterium \nsuccinicans 1","Bosea \nmassiliensis","Aeromonas \nsalmonicida","Ohtaekwangia \nkoreensis","Flavobacterium \nsuccinicans 2","Falsiroseomonas \nstagni","Parasediminibacterium \npaludis","Arcicella sp.","Microbacterium \noxydans","Pseudomonas \nprotogens","All 10 bacteria")
+levels(df.C.2020$bac) <- c("Control", "Flavobacterium \nsuccinicans 1","Bosea \nmassiliensis","Aeromonas \nsalmonicida","Ohtaekwangia \nkoreensis","Flavobacterium \nsuccinicans 2","Falsiroseomonas \nstagni","Parasediminibacterium \npaludis","Arcicella sp.","Microbacterium \noxydans","Pseudomonas \nprotogens","All 10 bacteria")
 
 df.W.2020$bac<- factor(df.W.2020$bac, levels = c("Control","2","8","1","9","6","3","5","4","7","10","All10"))
 levels(df.W.2020$bac) <- c("Control","Sphingomonas \npituitosa 1","Flaviflagellibacter \ndeserti","Rhizobium \nrosettiformans","Rhizorhabdus \nwittichii 1","Rhizobium \ncapsici 1","Pseudomonas \nprotogens","Rhizorhabdus \nwittichii 2","Rhizobium \ncapsici 2","Sphingomonas \npituitosa 2","Fervidobacterium \nriparium","All 10 bacteria")
+
+df2020 <- rbind(df.C.2020, df.W.2020)
 
 #####################Load 2019 data#######################
 
@@ -123,21 +122,24 @@ levels(df.K.2019$bac) <- c("Control","Pseudomonas \nprotogens","Flavobacterium \
 
 df.W.2019$bac<- factor(df.W.2019$bac, levels = c("0","8","5","3","2","4","6","9","7","1","10","All"))
 levels(df.W.2019$bac) <- c("Control","Rhizobium sp.","Agrobacterium sp.","Rhizobium \nrosettiformans 1","Rhizobium \nrhizophilum","Rhizobium \nrosettiformans 2","Rhizobium \nhelianthi","Sphingomonas \npituitosa","Rhizorhabdus \nwittichii","Rhizobium \nglycinendophyticum","Phenylobacterium \npanacis","All 10 bacteria")
+
+df2019 <- rbind(df.C.2019, df.K.2019, df.W.2019)
 ```
 
 SECTION 3: Plant growth models and figures
 
-```{r Duckweed growth}
+First, let's model the data. 
+
+```{r Duckweed growth models}
 
 #Churchill 2019
-
 lmer.grt.C2019<-lmer(pix1 ~ pix0 + bac + alg.ord + (1|edge) + (1|plate), data=df.C.2019)
-anova(lmer.grt.C2019)
+anova(lmer.grt.C2019, type=3)
 ranova(lmer.grt.C2019)
 summary(lmer.grt.C2019)
 plot(lmer.grt.C2019)
 
-# Try running an ANCOVA style model (e.g. checking for variaiton in slope effects of pix0vpix1 for each bac.)
+#Try running an ANCOVA style model (e.g. checking for variation in slope effects of pix0vpix1 for each bac.)
 lmer.grt.C2019.2<-lmer(pix1 ~ pix0*bac + alg.ord + (1|edge) + (1|plate), data=df.C.2019)
 anova(lmer.grt.C2019.2)
 ranova(lmer.grt.C2019.2)
@@ -145,7 +147,6 @@ summary(lmer.grt.C2019.2)
 plot(lmer.grt.C2019.2)
 
 #Kelso 2019
-
 lmer.grt.K2019<-lmer(pix1 ~ pix0 + bac + alg.ord + (1|edge) + (1|plate), data=df.K.2019)
 anova(lmer.grt.K2019)
 ranova(lmer.grt.K2019)
@@ -159,7 +160,6 @@ summary(lmer.grt.K2019.2)
 plot(lmer.grt.K2019.2)
 
 #Wellspring 2019
-
 lmer.grt.W2019<-lmer(pix1 ~ pix0 + bac + alg.ord + (1|edge) + (1|plate), data=df.W.2019)
 anova(lmer.grt.W2019)
 ranova(lmer.grt.W2019)
@@ -173,7 +173,6 @@ summary(lmer.grt.W2019.2)
 plot(lmer.grt.W2019.2)
 
 #Churchill 2020
-
 lmer.grt.C2020<-lmer(pix1 ~ pix0 + bac + (1|edge) + (1|plate), data=df.C.2020)
 anova(lmer.grt.C2020)
 ranova(lmer.grt.C2020)
@@ -186,8 +185,12 @@ ranova(lmer.grt.C2020.2)
 summary(lmer.grt.C2020.2)
 plot(lmer.grt.C2020.2)
 
-#Wellspring 2020
+#Fronds added
+df.C.2020$frdchg <- df.C.2020$frd1-df.C.2020$frd0
+lmer.frd.C2020 <- lmer(frdchg~bac+ (1|edge)+(1|plate), data=df.C.2020)
+summary(lmer.frd.C2020)
 
+#Wellspring 2020
 lmer.grt.W2020<-lmer(pix1 ~ pix0 + bac + (1|edge) + (1|plate), data=df.W.2020)
 anova(lmer.grt.W2020)
 ranova(lmer.grt.W2020)
@@ -200,67 +203,211 @@ ranova(lmer.grt.W2020.2)
 summary(lmer.grt.W2020.2)
 plot(lmer.grt.W2020.2)
 
-##########################################################################################
+#Fronds added
+df.W.2020$frdchg <- df.W.2020$frd1-df.W.2020$frd0
+lmer.frd.W2020 <- lmer(frdchg~bac+ (1|edge)+(1|plate), data=df.W.2020)
+summary(lmer.frd.W2020)
+```
 
-# Onto figure generation - plotting Log Response Ratios of bacterial effects on plant growth
+Next, making a table of log response ratios of bacterial effects on plant growth. Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
 
-# Churchill 2019
+```{r Log response ratios}
+# 2020 data
+# For each bacterial treatment, we need count, mean, and SD.
+Sum_2020 <- subset(df2020, plt == "Y") %>% group_by(bac, pop) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
 
-# Reference for calculating LRR's: Hedges, L. V., Gurevitch, J., & Curtis, P. S. (1999). The meta-analysis of response ratios in experimental ecology. Ecology, 80(4), 1150-1156. Equation 1
+#Set the mean, count, and sd for the control group that everything else will be compared to
+Sum_2020$control_mean <- as.numeric(ifelse(Sum_2020$pop == "Churchill", Sum_2020[Sum_2020$pop == "Churchill" & Sum_2020$bac == "Control", "mean"], Sum_2020[Sum_2020$pop == "Wellspring" & Sum_2020$bac == "Control", "mean"]))
+   
+Sum_2020$control_count <- as.numeric(ifelse(Sum_2020$pop == "Churchill", Sum_2020[Sum_2020$pop == "Churchill" & Sum_2020$bac == "Control", "count"], Sum_2020[Sum_2020$pop == "Wellspring" & Sum_2020$bac == "Control", "count"]))
 
-# Let's do this more straightforwardly. For each bacterial treatment, we need count, mean, and SD.
+Sum_2020$control_sd <- as.numeric(ifelse(Sum_2020$pop == "Churchill", Sum_2020[Sum_2020$pop == "Churchill" & Sum_2020$bac == "Control", "sd"], Sum_2020[Sum_2020$pop == "Wellspring" & Sum_2020$bac == "Control", "sd"]))
+               
+#Calculate LRRs and CIs
+Sum_2020$LRR <- log(Sum_2020$mean)-log(Sum_2020$control_mean)
+Sum_2020$LRRvar<-Sum_2020$sd^2/(Sum_2020$count*Sum_2020$mean^2) + Sum_2020$control_sd^2/(Sum_2020$control_count*Sum_2020$control_mean^2)
+Sum_2020$LRRCIup <- Sum_2020$LRR+qnorm(0.975)*sqrt(Sum_2020$LRRvar)
+Sum_2020$LRRCIdown <- Sum_2020$LRR-qnorm(0.975)*sqrt(Sum_2020$LRRvar)
 
-melt.C.2019<-melt(df.C.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.C.2019<- ddply(melt.C.2019, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(),  sem = sd(value)/sqrt(length(value)))
+#Make 2020 table
+colnames(Sum_2020)[[1]] <- "Bacterial strain"
+colnames(Sum_2020)[[12]] <- "Upper bound"
+colnames(Sum_2020)[[13]] <- "Lower bound"
+table_2020 <- kbl(Sum_2020[,c(2,1,10, 13,12)], format="latex", digits=4, caption="List of bacteria used in 2020 experiments, with log response ratios (LRR) and the lower and upper bounds of 95\\% confidence intervals for their effects on \\textit{Lemna minor} growth", booktabs=T, longtable=T, linesep = c('', '', '', '', '', '', '', '', '', '', '\\hline'))
+
+# 2019 data
+Sum_2019 <- df2019 %>% group_by(bac, pop) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
+Sum_2019$pop <- trimws(Sum_2019$pop)
+
+#Set the mean, count, and sd for the control group that everything else will be compared to
+Sum_2019$control_mean <- as.numeric(ifelse(Sum_2019$pop == "Churchill", Sum_2019[Sum_2019$pop == "Churchill" & Sum_2019$bac == "Control", "mean"], ifelse(Sum_2019$pop == "Wellspring", Sum_2019[Sum_2019$pop == "Wellspring" & Sum_2019$bac == "Control", "mean"], Sum_2019[Sum_2019$pop == "Kelso" & Sum_2019$bac == "Control", "mean"])))
+   
+Sum_2019$control_count <- as.numeric(ifelse(Sum_2019$pop == "Churchill", Sum_2019[Sum_2019$pop == "Churchill" & Sum_2019$bac == "Control", "count"], ifelse(Sum_2019$pop == "Wellspring", Sum_2019[Sum_2019$pop == "Wellspring" & Sum_2019$bac == "Control", "count"], Sum_2019[Sum_2019$pop == "Kelso" & Sum_2019$bac == "Control", "count"])))
+
+Sum_2019$control_sd <- as.numeric(ifelse(Sum_2019$pop == "Churchill", Sum_2019[Sum_2019$pop == "Churchill" & Sum_2019$bac == "Control", "sd"], ifelse(Sum_2019$pop == "Wellspring", Sum_2019[Sum_2019$pop == "Wellspring" & Sum_2019$bac == "Control", "sd"], Sum_2019[Sum_2019$pop == "Kelso" & Sum_2019$bac == "Control", "sd"])))
+               
+#Calculate LRRs and CIs
+Sum_2019$LRR <- log(Sum_2019$mean)-log(Sum_2019$control_mean)
+Sum_2019$LRRvar<-Sum_2019$sd^2/(Sum_2019$count*Sum_2019$mean^2) + Sum_2019$control_sd^2/(Sum_2019$control_count*Sum_2019$control_mean^2)
+Sum_2019$LRRCIup <- Sum_2019$LRR+qnorm(0.975)*sqrt(Sum_2019$LRRvar)
+Sum_2019$LRRCIdown <- Sum_2019$LRR-qnorm(0.975)*sqrt(Sum_2019$LRRvar)
+
+#Make 2019 table
+colnames(Sum_2019)[[1]] <- "Bacterial strain"
+colnames(Sum_2019)[[12]] <- "Upper bound"
+colnames(Sum_2019)[[13]] <- "Lower bound"
+table_2019 <- kbl(Sum_2019[,c(2,1,10, 13,12)], format="latex", digits=4, caption="List of bacteria used in 2019 experiments, with log response ratios (LRR) and the lower and upper bounds of 95\\% confidence intervals for their effects on \\textit{Lemna minor} growth", booktabs=T, longtable=T, linesep = c('', '', '', '', '', '', '', '', '', '', '\\hline'))
+```
+
+```{r}
+#Churchill 2019
+Sum.C.2019 <- df.C.2019 %>% group_by(bac) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
 
 lrr.C.2019<-Sum.C.2019[2:12,]
 lrr.C.2019$LRR<-log(lrr.C.2019$mean) - log(Sum.C.2019$mean[1])
 lrr.C.2019$var<-lrr.C.2019$sd^2/(lrr.C.2019$count*lrr.C.2019$mean^2) + Sum.C.2019$sd[1]^2/(Sum.C.2019$count[1]*Sum.C.2019$mean[1]^2)
 lrr.C.2019$CI<-qnorm(0.975)*sqrt(lrr.C.2019$var)
 lrr.C.2019$SE<-sqrt(lrr.C.2019$var)/sqrt(lrr.C.2019$count)
+lrr.C.2019$CI_up <- lrr.C.2019$LRR+lrr.C.2019$CI
+lrr.C.2019$CI_down <- lrr.C.2019$LRR-lrr.C.2019$CI
+lrr.C.2019$Population <- "Churchill Marsh"
 
 # Kelso 2019
-
-melt.K.2019<-melt(df.K.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.K.2019<- ddply(melt.K.2019, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.K.2019 <- df.K.2019 %>% group_by(bac) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
 
 lrr.K.2019<-Sum.K.2019[2:12,]
 lrr.K.2019$LRR<-log(lrr.K.2019$mean) - log(Sum.K.2019$mean[1])
 lrr.K.2019$var<-lrr.K.2019$sd^2/(lrr.K.2019$count*lrr.K.2019$mean^2) + Sum.K.2019$sd[1]^2/(Sum.K.2019$count[1]*Sum.K.2019$mean[1]^2)
 lrr.K.2019$CI<-qnorm(0.975)*sqrt(lrr.K.2019$var)
 lrr.K.2019$SE<-sqrt(lrr.K.2019$var)/sqrt(lrr.K.2019$count)
-# Wellspring 2019
+lrr.K.2019$CI_up <- lrr.K.2019$LRR+lrr.K.2019$CI
+lrr.K.2019$CI_down <- lrr.K.2019$LRR-lrr.K.2019$CI
+lrr.K.2019$Population <- "Kelso Pond"
 
-melt.W.2019<-melt(df.W.2019, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.W.2019<- ddply(melt.W.2019, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+# Wellspring 2019
+Sum.W.2019 <- df.W.2019 %>% group_by(bac) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
 
 lrr.W.2019<-Sum.W.2019[2:12,]
 lrr.W.2019$LRR<-log(lrr.W.2019$mean) - log(Sum.W.2019$mean[1])
 lrr.W.2019$var<-lrr.W.2019$sd^2/(lrr.W.2019$count*lrr.W.2019$mean^2) + Sum.W.2019$sd[1]^2/(Sum.W.2019$count[1]*Sum.W.2019$mean[1]^2)
 lrr.W.2019$CI<-qnorm(0.975)*sqrt(lrr.W.2019$var)
 lrr.W.2019$SE<-sqrt(lrr.W.2019$var)/sqrt(lrr.W.2019$count)
+lrr.W.2019$CI_up <- lrr.W.2019$LRR+lrr.W.2019$CI
+lrr.W.2019$CI_down <- lrr.W.2019$LRR-lrr.W.2019$CI
+lrr.W.2019$Population <- "Wellspring Pond"
 
 # Churchill 2020
-
-melt.C.2020<-melt(df.C.2020, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.C.2020<- ddply(melt.C.2020, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.C.2020 <- subset(df.C.2020, plt == "Y") %>% group_by(bac) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
 
 lrr.C.2020<-Sum.C.2020[2:12,]
 lrr.C.2020$LRR<-log(lrr.C.2020$mean) - log(Sum.C.2020$mean[1])
 lrr.C.2020$var<-lrr.C.2020$sd^2/(lrr.C.2020$count*lrr.C.2020$mean^2) + Sum.C.2020$sd[1]^2/(Sum.C.2020$count[1]*Sum.C.2020$mean[1]^2)
 lrr.C.2020$CI<-qnorm(0.975)*sqrt(lrr.C.2020$var)
 lrr.C.2020$SE<-sqrt(lrr.C.2020$var)/sqrt(lrr.C.2020$count)
+lrr.C.2020$CI_up <- lrr.C.2020$LRR+lrr.C.2020$CI
+lrr.C.2020$CI_down <- lrr.C.2020$LRR-lrr.C.2020$CI
+lrr.C.2020$Population <- "Churchill Marsh"
 
 #Wellspring
-melt.W.2020<-melt(df.W.2020, id.vars=c("bac"), measure.vars= "Grt", na.rm = T)
-Sum.W.2020<- ddply(melt.W.2020, c("bac","variable"), dplyr::summarise, mean = mean(value), sd = sd(value), count=n(), sem = sd(value)/sqrt(length(value)))
+Sum.W.2020 <- subset(df.W.2020, plt == "Y") %>% group_by(bac) %>% dplyr::summarize(mean = mean(Grt, na.rm=T), sd = sd(Grt, na.rm=T), count=n(),  sem = sd/sqrt(count))
 
 lrr.W.2020<-Sum.W.2020[2:12,]
 lrr.W.2020$LRR<-log(lrr.W.2020$mean) - log(Sum.W.2020$mean[1])
 lrr.W.2020$var<-lrr.W.2020$sd^2/(lrr.W.2020$count*lrr.W.2020$mean^2) + Sum.W.2020$sd[1]^2/(Sum.W.2020$count[1]*Sum.W.2020$mean[1]^2)
 lrr.W.2020$CI<-qnorm(0.975)*sqrt(lrr.W.2020$var)
 lrr.W.2020$SE<-sqrt(lrr.W.2020$var)/sqrt(lrr.W.2020$count)
+lrr.W.2020$CI_up <- lrr.W.2020$LRR+lrr.W.2020$CI
+lrr.W.2020$CI_down <- lrr.W.2020$LRR-lrr.W.2020$CI
+lrr.W.2020$Population <- "Wellspring Pond"
 
+#Make 2020 table
+lrr.2020 <- rbind(lrr.C.2020, lrr.W.2020)
+colnames(lrr.2020)[[1]] <- "Bacterial strain"
+colnames(lrr.2020)[[10]] <- "Upper bound"
+colnames(lrr.2020)[[11]] <- "Lower bound"
+table_2020 <- kbl(lrr.2020[,c(12,1,6, 11,10)], format="latex", digits=4, caption="List of bacteria used in 2020 experiments, with log response ratios (LRR) and the lower and upper bounds of 95\\% confidence intervals for their effects on \\textit{Lemna minor} growth", booktabs=T, longtable=T, linesep = c('', '', '', '', '', '', '', '', '', '', '\\hline'))
+```
+
+```{latex}
+table_2020
+```
+
+```{r Tables}
+#Make 2019 table
+lrr.2019 <- rbind(lrr.C.2019, lrr.K.2019, lrr.W.2019)
+colnames(lrr.2019)[[1]] <- "Bacterial strain"
+colnames(lrr.2019)[[10]] <- "Upper bound"
+colnames(lrr.2019)[[11]] <- "Lower bound"
+table_2019 <- kbl(lrr.2019[,c(12,1,6, 11,10)], format="latex", digits=4, caption="List of bacteria used in 2019 experiments, with log response ratios (LRR) and the lower and upper bounds of 95\\% confidence intervals for their effects on \\textit{Lemna minor} growth", booktabs=T, longtable=T, linesep = c('', '', '', '', '', '', '', '', '', '', '\\hline'))
+table_2019
+```
+
+```{r Duckweed growth figures}
+pt_size = 3
+ylimits = c(-0.4, 1.1)
+lrr.2020$color <- ifelse(lrr.2020$`Bacterial strain` == "All 10 bacteria", "10-strain community", "Single strain")
+zero_line <- "red3"
+sum_line <- "green3"
+mean_line <- "blue3"
+dot_colors <- c("blue", "black")
+
+#Churchill 2020
+pred.C.2020.avg <-mean(lrr.C.2020$LRR[1:10])
+pred.C.2020.sum <-sum(lrr.C.2020$LRR[1:10])
+
+plot_C2020 <- ggplot(subset(lrr.2020, Population == "Churchill Marsh"), aes(y=mean,x=reorder(`Bacterial strain`, LRR), color=color))+
+  geom_point(size=pt_size)+
+  geom_errorbar(aes(x=reorder(`Bacterial strain`,LRR), ymin=mean-sem,ymax=mean+sem),width=0.5)+
+  #geom_errorbar(aes(x=reorder(`Bacterial strain`,LRR), ymin=LRR-SE,ymax=LRR+SE),width=0.5)+
+  #geom_errorbar(aes(x=reorder(`Bacterial strain`,LRR), ymin=`Lower bound`,ymax=`Upper bound`),width=0.5)+
+  theme_cowplot()+
+#  geom_hline(yintercept=0, linetype="dashed", color = zero_line,size=1)+
+ # geom_hline(yintercept=pred.C.2020.avg, linetype="dashed", color = mean_line,size=1)+
+ # geom_hline(yintercept=pred.C.2020.sum, linetype="dashed", color = sum_line,size=1)+
+  xlab("Bacterial strain")+
+  ggtitle("Churchill")+
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))+
+   theme(legend.title = element_blank())+
+#  scale_y_continuous(limits=ylimits)+
+  scale_color_manual(values=dot_colors)+
+  theme(legend.position = c(0.1, 0.9))
+plot_C2020
+#tmp <- lrr.2020[lrr.2020$Population == "Churchill Marsh", "Bacterial strain"]
+plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium succinicans* 1", "*Bosea massiliensis*", "*Aeromonas salmonicida*", "*Ohtaekwangia koreensis*", "*Flavobacterium succinicans* 2", "*Falsiroseomonas stagni*", "*Parasediminibacterium paludis*", "*Arcicella* sp.", "*Microbacterium oxydans*", "*Pseudomonas protogens*", "All 10 bacteria"))+
+  theme(axis.text.x = ggtext::element_markdown())
+plot_C2020_updated
+
+#Wellspring 2020
+pred.W.2020.avg <-mean(lrr.W.2020$LRR[1:10])
+pred.W.2020.sum <-sum(lrr.W.2020$LRR[1:10])
+
+plot_W2020 <- ggplot(subset(lrr.2020, Population == "Wellspring Pond"), aes(y=LRR,x=reorder(`Bacterial strain`, LRR), color=color))+
+  geom_point(size=pt_size)+
+  geom_errorbar(aes(x=reorder(`Bacterial strain`,LRR), ymin=LRR-SE,ymax=LRR+SE),width=0.5)+
+  #geom_errorbar(aes(x=reorder(`Bacterial strain`,LRR), ymin=`Lower bound`,ymax=`Upper bound`),width=0.5)+
+  theme_cowplot()+
+  geom_hline(yintercept=0, linetype="dashed", color = zero_line, size=1)+
+  geom_hline(yintercept=pred.W.2020.avg, linetype="dashed", color = mean_line,size=1)+
+  geom_hline(yintercept=pred.W.2020.sum, linetype="dashed", color = sum_line,size=1)+
+  xlab("Bacterial strain")+
+  ggtitle("Wellspring")+
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1))+
+  theme(legend.title = element_blank())+
+  scale_y_continuous(limits=ylimits)+
+  scale_color_manual(values=dot_colors)+
+  theme(legend.position="none")
+plot_W2020
+#tmp <- lrr.2020[lrr.2020$Population == "Wellspring Pond", "Bacterial strain"]
+plot_W2020_updated <- plot_W2020+scale_x_discrete(labels=c("*Sphingomonas pituitosa* 1", "*Flaviflagellibacter deserti*", "*Rhizobium rosettiformans*", "*Rhizorhabdus wittichii* 1", "*Rhizobium capsici* 1", "*Pseudomonas protogens*", "*Rhizorhabdus wittichii* 2", "*Rhizobium capsici* 2", "*Sphingomonas pituitosa* 2", "All 10 bacteria", "*Fervidobacterium riparium*"))+
+  theme(axis.text.x = ggtext::element_markdown())
+plot_W2020_updated
+
+plot_2020 <- plot_grid(plot_C2020_updated, plot_W2020_updated, labels="AUTO", align='h')
+plot_2020
+```
+
+
+```{r}
 #OK, let's get to plotting!
 
 pred.C.2019<-mean(lrr.C.2019$LRR[1:10])
@@ -376,12 +523,9 @@ plot1.C2 <- plot1.C2 + ylim(-0.2,0.4)
 plot1.W2 <- plot1.W2 + ylim(-0.2,0.4)
 
 plot1.2019<-plot_grid(plot1.C1, plot1.K1, plot1.W1, ncol=3,nrow=1, align='h', labels=c('A','B','C'))
-plot1.2020<-plot_grid(plot1.C2, plot1.W2, plot.leg, ncol=3,nrow=1, align='h', labels=c('D','E'))
 
-plot1<-plot_grid(plot1.2019,plot1.2020, ncol=1, nrow=2, align='v')
-grid.arrange(arrangeGrob(plot1, bottom = x.grob_bac, left = y.grob_lrrdw))
+plot1.2020<-plot_grid(plot1.C2, plot1.W2, plot.leg, ncol=3,nrow=1, align='h', labels=c('A','B'))
 
-# PDF , 10 x 12.5 " works well
 
 ```
 
