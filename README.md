@@ -1,7 +1,7 @@
 Single versus 10-strain inoculations of bacteria on Lemna
 ================
 Jason Laurich and Megan Frederickson
-Sys.Date()
+2024-04-08
 
 This code generates the figures and model results for:
 
@@ -201,6 +201,12 @@ dev.off()
 
     ## quartz_off_screen 
     ##                 2
+
+``` r
+p
+```
+
+![](README_files/figure-gfm/Plot%20tree-1.png)<!-- -->
 
 ### SECTION 3: Microbial growth models and figures
 
@@ -479,7 +485,7 @@ Next, let’s make a figure of the microbial data.
 ``` r
 #Set figure defaults
 pt_size = 3
-ylimits = c(0, 50000)
+ylimits = c(0, 35000)
 zero_line <- "red3"
 sum_line <- "green3"
 mean_line <- "blue3"
@@ -490,7 +496,7 @@ Sum_2020_C_micr <- subset(df2020, pop == "Churchill") %>% group_by(bac_name, plt
 sd = sd(abs, na.rm=TRUE), sem = sd/sqrt(n))
 
 #Add colors
-Sum_2020_C_micr$color <- ifelse(Sum_2020_C_micr$bac_name == "All10", "10-strain community", ifelse(Sum_2020_C_micr$bac_name == "Control", "Control", "Single strain"))
+Sum_2020_C_micr$color <- ifelse(Sum_2020_C_micr$bac_name == "All 10 bacteria", "10-strain community", ifelse(Sum_2020_C_micr$bac_name == "Control", "Control", "Single strain"))
 
 #Churchill WITHOUT PLANTS
 plot_C2020_micr_noplt <- ggplot(subset(Sum_2020_C_micr, bac_name != "Control" & plt == "N"), aes(y=mean,x=reorder(bac_name, mean), color=color))+
@@ -541,7 +547,7 @@ Sum_2020_W_micr <- subset(df2020, pop=="Wellspring") %>% group_by(bac_name, plt)
 sd = sd(abs, na.rm=TRUE), sem = sd/sqrt(n))
 
 #Add colors
-Sum_2020_W_micr$color <- ifelse(Sum_2020_W_micr$bac_name == "All10", "10-strain community", ifelse(Sum_2020_W_micr$bac_name == "Control", "Control", "Single strain"))
+Sum_2020_W_micr$color <- ifelse(Sum_2020_W_micr$bac_name == "All 10 bacteria", "10-strain community", ifelse(Sum_2020_W_micr$bac_name == "Control", "Control", "Single strain"))
 
 #Wellspring WITHOUT PLANTS
 plot_W2020_micr_noplt <- ggplot(subset(Sum_2020_W_micr, bac_name != "Control" & plt == "N"), aes(y=mean,x=reorder(bac_name, mean), color=color))+
@@ -625,17 +631,21 @@ summary(lm_micr_C)
     ## F-statistic: 7.916 on 1 and 9 DF,  p-value: 0.02026
 
 ``` r
-C_alt <-ggplot(subset(Sum_2020_C_micr_wide, bac_name != "Control"))+geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
+#Adjust some labels
+Sum_2020_C_micr_wide$bac_name2 <- gsub("\\bUnidentified\\b", "", Sum_2020_C_micr_wide$bac_name)
+
+C_alt <-ggplot(subset(Sum_2020_C_micr_wide, bac_name != "Control"))+
+      geom_text_repel(data=subset(Sum_2020_C_micr_wide, bac_name2 != "Control"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, nudge_y=0.12, segment.color="grey")+
+  geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+
+  xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
   geom_errorbar(aes(x=mean_N, ymax=mean_Y+sem_Y, ymin=mean_Y-sem_Y, color=color))+
     geom_errorbarh(aes(xmax=mean_N+sem_N, xmin=mean_N-sem_N, y=mean_Y, color=color))+
  theme(legend.title = element_blank())+
   scale_color_manual(values=c(dot_colors[1], dot_colors[3]))+
   theme(legend.position = c(0.55, 0.15))+
     ggtitle("Churchill")+
-    geom_text_repel(data=subset(Sum_2020_C_micr_wide, bac_name != "Control" & bac_name !="All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-    geom_text_repel(data=subset(Sum_2020_C_micr_wide, bac_name == "All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
-    scale_y_log10(limits=c(10,10000))+  
-  scale_x_log10(limits=c(10,10000))+
+    scale_y_log10(limits=c(10,13000))+  
+  scale_x_log10(limits=c(10,13000))+
   geom_smooth(aes(x=mean_N, y=mean_Y), method="lm", se=FALSE)
 C_alt
 ```
@@ -644,6 +654,8 @@ C_alt
 
 ``` r
 Sum_2020_W_micr_wide <- Sum_2020_W_micr %>% pivot_wider(names_from = plt, values_from = n:sem)
+
+Sum_2020_W_micr_wide$bac_name2 <- gsub("\\bUnidentified\\b", "", Sum_2020_W_micr_wide$bac_name)
 
 lm_micr_W <- lm(log(mean_Y)~log(mean_N), data=Sum_2020_W_micr_wide)
 summary(lm_micr_W)
@@ -670,17 +682,17 @@ summary(lm_micr_W)
     ## F-statistic: 6.029 on 1 and 9 DF,  p-value: 0.03643
 
 ``` r
-W_alt <-ggplot(subset(Sum_2020_W_micr_wide, bac_name != "Control"))+geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
+W_alt <-ggplot(subset(Sum_2020_W_micr_wide, bac_name != "Control"))+
+    geom_text_repel(data=subset(Sum_2020_W_micr_wide, bac_name2 != "Control"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, segment.color="grey", nudge_y=0.12)+
+  geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
  theme(legend.title = element_blank())+
     geom_errorbar(aes(x=mean_N, ymax=mean_Y+sem_Y, ymin=mean_Y-sem_Y, color=color))+
     geom_errorbarh(aes(xmax=mean_N+sem_N, xmin=mean_N-sem_N, y=mean_Y, color=color))+
   scale_color_manual(values=c(dot_colors[1], dot_colors[3]))+
   theme(legend.position = c(0.55, 0.15))+
     ggtitle("Wellspring")+
-  geom_text_repel(data=subset(Sum_2020_W_micr_wide, bac_name != "Control" & bac_name !="All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-    geom_text_repel(data=subset(Sum_2020_W_micr_wide, bac_name == "All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
-    scale_y_log10(limits=c(10,10000))+  
-  scale_x_log10(limits=c(10,10000))+
+    scale_y_log10(limits=c(10,13000))+  
+  scale_x_log10(limits=c(10,13000))+
   geom_smooth(aes(x=mean_N, y=mean_Y), method="lm", se=FALSE)
 W_alt
 ```
@@ -1035,7 +1047,7 @@ ylimits = c(12000, 48000)
 zero_line <- "red3"
 sum_line <- "green3"
 mean_line <- "blue3"
-dot_colors <- c("red","black", "blue")
+dot_colors <- c("black", "blue", "red")
 
 Sum_2020 <- df2020 %>% group_by(pop, bac_name, group) %>% summarize(n=n(), mean=mean(pix1, na.rm=TRUE), sd=sd(pix1, na.rm=TRUE), sem=sd/sqrt(n))
 
@@ -1054,7 +1066,7 @@ plot_C2020 <- ggplot(subset(Sum_2020, pop == "Churchill"), aes(y=mean,x=reorder(
   theme(legend.position = c(0.1, 0.9))+
   ylab("Duckweed area (final pixels)")
 
-plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium* sp.", "*Bosea massiliensis*", "Control", "Unidentified *Flavobacteriaceae*", "*Aeromonas salmonicida*", "*Devosia confluentis*", "*Falsiroseomonas* sp.", "Unidentified *Chitinophagaceae*", "*Arcicella* sp.", "*Microbacterium oxydans*", "All 10 bacteria",  "*Pseudomonas protegens*"))+
+plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium* sp.", "*Bosea massiliensis*", "Control", "Unidentified *Flavobacteriaceae*", "*Aeromonas salmonicida*", "*Devosia confluentis*", "*Falsiroseomonas* sp.", "Unidentified *Chitinophagaceae*", "*Arcicella* sp.", "*Microbacterium oxydans*", "All 10 bacteria",  "*Pseudomonas protegens* 1"))+
   theme(axis.text.x = ggtext::element_markdown())
 plot_C2020_updated
 ```
@@ -1105,6 +1117,8 @@ we will use scaled data so that we can center fitness proxy data around
 0.
 
 ``` r
+dot_colors <- c("red", "black", "blue")
+
 #Churchill
 df.C.2020 <- subset(df2020, bac_name != "Control" & plt == "Y" & pop == "Churchill")
 df.C.2020$pix1_scaled <- scale(df.C.2020$pix1, center = TRUE, scale = TRUE)
@@ -1120,6 +1134,8 @@ modC.abs<-lmer(abs_scaled ~ bac_name + (1|edge) +(1|plate), data=df.C.2020)
 em.C.abs<-as.data.frame(emmeans(modC.abs, "bac_name", var="abs"))
 
 emC$color <- ifelse(emC$bac_name == "All 10 bacteria", "10-strain community", "Single strain")
+
+emC$bac_name2 <- gsub("\\bUnidentified\\b", "", emC$bac_name)
 
 emC$abs<-em.C.abs$emmean
 emC$abs.SE<-em.C.abs$SE
@@ -1160,8 +1176,8 @@ plot_C_fitness <- ggplot(emC)+
  theme(legend.title = element_blank())+
   scale_color_manual(values=c(dot_colors[3], dot_colors[2]))+
   theme(legend.position = c(0.55, 0.15))+
-  geom_text_repel(data=subset(emC, bac_name != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-      geom_text_repel(data=subset(emC, bac_name == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
+  geom_text_repel(data=subset(emC, bac_name2 != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, segment.color="grey")+
+      geom_text_repel(data=subset(emC, bac_name2 == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))), size=2.5, segment.color="grey")+
   geom_smooth(aes(x=abs, y=emmean), method="lm", se=FALSE)+
     scale_y_continuous(limits=c(-0.6,0.6))+
   scale_x_continuous(limits=c(-2,2.5))+
@@ -1187,6 +1203,8 @@ modW.abs<-lmer(abs_scaled ~ bac_name + (1|edge) +(1|plate), data=df.W.2020)
 em.W.abs<-as.data.frame(emmeans(modW.abs, "bac_name", var="abs"))
 
 emW$color <- ifelse(emW$bac_name == "All 10 bacteria", "10-strain community", "Single strain")
+
+emW$bac_name2 <- gsub("\\bUnidentified\\b", "", emW$bac_name)
 
 emW$abs<-em.W.abs$emmean
 emW$abs.SE<-em.W.abs$SE
@@ -1226,8 +1244,8 @@ geom_point(aes(x=abs, y=emmean, color=color))+theme_cowplot()+xlab(expression("M
  theme(legend.title = element_blank())+
   scale_color_manual(values=c(dot_colors[3], dot_colors[2]))+
   theme(legend.position = c(0.55, 0.15))+
-  geom_text_repel(data=subset(emW, bac_name != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-      geom_text_repel(data=subset(emW, bac_name == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
+  geom_text_repel(data=subset(emW, bac_name2 != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, segment.color="grey")+
+      geom_text_repel(data=subset(emW, bac_name2 == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))), size=2.5, segment.color="grey")+
   geom_smooth(aes(x=abs, y=emmean), method="lm", se=FALSE)+
   scale_y_continuous(limits=c(-0.6,0.6))+
   scale_x_continuous(limits=c(-2.5,2.5))+

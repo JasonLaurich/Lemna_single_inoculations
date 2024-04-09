@@ -118,7 +118,7 @@ df2020$pop <- trimws(df2020$pop)
 
 ### SECTION 3: Visualize phylogenetic tree
 
-```{r Tree taxonomy, message=FALSE, warning=FALSE}
+```{r Tree taxonomy, message=FALSE, warning=FALSE, dpi=300}
 #Import tree that was created in QIIME2
 tree <- ape::read.tree("tree.nwk")
 
@@ -187,7 +187,7 @@ taxonomy$tree_asvlabel <- ifelse(taxonomy$Type == "Cultured isolate", "", ifelse
 
 Use ggtree to plot the tree. 
 
-```{r Plot tree, warning=FALSE, message=FALSE}
+```{r Plot tree, warning=FALSE, message=FALSE, fig.height=6, fig.width=6, dpi=600}
 #Make type and population factors
 taxonomy$Type <- as.factor(taxonomy$Type)
 taxonomy$Population <- as.factor(taxonomy$Population)
@@ -204,13 +204,15 @@ p <- ggtree(tree, layout="circular") %<+% taxonomy +
 pdf("Figure_2.pdf", width=8, height=9)
 p
 dev.off()
+
+p
 ```
 
 ### SECTION 3: Microbial growth models and figures
 
 First, let's fit a model combining all data (with bacterial strain nested within population as a random effect) in which we test whether the productivity of 10-strain communities differs from the productivity of single strains. Again, this tests whether there is a biodiversity-ecosystem function relationship, whereby the number of strains in the microbiome (1 or 10) predicts microbial productivity. 
 
-```{r Microbial growth models both pops, message=FALSE, warnings=FALSE}
+```{r Microbial growth models both pops, message=FALSE, warnings=FALSE, dpi=300}
 #Group by whether 0, 1, or 10 strains were added
 df2020$group <- as.factor(ifelse(df2020$bac == "All10", "10-strain community", ifelse(df2020$bac == "Control", "Control", "Single strain")))
 
@@ -245,7 +247,7 @@ kbl(tbl, caption = "Model results for the effect of microbial strain diversity (
 
 Next, let's calculate the additive expectation for productivity in 10-strain communities, given the productivity of each single strain grown separately.
 
-```{r Microbial growth mean and additive predictions,message=FALSE, warnings=FALSE}
+```{r Microbial growth mean and additive predictions,message=FALSE, warnings=FALSE, dpi=300}
 #Make the 10-strain treatment the reference
 df2020$bac_name <- as.factor(df2020$bac_name)
 df2020 = df2020 %>% mutate(bac_name = relevel(bac_name, "All 10 bacteria"))
@@ -279,11 +281,11 @@ W_micr_sum_plt <- sum(W_emmeans[W_emmeans$plt == "Y" & W_emmeans$bac_name != "Al
 
 Next, let's make a figure of the microbial data. 
 
-```{r Microbial growth figures, warnings=FALSE, message=FALSE, fig.height=8, fig.width=8}
+```{r Microbial growth figures, warnings=FALSE, message=FALSE, fig.height=8, fig.width=8, dpi=600}
 
 #Set figure defaults
 pt_size = 3
-ylimits = c(0, 50000)
+ylimits = c(0, 35000)
 zero_line <- "red3"
 sum_line <- "green3"
 mean_line <- "blue3"
@@ -294,7 +296,7 @@ Sum_2020_C_micr <- subset(df2020, pop == "Churchill") %>% group_by(bac_name, plt
 sd = sd(abs, na.rm=TRUE), sem = sd/sqrt(n))
 
 #Add colors
-Sum_2020_C_micr$color <- ifelse(Sum_2020_C_micr$bac_name == "All10", "10-strain community", ifelse(Sum_2020_C_micr$bac_name == "Control", "Control", "Single strain"))
+Sum_2020_C_micr$color <- ifelse(Sum_2020_C_micr$bac_name == "All 10 bacteria", "10-strain community", ifelse(Sum_2020_C_micr$bac_name == "Control", "Control", "Single strain"))
 
 #Churchill WITHOUT PLANTS
 plot_C2020_micr_noplt <- ggplot(subset(Sum_2020_C_micr, bac_name != "Control" & plt == "N"), aes(y=mean,x=reorder(bac_name, mean), color=color))+
@@ -345,7 +347,7 @@ Sum_2020_W_micr <- subset(df2020, pop=="Wellspring") %>% group_by(bac_name, plt)
 sd = sd(abs, na.rm=TRUE), sem = sd/sqrt(n))
 
 #Add colors
-Sum_2020_W_micr$color <- ifelse(Sum_2020_W_micr$bac_name == "All10", "10-strain community", ifelse(Sum_2020_W_micr$bac_name == "Control", "Control", "Single strain"))
+Sum_2020_W_micr$color <- ifelse(Sum_2020_W_micr$bac_name == "All 10 bacteria", "10-strain community", ifelse(Sum_2020_W_micr$bac_name == "Control", "Control", "Single strain"))
 
 #Wellspring WITHOUT PLANTS
 plot_W2020_micr_noplt <- ggplot(subset(Sum_2020_W_micr, bac_name != "Control" & plt == "N"), aes(y=mean,x=reorder(bac_name, mean), color=color))+
@@ -398,42 +400,48 @@ final_microbes
 
 Next, we want to plot the strain and communities means without a host (x-axis) versus with a host (y-axis). 
 
-```{r Host versus no host, message=FALSE, warning=FALSE}
+```{r Host versus no host, message=FALSE, warning=FALSE, fig.height=6, fig.width=6, dpi=600}
 Sum_2020_C_micr_wide <- Sum_2020_C_micr %>% pivot_wider(names_from = plt, values_from = n:sem)
 
 lm_micr_C <- lm(log(mean_Y)~log(mean_N), data=Sum_2020_C_micr_wide)
 summary(lm_micr_C)
 
-C_alt <-ggplot(subset(Sum_2020_C_micr_wide, bac_name != "Control"))+geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
+#Adjust some labels
+Sum_2020_C_micr_wide$bac_name2 <- gsub("\\bUnidentified\\b", "", Sum_2020_C_micr_wide$bac_name)
+
+C_alt <-ggplot(subset(Sum_2020_C_micr_wide, bac_name != "Control"))+
+      geom_text_repel(data=subset(Sum_2020_C_micr_wide, bac_name2 != "Control"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, nudge_y=0.12, segment.color="grey")+
+  geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+
+  xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
   geom_errorbar(aes(x=mean_N, ymax=mean_Y+sem_Y, ymin=mean_Y-sem_Y, color=color))+
     geom_errorbarh(aes(xmax=mean_N+sem_N, xmin=mean_N-sem_N, y=mean_Y, color=color))+
  theme(legend.title = element_blank())+
   scale_color_manual(values=c(dot_colors[1], dot_colors[3]))+
   theme(legend.position = c(0.55, 0.15))+
     ggtitle("Churchill")+
-    geom_text_repel(data=subset(Sum_2020_C_micr_wide, bac_name != "Control" & bac_name !="All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-    geom_text_repel(data=subset(Sum_2020_C_micr_wide, bac_name == "All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
-    scale_y_log10(limits=c(10,10000))+  
-  scale_x_log10(limits=c(10,10000))+
+    scale_y_log10(limits=c(10,13000))+  
+  scale_x_log10(limits=c(10,13000))+
   geom_smooth(aes(x=mean_N, y=mean_Y), method="lm", se=FALSE)
 C_alt
 
 Sum_2020_W_micr_wide <- Sum_2020_W_micr %>% pivot_wider(names_from = plt, values_from = n:sem)
 
+Sum_2020_W_micr_wide$bac_name2 <- gsub("\\bUnidentified\\b", "", Sum_2020_W_micr_wide$bac_name)
+
 lm_micr_W <- lm(log(mean_Y)~log(mean_N), data=Sum_2020_W_micr_wide)
 summary(lm_micr_W)
 
-W_alt <-ggplot(subset(Sum_2020_W_micr_wide, bac_name != "Control"))+geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
+W_alt <-ggplot(subset(Sum_2020_W_micr_wide, bac_name != "Control"))+
+    geom_text_repel(data=subset(Sum_2020_W_micr_wide, bac_name2 != "Control"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, segment.color="grey", nudge_y=0.12)+
+  geom_point(aes(x=mean_N, y=mean_Y, color=color))+geom_abline(aes(intercept=0, slope=1), linetype="dotted")+theme_cowplot()+xlab(expression("Microbial density without hosts (cells/µL)"))+ylab(expression("Microbial density with hosts (cells/µL)"))+
  theme(legend.title = element_blank())+
     geom_errorbar(aes(x=mean_N, ymax=mean_Y+sem_Y, ymin=mean_Y-sem_Y, color=color))+
     geom_errorbarh(aes(xmax=mean_N+sem_N, xmin=mean_N-sem_N, y=mean_Y, color=color))+
   scale_color_manual(values=c(dot_colors[1], dot_colors[3]))+
   theme(legend.position = c(0.55, 0.15))+
     ggtitle("Wellspring")+
-  geom_text_repel(data=subset(Sum_2020_W_micr_wide, bac_name != "Control" & bac_name !="All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-    geom_text_repel(data=subset(Sum_2020_W_micr_wide, bac_name == "All 10 bacteria"), aes(x=mean_N, y=mean_Y, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
-    scale_y_log10(limits=c(10,10000))+  
-  scale_x_log10(limits=c(10,10000))+
+    scale_y_log10(limits=c(10,13000))+  
+  scale_x_log10(limits=c(10,13000))+
   geom_smooth(aes(x=mean_N, y=mean_Y), method="lm", se=FALSE)
 W_alt
 
@@ -508,7 +516,7 @@ ylimits = c(12000, 48000)
 zero_line <- "red3"
 sum_line <- "green3"
 mean_line <- "blue3"
-dot_colors <- c("red","black", "blue")
+dot_colors <- c("black", "blue", "red")
 
 Sum_2020 <- df2020 %>% group_by(pop, bac_name, group) %>% summarize(n=n(), mean=mean(pix1, na.rm=TRUE), sd=sd(pix1, na.rm=TRUE), sem=sd/sqrt(n))
 
@@ -527,7 +535,7 @@ plot_C2020 <- ggplot(subset(Sum_2020, pop == "Churchill"), aes(y=mean,x=reorder(
   theme(legend.position = c(0.1, 0.9))+
   ylab("Duckweed area (final pixels)")
 
-plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium* sp.", "*Bosea massiliensis*", "Control", "Unidentified *Flavobacteriaceae*", "*Aeromonas salmonicida*", "*Devosia confluentis*", "*Falsiroseomonas* sp.", "Unidentified *Chitinophagaceae*", "*Arcicella* sp.", "*Microbacterium oxydans*", "All 10 bacteria",  "*Pseudomonas protegens*"))+
+plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium* sp.", "*Bosea massiliensis*", "Control", "Unidentified *Flavobacteriaceae*", "*Aeromonas salmonicida*", "*Devosia confluentis*", "*Falsiroseomonas* sp.", "Unidentified *Chitinophagaceae*", "*Arcicella* sp.", "*Microbacterium oxydans*", "All 10 bacteria",  "*Pseudomonas protegens* 1"))+
   theme(axis.text.x = ggtext::element_markdown())
 plot_C2020_updated
 
@@ -561,6 +569,8 @@ save_plot("Figure_5.pdf", plot_2020, base_height=8, base_width=12)
 Fit models (with full random effect structure) from which we can extract 'genotype' (i.e. bacterial inocula) means for their (1) effects on duckweed growth, and (2) microbial density when grown with plants. Then, we will use scaled data so that we can center fitness proxy data around 0.
 
 ```{r Fitness regression, warning=FALSE, message=FALSE}
+dot_colors <- c("red", "black", "blue")
+
 #Churchill
 df.C.2020 <- subset(df2020, bac_name != "Control" & plt == "Y" & pop == "Churchill")
 df.C.2020$pix1_scaled <- scale(df.C.2020$pix1, center = TRUE, scale = TRUE)
@@ -576,6 +586,8 @@ modC.abs<-lmer(abs_scaled ~ bac_name + (1|edge) +(1|plate), data=df.C.2020)
 em.C.abs<-as.data.frame(emmeans(modC.abs, "bac_name", var="abs"))
 
 emC$color <- ifelse(emC$bac_name == "All 10 bacteria", "10-strain community", "Single strain")
+
+emC$bac_name2 <- gsub("\\bUnidentified\\b", "", emC$bac_name)
 
 emC$abs<-em.C.abs$emmean
 emC$abs.SE<-em.C.abs$SE
@@ -595,8 +607,8 @@ plot_C_fitness <- ggplot(emC)+
  theme(legend.title = element_blank())+
   scale_color_manual(values=c(dot_colors[3], dot_colors[2]))+
   theme(legend.position = c(0.55, 0.15))+
-  geom_text_repel(data=subset(emC, bac_name != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-      geom_text_repel(data=subset(emC, bac_name == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
+  geom_text_repel(data=subset(emC, bac_name2 != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, segment.color="grey")+
+      geom_text_repel(data=subset(emC, bac_name2 == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))), size=2.5, segment.color="grey")+
   geom_smooth(aes(x=abs, y=emmean), method="lm", se=FALSE)+
     scale_y_continuous(limits=c(-0.6,0.6))+
   scale_x_continuous(limits=c(-2,2.5))+
@@ -619,6 +631,8 @@ em.W.abs<-as.data.frame(emmeans(modW.abs, "bac_name", var="abs"))
 
 emW$color <- ifelse(emW$bac_name == "All 10 bacteria", "10-strain community", "Single strain")
 
+emW$bac_name2 <- gsub("\\bUnidentified\\b", "", emW$bac_name)
+
 emW$abs<-em.W.abs$emmean
 emW$abs.SE<-em.W.abs$SE
 
@@ -636,8 +650,8 @@ geom_point(aes(x=abs, y=emmean, color=color))+theme_cowplot()+xlab(expression("M
  theme(legend.title = element_blank())+
   scale_color_manual(values=c(dot_colors[3], dot_colors[2]))+
   theme(legend.position = c(0.55, 0.15))+
-  geom_text_repel(data=subset(emW, bac_name != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))),fontface = "italic", size=2.5)+
-      geom_text_repel(data=subset(emW, bac_name == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name))), size=2.5)+
+  geom_text_repel(data=subset(emW, bac_name2 != "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))),fontface = "italic", size=2.5, segment.color="grey")+
+      geom_text_repel(data=subset(emW, bac_name2 == "All 10 bacteria"), aes(x=abs, y=emmean, label=trimws(gsub("[\r\n]", "", bac_name2))), size=2.5, segment.color="grey")+
   geom_smooth(aes(x=abs, y=emmean), method="lm", se=FALSE)+
   scale_y_continuous(limits=c(-0.6,0.6))+
   scale_x_continuous(limits=c(-2.5,2.5))+
