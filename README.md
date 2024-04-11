@@ -1,7 +1,7 @@
 Single versus 10-strain inoculations of bacteria on Lemna
 ================
 Jason Laurich and Megan Frederickson
-2024-04-08
+2024-04-10
 
 This code generates the figures and model results for:
 
@@ -208,12 +208,58 @@ p
 
 ![](README_files/figure-gfm/Plot%20tree-1.png)<!-- -->
 
-### SECTION 3: Microbial growth models and figures
+### SECTION 4: Barplot of 16S field microbiome data
 
-First, let’s fit a model combining all data (with bacterial strain
-nested within population as a random effect) in which we test whether
-the productivity of 10-strain communities differs from the productivity
-of single strains. Again, this tests whether there is a
+``` r
+#Read in output feature table from QIIME
+SVs <- read.delim("QIIME/church_well_exported-feature-table/feature_table.tsv", header=FALSE, comment.char="#")
+#Adjust column names
+colnames(SVs) <- c("Feature.ID", "Church.F.28", "Well.F.92")
+#Read in taxonomy from QIIME
+taxonomy <- read.csv("merged_taxonomy.csv")
+#Remove confidence column, which is unneeded
+taxonomy <- taxonomy[which(!is.na(taxonomy$domain)), -9]
+#Adjust column names
+colnames(taxonomy) <- c("Feature.ID", "Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+
+#Merge feature table and taxonomy
+full_tax_df <- merge(SVs, taxonomy, by = "Feature.ID")
+
+#Summarize at the family level
+summarize_by_family <- full_tax_df %>% group_by(Phylum, Family) %>% summarize(read_count_Church = sum(Church.F.28), read_count_Wells = sum(Well.F.92))
+
+#Write to disk
+write.csv(summarize_by_family, file="bar_plot.csv")
+#Add colors manually #Colors from https://medialab.github.io/iwanthue/
+#Read back in summary
+summarize_by_family <- read.csv("bar_plot_edited.csv")
+
+#Calculate total reads for both pops
+total_reads_Churchill <- sum(summarize_by_family$read_count_Church)
+total_reads_Wellspring <- sum(summarize_by_family$read_count_Wells)
+
+#Make wide data long
+summarize_by_family_long <- gather(summarize_by_family, Population, Reads,  read_count_Church:read_count_Wells, factor_key=TRUE)
+#Rename populations
+levels(summarize_by_family_long$Population) <- c("Churchill", "Wellspring")
+#Calculate each family's proportion of total reads
+summarize_by_family_long$Prop <- ifelse(summarize_by_family_long$Population == "Churchill", summarize_by_family_long$Reads/total_reads_Churchill, summarize_by_family_long$Reads/total_reads_Wellspring)
+#Bin into "Other" for families with less than 0.1% of the reads
+summarize_by_family_long$Family2 <- ifelse(summarize_by_family_long$Prop > 0.001 & summarize_by_family_long$Family != " ",                    trimws(summarize_by_family_long$Family), "Other")
+
+#Make figure
+bar_plot <- ggplot(data=summarize_by_family_long)+geom_bar(aes(fill=reorder(Family2, Reads, decreasing = T), x=Population, y=Reads), color="black", stat="identity", position="stack")+scale_fill_manual(values=summarize_by_family$fill_color)+theme_cowplot()+labs(fill="Family")
+
+#Save figure
+ggsave("Figure_S1.pdf", bar_plot, height=8, width=12)
+```
+
+### SECTION 5: Microbial growth models and figures
+
+Let’s fit a model combining all data (with bacterial strain nested
+within population as a random effect) in which we test whether the
+productivity of 10-strain communities differs from the productivity of
+single strains. Again, this tests whether there is a
 biodiversity-ecosystem function relationship, whereby the number of
 strains in the microbiome (1 or 10) predicts microbial productivity.
 
@@ -710,7 +756,7 @@ alt
 save_plot("Figure_4.pdf", alt, base_height=6, base_width=12)
 ```
 
-### SECTION 4: Plant growth models and figures
+### SECTION 6: Plant growth models and figures
 
 The first set of models tests whether there is a biodiversity-ecosystem
 function relationship, whereby the number of strains in the microbiome
@@ -1108,7 +1154,7 @@ plot_2020
 save_plot("Figure_5.pdf", plot_2020, base_height=8, base_width=12)
 ```
 
-### SECTION 5: Fitness regression
+### SECTION 7: Fitness regression
 
 Fit models (with full random effect structure) from which we can extract
 ‘genotype’ (i.e. bacterial inocula) means for their (1) effects on

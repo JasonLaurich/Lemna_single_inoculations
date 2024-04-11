@@ -1,0 +1,5 @@
+sample-id,absolute-filepath,direction
+Church.F.28,/symbiont/megan.frederickson/Lemna_microbiome/church-well/MI.M03555_0380.001.FLD0212.Church-F-28_R1.fastq.gz,forward
+Church.F.28,/symbiont/megan.frederickson/Lemna_microbiome/church-well/MI.M03555_0380.001.FLD0212.Church-F-28_R2.fastq.gz,reverse
+Well.F.92,/symbiont/megan.frederickson/Lemna_microbiome/church-well/MI.M03555_0380.001.FLD0276.Well-F-92_R1.fastq.gz,forward
+Well.F.92,/symbiont/megan.frederickson/Lemna_microbiome/church-well/MI.M03555_0380.001.FLD0276.Well-F-92_R2.fastq.gz,reverse
