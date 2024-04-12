@@ -187,7 +187,7 @@ taxonomy$tree_asvlabel <- ifelse(taxonomy$Type == "Cultured isolate", "", ifelse
 
 Use ggtree to plot the tree. 
 
-```{r Plot tree, warning=FALSE, message=FALSE, fig.height=6, fig.width=6, dpi=600}
+```{r Plot tree, warning=FALSE, message=FALSE, fig.height=12, fig.width=6, dpi=600}
 #Make type and population factors
 taxonomy$Type <- as.factor(taxonomy$Type)
 taxonomy$Population <- as.factor(taxonomy$Population)
@@ -210,7 +210,7 @@ p
 
 ### SECTION 4: Barplot of 16S field microbiome data
 
-```{r 16S bar plot, warning=FALSE, message=FALSE}
+```{r 16S bar plot, warning=FALSE, message=FALSE, dpi=600, fig.height=6, fig.width=12}
 #Read in output feature table from QIIME
 SVs <- read.delim("QIIME/church_well_exported-feature-table/feature_table.tsv", header=FALSE, comment.char="#")
 #Adjust column names
@@ -238,6 +238,14 @@ summarize_by_family <- read.csv("bar_plot_edited.csv")
 total_reads_Churchill <- sum(summarize_by_family$read_count_Church)
 total_reads_Wellspring <- sum(summarize_by_family$read_count_Wells)
 
+#Calculate proportion of total reads for each ASV
+full_tax_df$Prop.C <- (full_tax_df$Church.F.28/total_reads_Churchill)*100
+full_tax_df$Prop.W <- (full_tax_df$Well.F.92/total_reads_Wellspring)*100
+
+#Medians for proportions of total reads for each ASV
+median(full_tax_df$Prop.W)
+median(full_tax_df$Prop.C)
+
 #Make wide data long
 summarize_by_family_long <- gather(summarize_by_family, Population, Reads,  read_count_Church:read_count_Wells, factor_key=TRUE)
 #Rename populations
@@ -252,6 +260,8 @@ bar_plot <- ggplot(data=summarize_by_family_long)+geom_bar(aes(fill=reorder(Fami
 
 #Save figure
 ggsave("Figure_S1.pdf", bar_plot, height=8, width=12)
+
+bar_plot
 ```
 
 ### SECTION 5: Microbial growth models and figures
@@ -327,7 +337,7 @@ W_micr_sum_plt <- sum(W_emmeans[W_emmeans$plt == "Y" & W_emmeans$bac_name != "Al
 
 Next, let's make a figure of the microbial data. 
 
-```{r Microbial growth figures, warnings=FALSE, message=FALSE, fig.height=8, fig.width=8, dpi=600}
+```{r Microbial growth figures, warnings=FALSE, message=FALSE, fig.height=12, fig.width=10, dpi=600}
 
 #Set figure defaults
 pt_size = 3
@@ -492,7 +502,6 @@ W_alt <-ggplot(subset(Sum_2020_W_micr_wide, bac_name != "Control"))+
 W_alt
 
 alt <- plot_grid(C_alt, W_alt, labels="AUTO")
-alt
 
 save_plot("Figure_4.pdf", alt, base_height=6, base_width=12)
 
@@ -556,13 +565,13 @@ pred.W.2020.sum.emmeans <- sum(as.numeric(W_pix_emmeans[3:12, "emmean"]-as.numer
 
 Next, let's make a figure of the plant growth data. 
 
-```{r Duckweed growth figures, message=FALSE, warnings=FALSE}
+```{r Duckweed growth figures, message=FALSE, warnings=FALSE, fig.height=6, fig.width=8, dpi=600}
 pt_size = 3
 ylimits = c(12000, 48000)
 zero_line <- "red3"
 sum_line <- "green3"
 mean_line <- "blue3"
-dot_colors <- c("black", "blue", "red")
+dot_colors <- c("red","black", "blue")
 
 Sum_2020 <- df2020 %>% group_by(pop, bac_name, group) %>% summarize(n=n(), mean=mean(pix1, na.rm=TRUE), sd=sd(pix1, na.rm=TRUE), sem=sd/sqrt(n))
 
@@ -583,7 +592,6 @@ plot_C2020 <- ggplot(subset(Sum_2020, pop == "Churchill"), aes(y=mean,x=reorder(
 
 plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium* sp.", "*Bosea massiliensis*", "Control", "Unidentified *Flavobacteriaceae*", "*Aeromonas salmonicida*", "*Devosia confluentis*", "*Falsiroseomonas* sp.", "Unidentified *Chitinophagaceae*", "*Arcicella* sp.", "*Microbacterium oxydans*", "All 10 bacteria",  "*Pseudomonas protegens* 1"))+
   theme(axis.text.x = ggtext::element_markdown())
-plot_C2020_updated
 
 #Wellspring 2020
 plot_W2020 <- ggplot(subset(Sum_2020, pop == "Wellspring"), aes(y=mean,x=reorder(bac_name, mean), color=group))+
@@ -603,7 +611,6 @@ plot_W2020 <- ggplot(subset(Sum_2020, pop == "Wellspring"), aes(y=mean,x=reorder
 
 plot_W2020_updated <- plot_W2020+scale_x_discrete(labels=c("*Sphingomonas pituitosa* 1", "Control",  "Unidentified *Hyphomicrobiales*", "*Allorhizobium* sp. 2", "*Allorhizobium* sp. 1", "*Rhizorhabdus wittichii* 2", "*Pseudomonas protegens* 2", "*Rhizorhabdus wittichii* 1", "*Rhizobium* sp.", "*Sphingomonas pituitosa* 2", "All 10 bacteria", "*Rhizobium rosettiformans*"))+
   theme(axis.text.x = ggtext::element_markdown())
-plot_W2020_updated
 
 plot_2020 <- plot_grid(plot_C2020_updated, plot_W2020_updated, labels="AUTO", align='h')
 plot_2020
@@ -614,7 +621,7 @@ save_plot("Figure_5.pdf", plot_2020, base_height=8, base_width=12)
 
 Fit models (with full random effect structure) from which we can extract 'genotype' (i.e. bacterial inocula) means for their (1) effects on duckweed growth, and (2) microbial density when grown with plants. Then, we will use scaled data so that we can center fitness proxy data around 0.
 
-```{r Fitness regression, warning=FALSE, message=FALSE}
+```{r Fitness regression, warning=FALSE, message=FALSE, dpi=300, fig.height=6, fig.width=6}
 dot_colors <- c("red", "black", "blue")
 
 #Churchill
@@ -705,7 +712,6 @@ geom_point(aes(x=abs, y=emmean, color=color))+theme_cowplot()+xlab(expression("M
 plot_W_fitness
 
 plot_2020_fitness <- plot_grid(plot_C_fitness, plot_W_fitness, labels="AUTO", align='h')
-plot_2020_fitness
 save_plot("Figure_6.pdf", plot_2020_fitness, base_height=6, base_width=12)
 
 ```

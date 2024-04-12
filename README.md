@@ -1,7 +1,7 @@
 Single versus 10-strain inoculations of bacteria on Lemna
 ================
 Jason Laurich and Megan Frederickson
-2024-04-10
+2024-04-11
 
 This code generates the figures and model results for:
 
@@ -238,6 +238,23 @@ summarize_by_family <- read.csv("bar_plot_edited.csv")
 total_reads_Churchill <- sum(summarize_by_family$read_count_Church)
 total_reads_Wellspring <- sum(summarize_by_family$read_count_Wells)
 
+#Calculate proportion of total reads for each ASV
+full_tax_df$Prop.C <- (full_tax_df$Church.F.28/total_reads_Churchill)*100
+full_tax_df$Prop.W <- (full_tax_df$Well.F.92/total_reads_Wellspring)*100
+
+#Medians for proportions of total reads for each ASV
+median(full_tax_df$Prop.W)
+```
+
+    ## [1] 0.08187913
+
+``` r
+median(full_tax_df$Prop.C)
+```
+
+    ## [1] 0.04900869
+
+``` r
 #Make wide data long
 summarize_by_family_long <- gather(summarize_by_family, Population, Reads,  read_count_Church:read_count_Wells, factor_key=TRUE)
 #Rename populations
@@ -252,7 +269,11 @@ bar_plot <- ggplot(data=summarize_by_family_long)+geom_bar(aes(fill=reorder(Fami
 
 #Save figure
 ggsave("Figure_S1.pdf", bar_plot, height=8, width=12)
+
+bar_plot
 ```
+
+![](README_files/figure-gfm/16S%20bar%20plot-1.png)<!-- -->
 
 ### SECTION 5: Microbial growth models and figures
 
@@ -747,12 +768,7 @@ W_alt
 
 ``` r
 alt <- plot_grid(C_alt, W_alt, labels="AUTO")
-alt
-```
 
-![](README_files/figure-gfm/Host%20versus%20no%20host-3.png)<!-- -->
-
-``` r
 save_plot("Figure_4.pdf", alt, base_height=6, base_width=12)
 ```
 
@@ -1093,7 +1109,7 @@ ylimits = c(12000, 48000)
 zero_line <- "red3"
 sum_line <- "green3"
 mean_line <- "blue3"
-dot_colors <- c("black", "blue", "red")
+dot_colors <- c("red","black", "blue")
 
 Sum_2020 <- df2020 %>% group_by(pop, bac_name, group) %>% summarize(n=n(), mean=mean(pix1, na.rm=TRUE), sd=sd(pix1, na.rm=TRUE), sem=sd/sqrt(n))
 
@@ -1114,12 +1130,7 @@ plot_C2020 <- ggplot(subset(Sum_2020, pop == "Churchill"), aes(y=mean,x=reorder(
 
 plot_C2020_updated <- plot_C2020+scale_x_discrete(labels=c("*Flavobacterium* sp.", "*Bosea massiliensis*", "Control", "Unidentified *Flavobacteriaceae*", "*Aeromonas salmonicida*", "*Devosia confluentis*", "*Falsiroseomonas* sp.", "Unidentified *Chitinophagaceae*", "*Arcicella* sp.", "*Microbacterium oxydans*", "All 10 bacteria",  "*Pseudomonas protegens* 1"))+
   theme(axis.text.x = ggtext::element_markdown())
-plot_C2020_updated
-```
 
-![](README_files/figure-gfm/Duckweed%20growth%20figures-1.png)<!-- -->
-
-``` r
 #Wellspring 2020
 plot_W2020 <- ggplot(subset(Sum_2020, pop == "Wellspring"), aes(y=mean,x=reorder(bac_name, mean), color=group))+
   geom_point(size=pt_size)+
@@ -1138,17 +1149,12 @@ plot_W2020 <- ggplot(subset(Sum_2020, pop == "Wellspring"), aes(y=mean,x=reorder
 
 plot_W2020_updated <- plot_W2020+scale_x_discrete(labels=c("*Sphingomonas pituitosa* 1", "Control",  "Unidentified *Hyphomicrobiales*", "*Allorhizobium* sp. 2", "*Allorhizobium* sp. 1", "*Rhizorhabdus wittichii* 2", "*Pseudomonas protegens* 2", "*Rhizorhabdus wittichii* 1", "*Rhizobium* sp.", "*Sphingomonas pituitosa* 2", "All 10 bacteria", "*Rhizobium rosettiformans*"))+
   theme(axis.text.x = ggtext::element_markdown())
-plot_W2020_updated
-```
 
-![](README_files/figure-gfm/Duckweed%20growth%20figures-2.png)<!-- -->
-
-``` r
 plot_2020 <- plot_grid(plot_C2020_updated, plot_W2020_updated, labels="AUTO", align='h')
 plot_2020
 ```
 
-![](README_files/figure-gfm/Duckweed%20growth%20figures-3.png)<!-- -->
+![](README_files/figure-gfm/Duckweed%20growth%20figures-1.png)<!-- -->
 
 ``` r
 save_plot("Figure_5.pdf", plot_2020, base_height=8, base_width=12)
@@ -1303,11 +1309,5 @@ plot_W_fitness
 
 ``` r
 plot_2020_fitness <- plot_grid(plot_C_fitness, plot_W_fitness, labels="AUTO", align='h')
-plot_2020_fitness
-```
-
-![](README_files/figure-gfm/Fitness%20regression-3.png)<!-- -->
-
-``` r
 save_plot("Figure_6.pdf", plot_2020_fitness, base_height=6, base_width=12)
 ```
